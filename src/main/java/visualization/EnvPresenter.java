@@ -25,6 +25,7 @@ import javax.swing.Timer;
  * EnvPresenter handles the visualization of the game environment and detects level completion.
  */
 public class EnvPresenter {
+    public static final int CELL_SIZE = 40;
     private final ToolEnvironment env;
     private List<FieldView> fields;
     private JFrame frame;

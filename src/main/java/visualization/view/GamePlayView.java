@@ -1,6 +1,7 @@
 package visualization.view;
 
 import ija.ijaProject.common.GameNode;
+import ija.ijaProject.common.Side;
 import ija.ijaProject.game.levels.LevelManager;
 import ija.ijaProject.game.Game;
 import ija.ijaProject.game.levels.GameLevels;
@@ -16,6 +17,7 @@ import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Tooltip;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.effect.Glow;
 import javafx.scene.layout.*;
@@ -34,6 +36,8 @@ import visualization.common.ToolEnvironment;
 import javax.swing.*;
 import java.awt.*;
 import java.lang.reflect.Field;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 
 /**
@@ -121,6 +125,7 @@ public class GamePlayView {
 
         layout.setCenter(gameContainer);
 
+
         // Create the level complete overlay (initially hidden)
         levelCompleteOverlay = createLevelCompleteOverlay();
         levelCompleteOverlay.setVisible(false);
@@ -135,6 +140,7 @@ public class GamePlayView {
     private EnvPresenter getPlayPresenter() {
         return (EnvPresenter) gameNode.getUserData();
     }
+
 
     /**
      * Creates the background for the game screen.
@@ -253,7 +259,7 @@ public class GamePlayView {
         // Add to header
         header.getChildren().addAll(backButton, levelText);
 
-        Button infoButton = new Button("Info");
+        Button infoButton = new Button("Hints");
         infoButton.setStyle(
                 "-fx-background-color: rgba(14, 165, 233, 0.2);" +
                         "-fx-background-radius: 30;" +

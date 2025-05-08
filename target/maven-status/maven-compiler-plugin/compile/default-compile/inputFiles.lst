@@ -2,8 +2,6 @@
 /Users/withoutsocialty/Desktop/VoltMaze-game/src/main/java/visualization/EnvPresenter.java
 /Users/withoutsocialty/Desktop/VoltMaze-game/src/main/java/visualization/view/RotateInfoView.java
 /Users/withoutsocialty/Desktop/VoltMaze-game/src/main/java/visualization/view/SettingsView.java
-/Users/withoutsocialty/Desktop/VoltMaze-game/src/main/java/ija/ijaProject/game/GameEvent.java
-/Users/withoutsocialty/Desktop/VoltMaze-game/src/main/java/ija/ijaProject/game/GameReplayer.java
 /Users/withoutsocialty/Desktop/VoltMaze-game/src/main/java/ija/ijaProject/MainApp.java
 /Users/withoutsocialty/Desktop/VoltMaze-game/src/main/java/visualization/common/Observable.java
 /Users/withoutsocialty/Desktop/VoltMaze-game/src/main/java/ija/ijaProject/common/Position.java
@@ -19,11 +17,9 @@
 /Users/withoutsocialty/Desktop/VoltMaze-game/src/main/java/visualization/view/InfoPresenter.java
 /Users/withoutsocialty/Desktop/VoltMaze-game/src/main/java/ija/ijaProject/settings/SoundManager.java
 /Users/withoutsocialty/Desktop/VoltMaze-game/src/main/java/ija/ijaProject/game/Game.java
-/Users/withoutsocialty/Desktop/VoltMaze-game/src/main/java/ija/ijaProject/game/InitLevelEvent.java
 /Users/withoutsocialty/Desktop/VoltMaze-game/src/main/java/visualization/view/GameBridge.java
 /Users/withoutsocialty/Desktop/VoltMaze-game/src/main/java/visualization/view/InfoView.java
 /Users/withoutsocialty/Desktop/VoltMaze-game/src/main/java/visualization/view/FieldView.java
 /Users/withoutsocialty/Desktop/VoltMaze-game/src/main/java/ija/ijaProject/settings/LanguageManager.java
-/Users/withoutsocialty/Desktop/VoltMaze-game/src/main/java/ija/ijaProject/game/RotateEvent.java
 /Users/withoutsocialty/Desktop/VoltMaze-game/src/main/java/ija/ijaProject/game/levels/LevelManager.java
 /Users/withoutsocialty/Desktop/VoltMaze-game/src/main/java/visualization/common/AbstractObservableField.java

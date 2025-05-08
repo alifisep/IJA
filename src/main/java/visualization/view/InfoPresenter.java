@@ -9,13 +9,15 @@ import visualization.common.Observable;
 import javax.swing.*;
 import javax.swing.border.LineBorder;
 import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 public class InfoPresenter implements Observable.Observer {
-    public static final int TILE_SIZE = 48;          // stejná velikost dlaždice jako ve hře
+    public static final int TILE_SIZE = 40;          // stejná velikost dlaždice jako ve hře
     private static final Color BG        = Color.decode("#0f1e2e");  // pozadí okna
     private static final Color CELL_BG   = Color.decode("#1f2f3f");  // pozadí buňky
     private static final Color LINE      = Color.decode("#2f3f4f");  // barva mřížky
@@ -27,6 +29,9 @@ public class InfoPresenter implements Observable.Observer {
     private final JPanel panel;
     private final Map<Position, JLabel> labels = new HashMap<>();
     private final Map<Position,JButton> buttons = new HashMap<>();
+    static{
+        ToolTipManager.sharedInstance().setInitialDelay(2000); // 2 секунды перед показом
+    }
 
     public InfoPresenter(Game currentGame, Game solvedGame) {
         this.currentGame = currentGame;
@@ -36,6 +41,7 @@ public class InfoPresenter implements Observable.Observer {
         int cols = currentGame.cols();
         this.panel = new JPanel(new GridLayout(rows, cols, 0, 0));
         panel.setBackground(BG_CELL);
+
 
         for (int r = 1; r <= rows; r++) {
             for (int c = 1; c <= cols; c++) {
@@ -54,6 +60,14 @@ public class InfoPresenter implements Observable.Observer {
                 if (currentGame.isPlayebleNode(node)) {
                     node.addObserver(this);
                     buttons.put(pos, btn);
+                   /* updateTooltip(pos, btn);
+                    ToolTipManager.sharedInstance().registerComponent(btn);
+                    btn.addMouseListener(new MouseAdapter() {
+                        @Override
+                        public void mouseEntered(MouseEvent e) {
+                            updateTooltip(pos, btn);
+                        }
+                    });*/
                 } else {
                     btn.setText("?");
                     btn.setBackground(Color.DARK_GRAY);
@@ -85,9 +99,25 @@ public class InfoPresenter implements Observable.Observer {
             );
             // btn.setText(String.valueOf(need));
             btn.setText(need >= 0 ? String.valueOf(need) : "?");
+            //updateTooltip(pos, btn);
         }
     }
+    /* private void updateTooltip(Position pos, JButton btn) {
 
+        GameNode cur = currentGame.getGameNode(pos.row(), pos.col());
+        GameNode sol = solvedGame.getGameNode(pos.row(), pos.col());
+
+        int needed = rotationsNeeded(cur.getConnectors(), sol.getConnectors());
+        int actual = cur.getRotationCount();
+        System.out.println("Needed: " + needed + " Actual: " + actual);
+
+        btn.setToolTipText(
+                "<html>GameNode " + pos.row() + "," + pos.col() + "<br/>" +
+                        "Needed: " + needed + "<br/>" +
+                        "Actual: " + actual + "</html>"
+        );
+    }
+*/
     private int rotationsNeeded(Set<Side> cur, Set<Side> tgt) {
         for (int k = 0; k < 4; k++) {
             final int kk = k;

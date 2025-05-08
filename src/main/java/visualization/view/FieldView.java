@@ -7,10 +7,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.geom.Line2D;
-import java.awt.geom.Rectangle2D;
-import java.awt.geom.Ellipse2D;
-import java.awt.geom.Path2D;
+import java.awt.geom.*;
 
 public class FieldView extends JPanel implements Observable.Observer {
     private final ToolField field;
@@ -198,41 +195,54 @@ public class FieldView extends JPanel implements Observable.Observer {
      * @param height The height of the component
      */
     private void drawPowerNode(Graphics2D g2d, int width, int height) {
-        // Draw outer circle
-        int outerSize = 30;
-        Ellipse2D outer = new Ellipse2D.Double(
-                width / 2 - outerSize / 2,
-                height / 2 - outerSize / 2,
-                outerSize,
-                outerSize
-        );
-        g2d.setColor(new Color(14, 165, 233));
-        g2d.fill(outer);
+        int bodyW = 30;
+        int bodyH = 16;
+        int x = width / 2 - bodyW / 2;
+        int y = height / 2 - bodyH / 2;
 
-        // Draw inner circle
-        int innerSize = 20;
-        Ellipse2D inner = new Ellipse2D.Double(
-                width / 2 - innerSize / 2,
-                height / 2 - innerSize / 2,
-                innerSize,
-                innerSize
-        );
-        g2d.setColor(new Color(14, 165, 233, 128));
-        g2d.fill(inner);
 
-        // Draw lightning bolt
-        Path2D bolt = new Path2D.Double();
-        bolt.moveTo(width / 2, height / 2 - 10);  // Top
-        bolt.lineTo(width / 2 - 5, height / 2);   // Middle left
-        bolt.lineTo(width / 2, height / 2);       // Middle center
-        bolt.lineTo(width / 2 + 5, height / 2 + 10); // Bottom
-        bolt.closePath();
+        Color glowColor = new Color(0x1F8A70);
 
-        g2d.setColor(Color.WHITE);
-        g2d.fill(bolt);
+        for (int i = 4; i > 0; i--) {
+            int pad = i * 3;
+            int alpha = 50 / i;
+            g2d.setColor(new Color(
+                    glowColor.getRed(),
+                    glowColor.getGreen(),
+                    glowColor.getBlue(),
+                    alpha
+            ));
+            g2d.fillRoundRect(
+                    x - pad,
+                    y - pad,
+                    bodyW + pad * 2,
+                    bodyH + pad * 2,
+                    6 + pad,
+                    6 + pad
+            );
+        }
 
-        // Draw connections based on sides
-        drawConnections(g2d, width, height, new Color(14, 165, 233));
+
+        g2d.setColor(glowColor);
+        g2d.fillRoundRect(x, y, bodyW, bodyH, 4, 4);
+
+        g2d.setColor(glowColor.darker());
+        g2d.setStroke(new BasicStroke(2));
+        g2d.drawRoundRect(x, y, bodyW, bodyH, 4, 4);
+
+        int termH = bodyH / 3;
+        int termW = 4;
+        int tx = x - termW;
+        int ty = height / 2 - termH / 2;
+        g2d.fillRect(tx, ty, termW, termH);
+
+        int px = x + bodyW + 1;
+        int py = height / 2 - termH / 2;
+        g2d.fillRect(px, py, termW, termH);
+        int dotR = 3;
+        g2d.fillOval(px + termW/2 - dotR/2, height/2 - dotR/2, dotR, dotR);
+
+        drawConnections(g2d, width, height, glowColor);
     }
 
     /**
@@ -246,28 +256,68 @@ public class FieldView extends JPanel implements Observable.Observer {
     private void drawConnections(Graphics2D g2d, int width, int height, Color color) {
         g2d.setColor(color);
         g2d.setStroke(new BasicStroke(3));
+        Color baseColor = color;
 
-        int centerX = width / 2;
+        int centerX = width  / 2;
         int centerY = height / 2;
+        int thickness = 4;
 
-        // Draw connections based on the field's direction methods
+        g2d.setStroke(new BasicStroke(thickness, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
+
+        Point2D start = new Point2D.Float(centerX, centerY);
+        Point2D end;
+        LinearGradientPaint paint;
+
         if (field.north()) {
-            g2d.draw(new Line2D.Double(centerX, centerY, centerX, 0));
+            end = new Point2D.Float(centerX, 0);
+            paint = new LinearGradientPaint(
+                    start, end,
+                    new float[]{0f, 1f},
+                    new Color[]{baseColor.brighter(), baseColor.darker()}
+            );
+            g2d.setPaint(paint);
+            g2d.draw(new Line2D.Float(centerX, centerY, centerX, 0));
         }
-
-        if (field.east()) {
-            g2d.draw(new Line2D.Double(centerX, centerY, width, centerY));
-        }
-
         if (field.south()) {
-            g2d.draw(new Line2D.Double(centerX, centerY, centerX, height));
+            end = new Point2D.Float(centerX, height);
+            paint = new LinearGradientPaint(
+                    start, end,
+                    new float[]{0f, 1f},
+                    new Color[]{baseColor.brighter(), baseColor.darker()}
+            );
+            g2d.setPaint(paint);
+            g2d.draw(new Line2D.Float(centerX, centerY, centerX, height));
+        }
+        if (field.east()) {
+            end = new Point2D.Float(width, centerY);
+            paint = new LinearGradientPaint(
+                    start, end,
+                    new float[]{0f, 1f},
+                    new Color[]{baseColor.brighter(), baseColor.darker()}
+            );
+            g2d.setPaint(paint);
+            g2d.draw(new Line2D.Float(centerX, centerY, width, centerY));
+        }
+        if (field.west()) {
+            end = new Point2D.Float(0, centerY);
+            paint = new LinearGradientPaint(
+                    start, end,
+                    new float[]{0f, 1f},
+                    new Color[]{baseColor.brighter(), baseColor.darker()}
+            );
+            g2d.setPaint(paint);
+            g2d.draw(new Line2D.Float(centerX, centerY, 0, centerY));
         }
 
-        if (field.west()) {
-            g2d.draw(new Line2D.Double(centerX, centerY, 0, centerY));
-        }
+        g2d.setPaint(baseColor);
     }
 
+    private void drawDirLines(Graphics2D g2d, int cx, int cy, int w, int h) {
+        if (field.north()) g2d.draw(new Line2D.Float(cx, cy, cx, 0));
+        if (field.south()) g2d.draw(new Line2D.Float(cx, cy, cx, h));
+        if (field.east()) g2d.draw(new Line2D.Float(cx, cy, w, cy));
+        if (field.west()) g2d.draw(new Line2D.Float(cx, cy, 0, cy));
+    }
     public ToolField getField() {
         return field;
     }

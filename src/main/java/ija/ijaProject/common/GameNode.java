@@ -14,7 +14,7 @@ public class GameNode extends AbstractObservableField implements ToolField {
     private boolean isLink;
     private boolean isConnectedToPower = false;
     private final Set<Side> connectors = new HashSet<>();
-
+    private int rotationCount = 0;
     // Creating game grid
     public void setGame(Game game) {
         this.game = game;
@@ -59,10 +59,18 @@ public class GameNode extends AbstractObservableField implements ToolField {
         connectors.clear();
         connectors.addAll(newConnectors);
         notifyObservers();
+        rotationCount++;
 
         if (game != null) {
             game.init();
         }
+    }
+    public int getRotationCount() {
+        return rotationCount;
+    }
+
+    public void resetRotationCount() {
+        this.rotationCount = 0;
     }
 
     private Side rotateClockwise(Side side) {

@@ -7,7 +7,10 @@ import ija.ijaProject.game.Game;
 import javafx.animation.PauseTransition;
 import javafx.embed.swing.SwingNode;
 import javafx.application.Platform;
+import javafx.geometry.Bounds;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Tooltip;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 import javafx.util.Duration;
@@ -15,6 +18,9 @@ import visualization.EnvPresenter;
 import visualization.view.InfoPresenter;
 
 import javax.swing.*;
+import java.awt.*;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseMotionAdapter;
 import java.util.Map;
 import java.util.Random;
 import java.util.List;
@@ -135,35 +141,59 @@ public class GameLevels {
     };
 
     private static final Object[][] LEVEL_8_BEGINNER = {
-            {"P", 2, 3, Side.SOUTH},
-            {"L", 3, 3, Side.SOUTH, Side.EAST},
-            {"L", 3, 4, Side.WEST, Side.EAST},
+            {"P", 2, 4, Side.SOUTH},
+            {"L", 3, 4, Side.NORTH, Side.SOUTH, Side.EAST, Side.WEST},
+            {"L", 4, 4, Side.NORTH, Side.SOUTH,Side.EAST},
+            {"L", 5, 4, Side.NORTH, Side.SOUTH},
+            {"L", 6, 4, Side.NORTH, Side.SOUTH, Side.EAST, Side.WEST},
+            {"L", 7, 4, Side.NORTH, Side.SOUTH,Side.EAST},
+            {"B", 8, 4, Side.NORTH},
+            {"L", 3, 3, Side.EAST, Side.SOUTH},
+            {"B", 4, 3, Side.NORTH},
             {"L", 3, 5, Side.WEST, Side.SOUTH},
-            {"L", 4, 5, Side.NORTH, Side.SOUTH},
-            {"L", 5, 5, Side.NORTH, Side.EAST},
-            {"B", 6, 6, Side.WEST}
+            {"B", 4, 5, Side.NORTH},
+            {"L", 6, 3, Side.SOUTH, Side.EAST},
+            {"B", 7, 3, Side.NORTH},
+            {"L", 6, 5, Side.WEST, Side.SOUTH},
+            {"B", 7, 5, Side.NORTH}
     };
 
 
     private static final Object[][] LEVEL_9_BEGINNER = {
             {"P", 2, 4, Side.SOUTH},
-            {"L", 3, 4, Side.NORTH, Side.EAST},
+            {"L", 3, 4, Side.NORTH, Side.SOUTH, Side.EAST, Side.WEST},
+            {"L", 4, 4, Side.NORTH, Side.SOUTH,Side.EAST},
+            {"L", 5, 4, Side.NORTH, Side.SOUTH},
+            {"L", 6, 4, Side.NORTH, Side.SOUTH, Side.EAST, Side.WEST},
+            {"L", 7, 4, Side.NORTH, Side.SOUTH,Side.EAST},
+            {"B", 8, 4, Side.NORTH},
+            {"L", 3, 3, Side.EAST, Side.SOUTH},
+            {"B", 4, 3, Side.NORTH},
             {"L", 3, 5, Side.WEST, Side.SOUTH},
-            {"L", 4, 5, Side.NORTH, Side.SOUTH},
-            {"L", 5, 5, Side.NORTH, Side.EAST},
-            {"L", 5, 6, Side.WEST, Side.SOUTH},
-            {"B", 6, 6, Side.NORTH}
+            {"B", 4, 5, Side.NORTH},
+            {"L", 6, 3, Side.SOUTH, Side.EAST},
+            {"B", 7, 3, Side.NORTH},
+            {"L", 6, 5, Side.WEST, Side.SOUTH},
+            {"B", 7, 5, Side.NORTH}
     };
 
 
     private static final Object[][] LEVEL_10_BEGINNER = {
             {"P", 2, 4, Side.SOUTH},
-            {"L", 3, 4, Side.NORTH, Side.SOUTH},
-            {"L", 4, 4, Side.NORTH, Side.EAST},
-            {"L", 4, 5, Side.WEST, Side.EAST},
-            {"L", 4, 6, Side.WEST, Side.SOUTH},
-            {"L", 5, 6, Side.NORTH, Side.EAST},
-            {"B", 5, 7, Side.WEST}
+            {"L", 3, 4, Side.NORTH, Side.SOUTH, Side.EAST, Side.WEST},
+            {"L", 4, 4, Side.NORTH, Side.SOUTH,Side.EAST},
+            {"L", 5, 4, Side.NORTH, Side.SOUTH},
+            {"L", 6, 4, Side.NORTH, Side.SOUTH, Side.EAST, Side.WEST},
+            {"L", 7, 4, Side.NORTH, Side.SOUTH,Side.EAST},
+            {"B", 8, 4, Side.NORTH},
+            {"L", 3, 3, Side.EAST, Side.SOUTH},
+            {"B", 4, 3, Side.NORTH},
+            {"L", 3, 5, Side.WEST, Side.SOUTH},
+            {"B", 4, 5, Side.NORTH},
+            {"L", 6, 3, Side.SOUTH, Side.EAST},
+            {"B", 7, 3, Side.NORTH},
+            {"L", 6, 5, Side.WEST, Side.SOUTH},
+            {"B", 7, 5, Side.NORTH}
     };
 
 
@@ -227,1069 +257,790 @@ public class GameLevels {
 
     // Level 13: Introducing complex interdependence
     private static final Object[][] LEVEL_13_INTERMEDIATE = {
-            {"L", 2, 3, Side.EAST, Side.SOUTH},
-            {"L", 2, 4, Side.EAST, Side.WEST},
-            {"L", 2, 5, Side.EAST, Side.WEST},
-            {"L", 2, 6, Side.EAST, Side.WEST},
-            {"L", 2, 7, Side.WEST, Side.SOUTH},
-            {"L", 3, 3, Side.NORTH, Side.SOUTH},
-            {"L", 3, 7, Side.NORTH, Side.SOUTH},
-            {"L", 4, 3, Side.NORTH, Side.EAST},
-            {"L", 4, 4, Side.EAST, Side.WEST},
-            {"L", 4, 5, Side.EAST, Side.WEST},
-            {"L", 4, 6, Side.EAST, Side.WEST},
-            {"L", 4, 7, Side.NORTH, Side.WEST},
-            {"L", 5, 4, Side.NORTH, Side.SOUTH},
-            {"L", 5, 5, Side.NORTH, Side.SOUTH},
-            {"L", 5, 6, Side.NORTH, Side.SOUTH},
-            {"L", 6, 4, Side.NORTH, Side.EAST},
-            {"L", 6, 5, Side.EAST, Side.WEST},
-            {"L", 6, 6, Side.NORTH, Side.WEST},
-            {"L", 7, 3, Side.EAST, Side.SOUTH},
-            {"L", 7, 4, Side.NORTH, Side.WEST},
-            {"L", 7, 6, Side.NORTH, Side.EAST},
-            {"L", 7, 7, Side.WEST, Side.SOUTH},
-            {"L", 8, 3, Side.NORTH, Side.EAST},
-            {"L", 8, 4, Side.EAST, Side.WEST},
-            {"L", 8, 5, Side.EAST, Side.WEST},
-            {"L", 8, 6, Side.EAST, Side.WEST},
-            {"L", 8, 7, Side.NORTH, Side.WEST},
-            {"B", 3, 2, Side.EAST},
-            {"B", 3, 8, Side.WEST},
-            {"B", 9, 5, Side.NORTH},
-            {"P", 3, 5, Side.NORTH, Side.EAST, Side.SOUTH, Side.WEST},
-            {"P", 5, 3, Side.EAST, Side.SOUTH},
-            {"P", 5, 7, Side.SOUTH, Side.WEST},
-            {"P", 7, 5, Side.NORTH, Side.EAST, Side.SOUTH, Side.WEST}
+            {"P", 4, 4, Side.SOUTH,Side.EAST},
+
+            {"L", 4, 3, Side.SOUTH, Side.NORTH},
+            {"L", 5, 3, Side.NORTH, Side.EAST},
+            {"L", 6, 3, Side.SOUTH, Side.EAST},
+            {"L", 7, 3, Side.NORTH, Side.EAST},
+
+            {"L", 5, 4, Side.NORTH, Side.EAST,Side.WEST},
+            {"L", 6, 4, Side.EAST,Side.WEST},
+
+            {"L",  3, 5, Side.WEST, Side.SOUTH},
+            {"L",  4, 5, Side.WEST, Side.NORTH},
+            {"L",  5, 5, Side.WEST, Side.SOUTH},
+            {"L",  6, 5, Side.SOUTH,  Side.WEST,Side.NORTH},
+            {"L",  7, 5, Side.EAST,  Side.NORTH},
+
+            {"L",  4, 6, Side.SOUTH, Side.EAST},
+            {"L",  5, 6, Side.NORTH,  Side.SOUTH},
+            {"L",  6, 6, Side.SOUTH,Side.NORTH, Side.EAST},
+            {"L",  7, 6, Side.NORTH,  Side.WEST},
+
+            {"L",  3, 7, Side.WEST,  Side.SOUTH},
+            {"L",  4, 7, Side.NORTH, Side.WEST},
+            {"L",  6, 7, Side.NORTH,  Side.SOUTH,Side.WEST},
+
+
+            {"B", 3, 3, Side.SOUTH},
+            {"B", 3, 4, Side.EAST},
+            {"B", 7, 4, Side.WEST},
+            {"B", 3 , 6, Side.EAST},
+            {"B",  7, 7, Side.NORTH},
+            {"B",  5, 7, Side.SOUTH}
     };
 
     // Level 14: Complex grid with multiple power sources
     private static final Object[][] LEVEL_14_INTERMEDIATE = {
-            {"L", 2, 3, Side.EAST, Side.SOUTH},
-            {"L", 2, 4, Side.EAST, Side.WEST},
-            {"L", 2, 5, Side.EAST, Side.WEST},
-            {"L", 2, 6, Side.EAST, Side.WEST},
-            {"L", 2, 7, Side.WEST, Side.SOUTH},
-            {"L", 3, 3, Side.NORTH, Side.SOUTH},
-            {"L", 3, 7, Side.NORTH, Side.SOUTH},
-            {"L", 4, 3, Side.NORTH, Side.EAST},
-            {"L", 4, 4, Side.EAST, Side.WEST},
-            {"L", 4, 5, Side.EAST, Side.WEST},
-            {"L", 4, 6, Side.EAST, Side.WEST},
-            {"L", 4, 7, Side.NORTH, Side.WEST},
-            {"L", 5, 2, Side.EAST, Side.SOUTH},
-            {"L", 5, 3, Side.NORTH, Side.WEST},
-            {"L", 5, 7, Side.NORTH, Side.EAST},
-            {"L", 5, 8, Side.WEST, Side.SOUTH},
-            {"L", 6, 2, Side.NORTH, Side.EAST},
-            {"L", 6, 3, Side.EAST, Side.WEST},
-            {"L", 6, 4, Side.EAST, Side.WEST},
-            {"L", 6, 5, Side.EAST, Side.WEST},
-            {"L", 6, 6, Side.EAST, Side.WEST},
-            {"L", 6, 7, Side.EAST, Side.WEST},
-            {"L", 6, 8, Side.NORTH, Side.WEST},
-            {"L", 7, 4, Side.NORTH, Side.SOUTH},
-            {"L", 7, 5, Side.NORTH, Side.SOUTH},
-            {"L", 7, 6, Side.NORTH, Side.SOUTH},
-            {"L", 8, 4, Side.NORTH, Side.EAST},
-            {"L", 8, 5, Side.EAST, Side.WEST},
-            {"L", 8, 6, Side.NORTH, Side.WEST},
-            {"B", 1, 5, Side.SOUTH},
-            {"B", 3, 2, Side.EAST},
-            {"B", 3, 8, Side.WEST},
-            {"B", 9, 5, Side.NORTH},
-            {"P", 3, 5, Side.NORTH, Side.EAST, Side.SOUTH, Side.WEST},
-            {"P", 5, 4, Side.NORTH, Side.EAST, Side.SOUTH, Side.WEST},
-            {"P", 5, 5, Side.NORTH, Side.EAST, Side.SOUTH, Side.WEST},
-            {"P", 5, 6, Side.NORTH, Side.EAST, Side.SOUTH, Side.WEST},
-            {"P", 7, 3, Side.EAST, Side.SOUTH},
-            {"P", 7, 7, Side.SOUTH, Side.WEST}
+            {"P", 6, 4, Side.NORTH,Side.EAST},
+
+            {"L", 4, 3, Side.EAST, Side.NORTH},
+            {"L", 5, 3, Side.EAST, Side.SOUTH},
+            {"L", 6, 3, Side.SOUTH, Side.NORTH},
+            {"L", 7, 3, Side.NORTH, Side.EAST},
+
+            {"L", 4, 4, Side.SOUTH,Side.WEST},
+            {"L", 5, 4, Side.EAST,Side.SOUTH,Side.NORTH},
+            {"L", 7, 4, Side.NORTH,Side.WEST},
+
+            {"L",  3, 5, Side.WEST, Side.SOUTH,Side.EAST},
+            {"L",  4, 5, Side.EAST,Side.SOUTH, Side.NORTH},
+            {"L",  5, 5, Side.WEST, Side.NORTH},
+            {"L",  6, 5, Side.SOUTH,  Side.EAST,Side.WEST},
+
+            {"L",  3, 6, Side.WEST, Side.EAST},
+            {"L",  5, 6, Side.EAST,  Side.SOUTH},
+            {"L",  6, 6, Side.SOUTH,Side.NORTH, Side.WEST},
+
+            {"L",  4, 7, Side.WEST,  Side.SOUTH},
+            {"L",  5, 7, Side.NORTH, Side.WEST},
+            {"L",  6, 7, Side.NORTH, Side.WEST},
+            {"L",  7, 7, Side.NORTH, Side.WEST},
+
+
+            {"B", 3, 3, Side.SOUTH},
+            {"B", 3, 4, Side.EAST},
+            {"B", 7, 5, Side.NORTH},
+            {"B", 4 , 6, Side.WEST},
+            {"B",  7, 6, Side.NORTH},
+            {"B",  3, 7, Side.WEST}
     };
 
     // Level 15: Complex grid with multiple paths and bulbs
     private static final Object[][] LEVEL_15_INTERMEDIATE = {
-            {"L", 2, 2, Side.EAST, Side.SOUTH},
-            {"L", 2, 3, Side.EAST, Side.WEST},
-            {"L", 2, 4, Side.EAST, Side.WEST},
-            {"L", 2, 5, Side.EAST, Side.WEST},
-            {"L", 2, 6, Side.EAST, Side.WEST},
-            {"L", 2, 7, Side.EAST, Side.WEST},
-            {"L", 2, 8, Side.WEST, Side.SOUTH},
-            {"L", 3, 2, Side.NORTH, Side.SOUTH},
-            {"L", 3, 8, Side.NORTH, Side.SOUTH},
-            {"L", 4, 2, Side.NORTH, Side.EAST},
-            {"L", 4, 3, Side.EAST, Side.WEST},
-            {"L", 4, 4, Side.EAST, Side.WEST},
-            {"L", 4, 5, Side.EAST, Side.WEST},
-            {"L", 4, 6, Side.EAST, Side.WEST},
-            {"L", 4, 7, Side.EAST, Side.WEST},
-            {"L", 4, 8, Side.NORTH, Side.WEST},
-            {"L", 5, 3, Side.NORTH, Side.SOUTH},
-            {"L", 5, 7, Side.NORTH, Side.SOUTH},
-            {"L", 6, 3, Side.NORTH, Side.EAST},
-            {"L", 6, 4, Side.EAST, Side.WEST},
-            {"L", 6, 5, Side.EAST, Side.WEST},
-            {"L", 6, 6, Side.EAST, Side.WEST},
-            {"L", 6, 7, Side.NORTH, Side.WEST},
-            {"L", 7, 4, Side.NORTH, Side.SOUTH},
-            {"L", 7, 5, Side.NORTH, Side.SOUTH},
-            {"L", 7, 6, Side.NORTH, Side.SOUTH},
-            {"L", 8, 4, Side.NORTH, Side.EAST},
-            {"L", 8, 5, Side.EAST, Side.WEST},
-            {"L", 8, 6, Side.NORTH, Side.WEST},
-            {"B", 1, 5, Side.SOUTH},
-            {"B", 3, 1, Side.EAST},
-            {"B", 3, 9, Side.WEST},
-            {"B", 5, 2, Side.EAST},
-            {"B", 5, 8, Side.WEST},
-            {"B", 9, 5, Side.NORTH},
-            {"P", 3, 5, Side.NORTH, Side.EAST, Side.SOUTH, Side.WEST},
-            {"P", 5, 4, Side.NORTH, Side.EAST, Side.SOUTH, Side.WEST},
-            {"P", 5, 5, Side.NORTH, Side.EAST, Side.SOUTH, Side.WEST},
-            {"P", 5, 6, Side.NORTH, Side.EAST, Side.SOUTH, Side.WEST},
-            {"P", 7, 3, Side.EAST, Side.SOUTH},
-            {"P", 7, 7, Side.SOUTH, Side.WEST}
+            {"P", 5, 4, Side.NORTH,Side.SOUTH},
+
+            {"L", 3, 3, Side.SOUTH, Side.EAST},
+            {"L", 4, 3, Side.SOUTH, Side.NORTH},
+            {"L", 8, 3, Side.EAST, Side.NORTH},
+
+            {"L", 3, 4, Side.SOUTH,Side.WEST},
+            {"L", 4, 4, Side.EAST,Side.SOUTH,Side.NORTH},
+            {"L", 6, 4, Side.NORTH,Side.WEST,Side.SOUTH},
+            {"L", 7, 4, Side.NORTH,Side.SOUTH},
+            {"L", 8, 4, Side.NORTH,Side.WEST},
+
+            {"L",  4, 5, Side.SOUTH,Side.WEST},
+            {"L",  5, 5, Side.EAST, Side.NORTH},
+
+            {"L",  3, 6, Side.SOUTH, Side.WEST},
+            {"L",  4, 6, Side.NORTH,  Side.SOUTH},
+            {"L",  5, 6, Side.SOUTH,Side.NORTH, Side.WEST},
+            {"L",  6, 6, Side.SOUTH,Side.NORTH, Side.WEST},
+            {"L",  7, 6, Side.SOUTH,Side.NORTH, Side.WEST},
+            {"L",  8, 6, Side.EAST,Side.NORTH, Side.WEST},
+
+            {"L",  3, 7, Side.EAST,  Side.SOUTH},
+            {"L",  8, 7, Side.WEST, Side.EAST},
+
+            {"L",  3, 8, Side.SOUTH, Side.WEST},
+            {"L",  4, 8, Side.NORTH,  Side.SOUTH},
+            {"L",  5, 8, Side.SOUTH,Side.NORTH, Side.WEST},
+            {"L",  6, 8, Side.SOUTH,Side.NORTH, Side.WEST},
+            {"L",  7, 8, Side.SOUTH,Side.NORTH, Side.WEST},
+            {"L",  8, 8, Side.NORTH, Side.WEST},
+
+
+            {"B", 5, 3, Side.NORTH},
+            {"B", 6, 3, Side.EAST},
+            {"B", 7, 3, Side.SOUTH},
+            {"B", 3 , 5, Side.EAST},
+            {"B",  6, 5, Side.EAST},
+            {"B",  7, 5, Side.EAST},
+            {"B",  8, 5, Side.EAST},
+            {"B",  4, 7, Side.NORTH},
+            {"B",  5, 7, Side.EAST},
+            {"B",  6, 7, Side.EAST},
+            {"B",  7, 7, Side.EAST}
     };
 
     // Level 16: Complex grid with multiple paths and power sources
     private static final Object[][] LEVEL_16_INTERMEDIATE = {
-            {"L", 2, 2, Side.EAST, Side.SOUTH},
-            {"L", 2, 3, Side.EAST, Side.WEST},
-            {"L", 2, 4, Side.EAST, Side.WEST},
-            {"L", 2, 5, Side.EAST, Side.WEST},
-            {"L", 2, 6, Side.EAST, Side.WEST},
-            {"L", 2, 7, Side.EAST, Side.WEST},
-            {"L", 2, 8, Side.WEST, Side.SOUTH},
-            {"L", 3, 2, Side.NORTH, Side.SOUTH},
-            {"L", 3, 8, Side.NORTH, Side.SOUTH},
-            {"L", 4, 2, Side.NORTH, Side.EAST},
-            {"L", 4, 3, Side.EAST, Side.WEST},
-            {"L", 4, 4, Side.EAST, Side.WEST},
-            {"L", 4, 5, Side.EAST, Side.WEST},
-            {"L", 4, 6, Side.EAST, Side.WEST},
-            {"L", 4, 7, Side.EAST, Side.WEST},
-            {"L", 4, 8, Side.NORTH, Side.WEST},
-            {"L", 5, 3, Side.NORTH, Side.SOUTH},
-            {"L", 5, 7, Side.NORTH, Side.SOUTH},
-            {"L", 6, 2, Side.EAST, Side.SOUTH},
-            {"L", 6, 3, Side.NORTH, Side.WEST},
-            {"L", 6, 7, Side.NORTH, Side.EAST},
-            {"L", 6, 8, Side.WEST, Side.SOUTH},
-            {"L", 7, 2, Side.NORTH, Side.EAST},
-            {"L", 7, 3, Side.EAST, Side.WEST},
-            {"L", 7, 4, Side.EAST, Side.WEST},
-            {"L", 7, 5, Side.EAST, Side.WEST},
-            {"L", 7, 6, Side.EAST, Side.WEST},
-            {"L", 7, 5, Side.EAST, Side.WEST},
-            {"L", 7, 6, Side.EAST, Side.WEST},
-            {"L", 7, 7, Side.EAST, Side.WEST},
-            {"L", 7, 8, Side.NORTH, Side.WEST},
-            {"L", 8, 4, Side.NORTH, Side.SOUTH},
-            {"L", 8, 5, Side.NORTH, Side.SOUTH},
-            {"L", 8, 6, Side.NORTH, Side.SOUTH},
-            {"L", 9, 4, Side.NORTH, Side.EAST},
-            {"L", 9, 5, Side.EAST, Side.WEST},
-            {"L", 9, 6, Side.NORTH, Side.WEST},
-            {"B", 1, 5, Side.SOUTH},
-            {"B", 3, 1, Side.EAST},
-            {"B", 3, 9, Side.WEST},
-            {"B", 5, 2, Side.EAST},
-            {"B", 5, 8, Side.WEST},
-            {"B", 10, 5, Side.NORTH},
-            {"P", 3, 5, Side.NORTH, Side.EAST, Side.SOUTH, Side.WEST},
-            {"P", 5, 4, Side.NORTH, Side.EAST, Side.SOUTH, Side.WEST},
-            {"P", 5, 5, Side.NORTH, Side.EAST, Side.SOUTH, Side.WEST},
-            {"P", 5, 6, Side.NORTH, Side.EAST, Side.SOUTH, Side.WEST},
-            {"P", 7, 3, Side.EAST, Side.SOUTH},
-            {"P", 7, 7, Side.SOUTH, Side.WEST}
+            {"P", 4, 6, Side.NORTH},
+
+            {"L", 3, 3, Side.EAST, Side.SOUTH},
+            {"L", 4, 3, Side.NORTH, Side.SOUTH},
+            {"L", 5, 3, Side.SOUTH, Side.NORTH,Side.EAST},
+            {"L", 6, 3, Side.NORTH, Side.SOUTH},
+            {"L", 7, 3, Side.NORTH, Side.EAST},
+
+            {"L", 3, 4, Side.SOUTH,Side.WEST,Side.EAST},
+            {"L", 4, 4, Side.EAST,Side.NORTH},
+            {"L", 6, 4, Side.SOUTH,Side.EAST},
+            {"L", 7, 4, Side.NORTH,Side.EAST,Side.WEST},
+
+            {"L",  3, 5, Side.WEST,Side.EAST},
+            {"L",  4, 5, Side.WEST,Side.SOUTH},
+            {"L",  7, 5, Side.WEST, Side.EAST},
+
+
+            {"L",  3, 6, Side.WEST, Side.SOUTH},
+            {"L",  7, 6, Side.EAST,  Side.NORTH,Side.WEST},
+
+
+            {"L",  4, 7, Side.NORTH,  Side.SOUTH},
+            {"L",  5, 7, Side.NORTH, Side.WEST,Side.SOUTH},
+            {"L",  6, 7, Side.NORTH, Side.SOUTH},
+            {"L",  7, 7, Side.NORTH, Side.WEST},
+
+
+            {"B", 5, 4, Side.WEST},
+            {"B", 5, 5, Side.NORTH},
+            {"B", 6, 5, Side.WEST},
+            {"B", 5 , 6, Side.EAST},
+            {"B",  6, 6, Side.SOUTH},
+            {"B",  3, 7, Side.SOUTH}
     };
 
     // Level 17: Complex grid with multiple paths and bulbs
     private static final Object[][] LEVEL_17_INTERMEDIATE = {
-            {"L", 2, 2, Side.EAST, Side.SOUTH},
-            {"L", 2, 3, Side.EAST, Side.WEST},
-            {"L", 2, 4, Side.EAST, Side.WEST},
-            {"L", 2, 5, Side.EAST, Side.WEST},
-            {"L", 2, 6, Side.EAST, Side.WEST},
-            {"L", 2, 7, Side.EAST, Side.WEST},
-            {"L", 2, 8, Side.WEST, Side.SOUTH},
+            {"P", 2, 2, Side.SOUTH},
             {"L", 3, 2, Side.NORTH, Side.SOUTH},
-            {"L", 3, 8, Side.NORTH, Side.SOUTH},
-            {"L", 4, 2, Side.NORTH, Side.EAST},
-            {"L", 4, 3, Side.EAST, Side.WEST},
-            {"L", 4, 4, Side.EAST, Side.WEST},
-            {"L", 4, 5, Side.EAST, Side.WEST},
-            {"L", 4, 6, Side.EAST, Side.WEST},
-            {"L", 4, 7, Side.EAST, Side.WEST},
-            {"L", 4, 8, Side.NORTH, Side.WEST},
-            {"L", 5, 3, Side.NORTH, Side.SOUTH},
-            {"L", 5, 7, Side.NORTH, Side.SOUTH},
-            {"L", 6, 3, Side.NORTH, Side.EAST},
-            {"L", 6, 4, Side.EAST, Side.WEST},
-            {"L", 6, 5, Side.EAST, Side.WEST},
-            {"L", 6, 6, Side.EAST, Side.WEST},
-            {"L", 6, 7, Side.NORTH, Side.WEST},
-            {"L", 7, 2, Side.EAST, Side.SOUTH},
-            {"L", 7, 3, Side.NORTH, Side.WEST},
-            {"L", 7, 7, Side.NORTH, Side.EAST},
-            {"L", 7, 8, Side.WEST, Side.SOUTH},
-            {"L", 8, 2, Side.NORTH, Side.EAST},
-            {"L", 8, 3, Side.EAST, Side.WEST},
-            {"L", 8, 4, Side.EAST, Side.WEST},
-            {"L", 8, 5, Side.EAST, Side.WEST},
-            {"L", 8, 6, Side.EAST, Side.WEST},
-            {"L", 8, 7, Side.EAST, Side.WEST},
-            {"L", 8, 8, Side.NORTH, Side.WEST},
+            {"L", 4, 2, Side.NORTH, Side.EAST,Side.SOUTH},
+            {"L", 4, 3, Side.WEST, Side.SOUTH,Side.NORTH},
+            {"L", 5, 3, Side.NORTH, Side.EAST},
+            {"L", 5, 4, Side.WEST, Side.SOUTH},
+            {"L", 6, 4, Side.NORTH, Side.SOUTH},
+            {"L", 7, 4, Side.NORTH, Side.EAST, Side.SOUTH},
+            {"L", 8, 4, Side.NORTH, Side.EAST},
+            {"L", 8, 5, Side.WEST, Side.SOUTH},
             {"L", 9, 5, Side.NORTH, Side.SOUTH},
-            {"B", 1, 5, Side.SOUTH},
-            {"B", 3, 1, Side.EAST},
-            {"B", 3, 9, Side.WEST},
-            {"B", 5, 2, Side.EAST},
-            {"B", 5, 8, Side.WEST},
-            {"B", 7, 1, Side.EAST},
-            {"B", 7, 9, Side.WEST},
-            {"B", 10, 5, Side.NORTH},
-            {"P", 3, 5, Side.NORTH, Side.EAST, Side.SOUTH, Side.WEST},
-            {"P", 5, 4, Side.NORTH, Side.EAST, Side.SOUTH, Side.WEST},
-            {"P", 5, 5, Side.NORTH, Side.EAST, Side.SOUTH, Side.WEST},
-            {"P", 5, 6, Side.NORTH, Side.EAST, Side.SOUTH, Side.WEST},
-            {"P", 9, 4, Side.EAST, Side.SOUTH},
-            {"P", 9, 6, Side.SOUTH, Side.WEST}
+            {"L",10, 5, Side.WEST, Side.NORTH},
+            {"B", 3, 3, Side.SOUTH},
+            {"B", 5, 2, Side.NORTH},
+            {"B", 7, 5, Side.WEST},
+            {"B",10, 4, Side.EAST}
+
     };
 
     // Level 18: Complex grid with multiple paths and power sources
     private static final Object[][] LEVEL_18_INTERMEDIATE = {
-            {"L", 2, 2, Side.EAST, Side.SOUTH},
-            {"L", 2, 3, Side.EAST, Side.WEST},
-            {"L", 2, 4, Side.EAST, Side.WEST},
-            {"L", 2, 5, Side.EAST, Side.WEST},
-            {"L", 2, 6, Side.EAST, Side.WEST},
-            {"L", 2, 7, Side.EAST, Side.WEST},
-            {"L", 2, 8, Side.WEST, Side.SOUTH},
-            {"L", 3, 2, Side.NORTH, Side.SOUTH},
-            {"L", 3, 8, Side.NORTH, Side.SOUTH},
-            {"L", 4, 2, Side.NORTH, Side.EAST},
-            {"L", 4, 3, Side.EAST, Side.WEST},
-            {"L", 4, 4, Side.EAST, Side.WEST},
-            {"L", 4, 5, Side.EAST, Side.WEST},
-            {"L", 4, 6, Side.EAST, Side.WEST},
-            {"L", 4, 7, Side.EAST, Side.WEST},
-            {"L", 4, 8, Side.NORTH, Side.WEST},
-            {"L", 5, 2, Side.EAST, Side.SOUTH},
-            {"L", 5, 3, Side.NORTH, Side.WEST},
-            {"L", 5, 7, Side.NORTH, Side.EAST},
-            {"L", 5, 8, Side.WEST, Side.SOUTH},
-            {"L", 6, 2, Side.NORTH, Side.SOUTH},
-            {"L", 6, 8, Side.NORTH, Side.SOUTH},
-            {"L", 7, 2, Side.NORTH, Side.EAST},
-            {"L", 7, 3, Side.EAST, Side.WEST},
-            {"L", 7, 4, Side.EAST, Side.WEST},
-            {"L", 7, 5, Side.EAST, Side.WEST},
-            {"L", 7, 6, Side.EAST, Side.WEST},
-            {"L", 7, 7, Side.EAST, Side.WEST},
-            {"L", 7, 8, Side.NORTH, Side.WEST},
-            {"L", 8, 4, Side.NORTH, Side.SOUTH},
-            {"L", 8, 5, Side.NORTH, Side.SOUTH},
-            {"L", 8, 6, Side.NORTH, Side.SOUTH},
-            {"L", 9, 4, Side.NORTH, Side.EAST},
-            {"L", 9, 5, Side.EAST, Side.WEST},
-            {"L", 9, 6, Side.NORTH, Side.WEST},
-            {"B", 1, 5, Side.SOUTH},
-            {"B", 3, 1, Side.EAST},
-            {"B", 3, 9, Side.WEST},
-            {"B", 6, 1, Side.EAST},
-            {"B", 6, 9, Side.WEST},
-            {"B", 10, 5, Side.NORTH},
-            {"P", 3, 5, Side.NORTH, Side.EAST, Side.SOUTH, Side.WEST},
-            {"P", 5, 4, Side.NORTH, Side.EAST, Side.SOUTH, Side.WEST},
-            {"P", 5, 5, Side.NORTH, Side.EAST, Side.SOUTH, Side.WEST},
-            {"P", 5, 6, Side.NORTH, Side.EAST, Side.SOUTH, Side.WEST},
-            {"P", 8, 3, Side.EAST, Side.SOUTH},
-            {"P", 8, 7, Side.SOUTH, Side.WEST}
+            {"P", 6, 4, Side.NORTH,Side.EAST},
+
+            {"L", 4, 3, Side.EAST, Side.NORTH},
+            {"L", 5, 3, Side.EAST, Side.SOUTH},
+            {"L", 6, 3, Side.SOUTH, Side.NORTH},
+            {"L", 7, 3, Side.NORTH, Side.EAST},
+
+            {"L", 4, 4, Side.SOUTH,Side.WEST},
+            {"L", 5, 4, Side.EAST,Side.SOUTH,Side.NORTH},
+            {"L", 7, 4, Side.NORTH,Side.WEST},
+
+            {"L",  3, 5, Side.WEST, Side.SOUTH,Side.EAST},
+            {"L",  4, 5, Side.EAST,Side.SOUTH, Side.NORTH},
+            {"L",  5, 5, Side.WEST, Side.NORTH},
+            {"L",  6, 5, Side.SOUTH,  Side.EAST,Side.WEST},
+
+            {"L",  3, 6, Side.WEST, Side.EAST},
+            {"L",  5, 6, Side.EAST,  Side.SOUTH},
+            {"L",  6, 6, Side.SOUTH,Side.NORTH, Side.WEST},
+
+            {"L",  4, 7, Side.WEST,  Side.SOUTH},
+            {"L",  5, 7, Side.NORTH, Side.WEST},
+            {"L",  6, 7, Side.NORTH, Side.WEST},
+            {"L",  7, 7, Side.NORTH, Side.WEST},
+
+
+            {"B", 3, 3, Side.SOUTH},
+            {"B", 3, 4, Side.EAST},
+            {"B", 7, 5, Side.NORTH},
+            {"B", 4 , 6, Side.WEST},
+            {"B",  7, 6, Side.NORTH},
+            {"B",  3, 7, Side.WEST}
     };
 
     // Level 19: Complex grid with multiple paths and bulbs
     private static final Object[][] LEVEL_19_INTERMEDIATE = {
-            {"L", 2, 2, Side.EAST, Side.SOUTH},
-            {"L", 2, 3, Side.EAST, Side.WEST},
-            {"L", 2, 4, Side.EAST, Side.WEST},
-            {"L", 2, 5, Side.EAST, Side.WEST},
-            {"L", 2, 6, Side.EAST, Side.WEST},
-            {"L", 2, 7, Side.EAST, Side.WEST},
-            {"L", 2, 8, Side.WEST, Side.SOUTH},
-            {"L", 3, 2, Side.NORTH, Side.SOUTH},
-            {"L", 3, 8, Side.NORTH, Side.SOUTH},
-            {"L", 4, 2, Side.NORTH, Side.EAST},
-            {"L", 4, 3, Side.EAST, Side.WEST},
-            {"L", 4, 4, Side.EAST, Side.WEST},
-            {"L", 4, 5, Side.EAST, Side.WEST},
-            {"L", 4, 6, Side.EAST, Side.WEST},
-            {"L", 4, 7, Side.EAST, Side.WEST},
-            {"L", 4, 8, Side.NORTH, Side.WEST},
-            {"L", 5, 3, Side.NORTH, Side.SOUTH},
-            {"L", 5, 7, Side.NORTH, Side.SOUTH},
-            {"L", 6, 3, Side.NORTH, Side.EAST},
-            {"L", 6, 4, Side.EAST, Side.WEST},
-            {"L", 6, 5, Side.EAST, Side.WEST},
-            {"L", 6, 6, Side.EAST, Side.WEST},
-            {"L", 6, 7, Side.NORTH, Side.WEST},
-            {"L", 7, 2, Side.EAST, Side.SOUTH},
-            {"L", 7, 3, Side.NORTH, Side.WEST},
-            {"L", 7, 7, Side.NORTH, Side.EAST},
-            {"L", 7, 8, Side.WEST, Side.SOUTH},
-            {"L", 8, 2, Side.NORTH, Side.EAST},
-            {"L", 8, 3, Side.EAST, Side.WEST},
-            {"L", 8, 4, Side.EAST, Side.WEST},
-            {"L", 8, 5, Side.EAST, Side.WEST},
-            {"L", 8, 6, Side.EAST, Side.WEST},
-            {"L", 8, 7, Side.EAST, Side.WEST},
-            {"L", 8, 8, Side.NORTH, Side.WEST},
-            {"L", 9, 4, Side.NORTH, Side.SOUTH},
-            {"L", 9, 5, Side.NORTH, Side.SOUTH},
-            {"L", 9, 6, Side.NORTH, Side.SOUTH},
-            {"L", 10, 4, Side.NORTH, Side.EAST},
-            {"L", 10, 5, Side.EAST, Side.WEST},
-            {"L", 10, 6, Side.NORTH, Side.WEST},
-            {"B", 1, 5, Side.SOUTH},
-            {"B", 3, 1, Side.EAST},
-            {"B", 3, 9, Side.WEST},
-            {"B", 5, 2, Side.EAST},
-            {"B", 5, 8, Side.WEST},
-            {"B", 7, 1, Side.EAST},
-            {"B", 7, 9, Side.WEST},
-            {"B", 11, 5, Side.NORTH},
-            {"P", 3, 5, Side.NORTH, Side.EAST, Side.SOUTH, Side.WEST},
-            {"P", 5, 4, Side.NORTH, Side.EAST, Side.SOUTH, Side.WEST},
-            {"P", 5, 5, Side.NORTH, Side.EAST, Side.SOUTH, Side.WEST},
-            {"P", 5, 6, Side.NORTH, Side.EAST, Side.SOUTH, Side.WEST},
-            {"P", 9, 3, Side.EAST, Side.SOUTH},
-            {"P", 9, 7, Side.SOUTH, Side.WEST}
+            {"P", 4, 4, Side.SOUTH,Side.EAST},
+
+            {"L", 4, 3, Side.SOUTH, Side.NORTH},
+            {"L", 5, 3, Side.NORTH, Side.EAST},
+            {"L", 6, 3, Side.SOUTH, Side.EAST},
+            {"L", 7, 3, Side.NORTH, Side.EAST},
+
+            {"L", 5, 4, Side.NORTH, Side.EAST,Side.WEST},
+            {"L", 6, 4, Side.EAST,Side.WEST},
+
+            {"L",  3, 5, Side.WEST, Side.SOUTH},
+            {"L",  4, 5, Side.WEST, Side.NORTH},
+            {"L",  5, 5, Side.WEST, Side.SOUTH},
+            {"L",  6, 5, Side.SOUTH,  Side.WEST,Side.NORTH},
+            {"L",  7, 5, Side.EAST,  Side.NORTH},
+
+            {"L",  4, 6, Side.SOUTH, Side.EAST},
+            {"L",  5, 6, Side.NORTH,  Side.SOUTH},
+            {"L",  6, 6, Side.SOUTH,Side.NORTH, Side.EAST},
+            {"L",  7, 6, Side.NORTH,  Side.WEST},
+
+            {"L",  3, 7, Side.WEST,  Side.SOUTH},
+            {"L",  4, 7, Side.NORTH, Side.WEST},
+            {"L",  6, 7, Side.NORTH,  Side.SOUTH,Side.WEST},
+
+
+            {"B", 3, 3, Side.SOUTH},
+            {"B", 3, 4, Side.EAST},
+            {"B", 7, 4, Side.WEST},
+            {"B", 3 , 6, Side.EAST},
+            {"B",  7, 7, Side.NORTH},
+            {"B",  5, 7, Side.SOUTH}
     };
 
     // Level 20: Complex grid with multiple paths and power sources
     private static final Object[][] LEVEL_20_INTERMEDIATE = {
-            {"L", 2, 2, Side.EAST, Side.SOUTH},
-            {"L", 2, 3, Side.EAST, Side.WEST},
-            {"L", 2, 4, Side.EAST, Side.WEST},
-            {"L", 2, 5, Side.EAST, Side.WEST},
-            {"L", 2, 6, Side.EAST, Side.WEST},
-            {"L", 2, 7, Side.EAST, Side.WEST},
-            {"L", 2, 8, Side.WEST, Side.SOUTH},
-            {"L", 3, 2, Side.NORTH, Side.SOUTH},
-            {"L", 3, 8, Side.NORTH, Side.SOUTH},
-            {"L", 4, 2, Side.NORTH, Side.EAST},
-            {"L", 4, 3, Side.EAST, Side.WEST},
-            {"L", 4, 4, Side.EAST, Side.WEST},
-            {"L", 4, 5, Side.EAST, Side.WEST},
-            {"L", 4, 6, Side.EAST, Side.WEST},
-            {"L", 4, 7, Side.EAST, Side.WEST},
-            {"L", 4, 8, Side.NORTH, Side.WEST},
-            {"L", 5, 2, Side.EAST, Side.SOUTH},
-            {"L", 5, 3, Side.NORTH, Side.WEST},
-            {"L", 5, 7, Side.NORTH, Side.EAST},
-            {"L", 5, 8, Side.WEST, Side.SOUTH},
-            {"L", 6, 2, Side.NORTH, Side.SOUTH},
-            {"L", 6, 8, Side.NORTH, Side.SOUTH},
-            {"L", 7, 2, Side.NORTH, Side.EAST},
-            {"L", 7, 3, Side.EAST, Side.WEST},
-            {"L", 7, 4, Side.EAST, Side.WEST},
-            {"L", 7, 5, Side.EAST, Side.WEST},
-            {"L", 7, 6, Side.EAST, Side.WEST},
-            {"L", 7, 7, Side.EAST, Side.WEST},
-            {"L", 7, 8, Side.NORTH, Side.WEST},
-            {"L", 8, 3, Side.NORTH, Side.SOUTH},
-            {"L", 8, 7, Side.NORTH, Side.SOUTH},
-            {"L", 9, 3, Side.NORTH, Side.EAST},
-            {"L", 9, 4, Side.EAST, Side.WEST},
-            {"L", 9, 5, Side.EAST, Side.WEST},
-            {"L", 9, 6, Side.EAST, Side.WEST},
-            {"L", 9, 7, Side.NORTH, Side.WEST},
-            {"L", 10, 4, Side.NORTH, Side.SOUTH},
-            {"L", 10, 5, Side.NORTH, Side.SOUTH},
-            {"L", 10, 6, Side.NORTH, Side.SOUTH},
-            {"B", 1, 5, Side.SOUTH},
-            {"B", 3, 1, Side.EAST},
-            {"B", 3, 9, Side.WEST},
-            {"B", 6, 1, Side.EAST},
-            {"B", 6, 9, Side.WEST},
-            {"B", 8, 2, Side.EAST},
-            {"B", 8, 8, Side.WEST},
-            {"B", 11, 5, Side.NORTH},
-            {"P", 3, 5, Side.NORTH, Side.EAST, Side.SOUTH, Side.WEST},
-            {"P", 5, 4, Side.NORTH, Side.EAST, Side.SOUTH, Side.WEST},
-            {"P", 5, 5, Side.NORTH, Side.EAST, Side.SOUTH, Side.WEST},
-            {"P", 5, 6, Side.NORTH, Side.EAST, Side.SOUTH, Side.WEST},
-            {"P", 8, 4, Side.NORTH, Side.EAST, Side.SOUTH, Side.WEST},
-            {"P", 8, 5, Side.NORTH, Side.EAST, Side.SOUTH, Side.WEST},
-            {"P", 8, 6, Side.NORTH, Side.EAST, Side.SOUTH, Side.WEST}
+            {"P", 5, 4, Side.NORTH,Side.SOUTH},
+
+            {"L", 3, 3, Side.SOUTH, Side.EAST},
+            {"L", 4, 3, Side.SOUTH, Side.NORTH},
+            {"L", 8, 3, Side.EAST, Side.NORTH},
+
+            {"L", 3, 4, Side.SOUTH,Side.WEST},
+            {"L", 4, 4, Side.EAST,Side.SOUTH,Side.NORTH},
+            {"L", 6, 4, Side.NORTH,Side.WEST,Side.SOUTH},
+            {"L", 7, 4, Side.NORTH,Side.SOUTH},
+            {"L", 8, 4, Side.NORTH,Side.WEST},
+
+            {"L",  4, 5, Side.SOUTH,Side.WEST},
+            {"L",  5, 5, Side.EAST, Side.NORTH},
+
+            {"L",  3, 6, Side.SOUTH, Side.WEST},
+            {"L",  4, 6, Side.NORTH,  Side.SOUTH},
+            {"L",  5, 6, Side.SOUTH,Side.NORTH, Side.WEST},
+            {"L",  6, 6, Side.SOUTH,Side.NORTH, Side.WEST},
+            {"L",  7, 6, Side.SOUTH,Side.NORTH, Side.WEST},
+            {"L",  8, 6, Side.EAST,Side.NORTH, Side.WEST},
+
+            {"L",  3, 7, Side.EAST,  Side.SOUTH},
+            {"L",  8, 7, Side.WEST, Side.EAST},
+
+            {"L",  3, 8, Side.SOUTH, Side.WEST},
+            {"L",  4, 8, Side.NORTH,  Side.SOUTH},
+            {"L",  5, 8, Side.SOUTH,Side.NORTH, Side.WEST},
+            {"L",  6, 8, Side.SOUTH,Side.NORTH, Side.WEST},
+            {"L",  7, 8, Side.SOUTH,Side.NORTH, Side.WEST},
+            {"L",  8, 8, Side.NORTH, Side.WEST},
+
+
+            {"B", 5, 3, Side.NORTH},
+            {"B", 6, 3, Side.EAST},
+            {"B", 7, 3, Side.SOUTH},
+            {"B", 3 , 5, Side.EAST},
+            {"B",  6, 5, Side.EAST},
+            {"B",  7, 5, Side.EAST},
+            {"B",  8, 5, Side.EAST},
+            {"B",  4, 7, Side.NORTH},
+            {"B",  5, 7, Side.EAST},
+            {"B",  6, 7, Side.EAST},
+            {"B",  7, 7, Side.EAST}
     };
 
     // ==================== ADVANCED LEVELS (21-30) ====================
 
     // Level 21: Introduction to advanced difficulty
     private static final Object[][] LEVEL_21_ADVANCED = {
-            {"L", 2, 3, Side.EAST, Side.SOUTH},
-            {"L", 2, 4, Side.EAST, Side.WEST},
-            {"L", 2, 5, Side.EAST, Side.WEST},
-            {"L", 2, 6, Side.EAST, Side.WEST},
-            {"L", 2, 7, Side.WEST, Side.SOUTH},
-            {"L", 3, 3, Side.NORTH, Side.SOUTH},
-            {"L", 3, 7, Side.NORTH, Side.SOUTH},
-            {"L", 4, 3, Side.NORTH, Side.EAST},
-            {"L", 4, 4, Side.EAST, Side.WEST},
-            {"L", 4, 5, Side.EAST, Side.WEST},
-            {"L", 4, 6, Side.EAST, Side.WEST},
-            {"L", 4, 7, Side.NORTH, Side.WEST},
-            {"L", 5, 4, Side.NORTH, Side.SOUTH},
-            {"L", 5, 6, Side.NORTH, Side.SOUTH},
-            {"L", 6, 4, Side.NORTH, Side.EAST},
-            {"L", 6, 5, Side.EAST, Side.WEST},
-            {"L", 6, 6, Side.NORTH, Side.WEST},
-            {"L", 7, 3, Side.EAST, Side.SOUTH},
-            {"L", 7, 4, Side.NORTH, Side.WEST},
-            {"L", 7, 6, Side.NORTH, Side.EAST},
-            {"L", 7, 7, Side.WEST, Side.SOUTH},
-            {"L", 8, 3, Side.NORTH, Side.EAST},
-            {"L", 8, 4, Side.EAST, Side.WEST},
-            {"L", 8, 5, Side.EAST, Side.WEST},
-            {"L", 8, 6, Side.EAST, Side.WEST},
-            {"L", 8, 7, Side.NORTH, Side.WEST},
-            {"B", 1, 5, Side.SOUTH},
-            {"B", 3, 2, Side.EAST},
-            {"B", 3, 8, Side.WEST},
-            {"B", 5, 3, Side.EAST},
-            {"B", 5, 7, Side.WEST},
-            {"B", 9, 5, Side.NORTH},
-            {"P", 3, 5, Side.NORTH, Side.EAST, Side.SOUTH, Side.WEST},
-            {"P", 5, 5, Side.NORTH, Side.EAST, Side.SOUTH, Side.WEST},
-            {"P", 7, 5, Side.NORTH, Side.EAST, Side.SOUTH, Side.WEST}
+            {"P", 7, 7, Side.WEST,Side.SOUTH},
+
+            {"L", 4, 3, Side.SOUTH, Side.EAST},
+            {"L", 5, 3, Side.SOUTH, Side.NORTH,Side.EAST},
+            {"L", 6, 3, Side.SOUTH, Side.NORTH},
+            {"L", 7, 3, Side.EAST, Side.NORTH},
+
+            {"L", 3, 4, Side.SOUTH,Side.WEST,Side.EAST},
+            {"L", 4, 4, Side.WEST,Side.NORTH},
+            {"L", 5, 4, Side.WEST,Side.SOUTH},
+            {"L", 6, 4, Side.NORTH,Side.EAST},
+            {"L", 7, 4, Side.WEST,Side.SOUTH},
+            {"L", 8, 4, Side.NORTH,Side.WEST,Side.EAST},
+
+            {"L",  3, 5, Side.EAST,Side.WEST},
+            {"L",  5, 5, Side.SOUTH, Side.NORTH},
+            {"L",  6, 5, Side.WEST, Side.NORTH,Side.SOUTH},
+
+            {"L",  3, 6, Side.EAST, Side.WEST},
+            {"L",  4, 6, Side.EAST,  Side.SOUTH},
+            {"L",  5, 6, Side.NORTH, Side.EAST},
+            {"L",  6, 6, Side.SOUTH,Side.EAST},
+            {"L",  7, 6, Side.NORTH, Side.EAST},
+
+            {"L",  3, 7, Side.EAST,  Side.SOUTH,Side.WEST},
+            {"L",  4, 7, Side.WEST, Side.NORTH},
+            {"L",  5, 7, Side.EAST,  Side.WEST},
+            {"L",  6, 7, Side.WEST, Side.EAST},
+            {"L",  8, 7, Side.WEST, Side.EAST,Side.NORTH},
+
+            {"L",  3, 8, Side.SOUTH, Side.WEST},
+            {"L",  5, 8, Side.WEST,  Side.SOUTH},
+            {"L",  6, 8, Side.SOUTH,Side.NORTH, Side.WEST},
+
+            {"B", 3, 3, Side.EAST},
+            {"B", 8, 3, Side.EAST},
+
+            {"B", 4, 5, Side.SOUTH},
+            {"B", 7 , 5, Side.NORTH},
+            {"B",  8, 5, Side.WEST},
+
+            {"B",  8, 6, Side.EAST},
+
+            {"B",  4, 8, Side.NORTH},
+            {"B",  7, 8, Side.NORTH},
+            {"B",  8, 8, Side.WEST}
     };
 
     // Level 22: Complex grid with multiple paths
     private static final Object[][] LEVEL_22_ADVANCED = {
-            {"L", 2, 2, Side.EAST, Side.SOUTH},
-            {"L", 2, 3, Side.EAST, Side.WEST},
-            {"L", 2, 4, Side.EAST, Side.WEST},
-            {"L", 2, 5, Side.EAST, Side.WEST},
-            {"L", 2, 6, Side.EAST, Side.WEST},
-            {"L", 2, 7, Side.EAST, Side.WEST},
-            {"L", 2, 8, Side.WEST, Side.SOUTH},
-            {"L", 3, 2, Side.NORTH, Side.SOUTH},
-            {"L", 3, 8, Side.NORTH, Side.SOUTH},
-            {"L", 4, 2, Side.NORTH, Side.EAST},
-            {"L", 4, 3, Side.EAST, Side.WEST},
-            {"L", 4, 4, Side.EAST, Side.WEST},
-            {"L", 4, 5, Side.EAST, Side.WEST},
-            {"L", 4, 6, Side.EAST, Side.WEST},
-            {"L", 4, 7, Side.EAST, Side.WEST},
-            {"L", 4, 8, Side.NORTH, Side.WEST},
-            {"L", 5, 3, Side.NORTH, Side.SOUTH},
-            {"L", 5, 7, Side.NORTH, Side.SOUTH},
-            {"L", 6, 3, Side.NORTH, Side.EAST},
-            {"L", 6, 4, Side.EAST, Side.WEST},
-            {"L", 6, 5, Side.EAST, Side.WEST},
-            {"L", 6, 6, Side.EAST, Side.WEST},
-            {"L", 6, 7, Side.NORTH, Side.WEST},
-            {"L", 7, 2, Side.EAST, Side.SOUTH},
-            {"L", 7, 3, Side.NORTH, Side.WEST},
-            {"L", 7, 7, Side.NORTH, Side.EAST},
-            {"L", 7, 8, Side.WEST, Side.SOUTH},
-            {"L", 8, 2, Side.NORTH, Side.EAST},
-            {"L", 8, 3, Side.EAST, Side.WEST},
-            {"L", 8, 4, Side.EAST, Side.WEST},
-            {"L", 8, 5, Side.EAST, Side.WEST},
-            {"L", 8, 6, Side.EAST, Side.WEST},
-            {"L", 8, 7, Side.EAST, Side.WEST},
-            {"L", 8, 8, Side.NORTH, Side.WEST},
-            {"L", 9, 4, Side.NORTH, Side.SOUTH},
-            {"L", 9, 5, Side.NORTH, Side.SOUTH},
-            {"L", 9, 6, Side.NORTH, Side.SOUTH},
-            {"L", 10, 4, Side.NORTH, Side.EAST},
-            {"L", 10, 5, Side.EAST, Side.WEST},
-            {"L", 10, 6, Side.NORTH, Side.WEST},
-            {"B", 1, 5, Side.SOUTH},
-            {"B", 3, 1, Side.EAST},
-            {"B", 3, 9, Side.WEST},
-            {"B", 5, 2, Side.EAST},
-            {"B", 5, 8, Side.WEST},
-            {"B", 7, 1, Side.EAST},
-            {"B", 7, 9, Side.WEST},
-            {"B", 11, 5, Side.NORTH},
-            {"P", 3, 5, Side.NORTH, Side.EAST, Side.SOUTH, Side.WEST},
-            {"P", 5, 4, Side.NORTH, Side.EAST, Side.SOUTH, Side.WEST},
-            {"P", 5, 5, Side.NORTH, Side.EAST, Side.SOUTH, Side.WEST},
-            {"P", 5, 6, Side.NORTH, Side.EAST, Side.SOUTH, Side.WEST},
-            {"P", 9, 3, Side.EAST, Side.SOUTH},
-            {"P", 9, 7, Side.SOUTH, Side.WEST}
+            {"P", 5, 5, Side.EAST,Side.NORTH},
+
+            {"L", 3, 3, Side.SOUTH, Side.EAST},
+            {"L", 4, 3, Side.SOUTH, Side.NORTH},
+            {"L", 5, 3, Side.NORTH,Side.EAST},
+            {"L", 7, 3, Side.EAST, Side.NORTH},
+
+            {"L", 3, 4, Side.SOUTH,Side.WEST},
+            {"L", 5, 4, Side.WEST,Side.SOUTH},
+            {"L", 6, 4, Side.EAST,Side.NORTH},
+            {"L", 7, 4, Side.WEST,Side.EAST},
+            {"L", 8, 4, Side.WEST,Side.EAST},
+
+
+            {"L",  6, 5, Side.EAST,Side.WEST},
+            {"L",  7, 5, Side.EAST, Side.WEST},
+            {"L",  8, 5, Side.WEST, Side.EAST},
+
+            {"L",  3, 6, Side.EAST, Side.WEST,Side.SOUTH},
+            {"L",  5, 6, Side.WEST,  Side.SOUTH,Side.EAST},
+            {"L",  6, 6, Side.NORTH, Side.WEST},
+            {"L",  7, 6, Side.SOUTH,Side.EAST,Side.WEST},
+            {"L",  8, 6, Side.NORTH, Side.WEST},
+
+
+            {"L",  3, 7, Side.EAST,  Side.SOUTH,Side.WEST},
+            {"L",  4, 7, Side.SOUTH, Side.NORTH},
+            {"L",  5, 7, Side.NORTH,Side.SOUTH,  Side.WEST},
+            {"L",  6, 7, Side.SOUTH, Side.NORTH},
+            {"L",  7, 7, Side.WEST, Side.EAST,Side.NORTH},
+
+            {"L",  3, 8, Side.SOUTH, Side.WEST},
+            {"L",  5, 8, Side.WEST,  Side.SOUTH},
+            {"L",  7, 8, Side.SOUTH,Side.NORTH, Side.WEST},
+            {"L",  8, 8, Side.WEST,  Side.NORTH},
+
+
+
+            {"B", 6, 3, Side.SOUTH},
+            {"B", 8, 3, Side.EAST},
+
+            {"B", 4, 4, Side.NORTH},
+
+            {"B", 3, 5, Side.EAST},
+            {"B", 4 , 5, Side.SOUTH},
+
+            {"B",  4, 6, Side.NORTH},
+
+            {"B",  8, 7, Side.EAST},
+
+            {"B",  4, 8, Side.NORTH},
+            {"B",  6, 8, Side.SOUTH}
     };
 
     // Level 23: Complex grid with multiple power sources
     private static final Object[][] LEVEL_23_ADVANCED = {
-            {"L", 2, 2, Side.EAST, Side.SOUTH},
-            {"L", 2, 3, Side.EAST, Side.WEST},
-            {"L", 2, 4, Side.EAST, Side.WEST},
-            {"L", 2, 5, Side.EAST, Side.WEST},
-            {"L", 2, 6, Side.EAST, Side.WEST},
-            {"L", 2, 7, Side.EAST, Side.WEST},
-            {"L", 2, 8, Side.WEST, Side.SOUTH},
-            {"L", 3, 2, Side.NORTH, Side.SOUTH},
-            {"L", 3, 8, Side.NORTH, Side.SOUTH},
-            {"L", 4, 2, Side.NORTH, Side.EAST},
-            {"L", 4, 3, Side.EAST, Side.WEST},
-            {"L", 4, 4, Side.EAST, Side.WEST},
-            {"L", 4, 5, Side.EAST, Side.WEST},
-            {"L", 4, 6, Side.EAST, Side.WEST},
-            {"L", 4, 7, Side.EAST, Side.WEST},
-            {"L", 4, 8, Side.NORTH, Side.WEST},
-            {"L", 5, 2, Side.EAST, Side.SOUTH},
-            {"L", 5, 3, Side.NORTH, Side.WEST},
-            {"L", 5, 7, Side.NORTH, Side.EAST},
-            {"L", 5, 8, Side.WEST, Side.SOUTH},
-            {"L", 6, 2, Side.NORTH, Side.SOUTH},
-            {"L", 6, 8, Side.NORTH, Side.SOUTH},
-            {"L", 7, 2, Side.NORTH, Side.EAST},
-            {"L", 7, 3, Side.EAST, Side.WEST},
-            {"L", 7, 4, Side.EAST, Side.WEST},
-            {"L", 7, 5, Side.EAST, Side.WEST},
-            {"L", 7, 6, Side.EAST, Side.WEST},
-            {"L", 7, 7, Side.EAST, Side.WEST},
-            {"L", 7, 8, Side.NORTH, Side.WEST},
-            {"L", 8, 3, Side.NORTH, Side.SOUTH},
-            {"L", 8, 7, Side.NORTH, Side.SOUTH},
-            {"L", 9, 3, Side.NORTH, Side.EAST},
-            {"L", 9, 4, Side.EAST, Side.WEST},
-            {"L", 9, 5, Side.EAST, Side.WEST},
-            {"L", 9, 6, Side.EAST, Side.WEST},
-            {"L", 9, 7, Side.NORTH, Side.WEST},
-            {"L", 10, 4, Side.NORTH, Side.SOUTH},
-            {"L", 10, 5, Side.NORTH, Side.SOUTH},
-            {"L", 10, 6, Side.NORTH, Side.SOUTH},
-            {"L", 11, 4, Side.NORTH, Side.EAST},
-            {"L", 11, 5, Side.EAST, Side.WEST},
-            {"L", 11, 6, Side.NORTH, Side.WEST},
-            {"B", 1, 5, Side.SOUTH},
-            {"B", 3, 1, Side.EAST},
-            {"B", 3, 9, Side.WEST},
-            {"B", 6, 1, Side.EAST},
-            {"B", 6, 9, Side.WEST},
-            {"B", 8, 2, Side.EAST},
-            {"B", 8, 8, Side.WEST},
-            {"B", 12, 5, Side.NORTH},
-            {"P", 3, 5, Side.NORTH, Side.EAST, Side.SOUTH, Side.WEST},
-            {"P", 5, 4, Side.NORTH, Side.EAST, Side.SOUTH, Side.WEST},
-            {"P", 5, 5, Side.NORTH, Side.EAST, Side.SOUTH, Side.WEST},
-            {"P", 5, 6, Side.NORTH, Side.EAST, Side.SOUTH, Side.WEST},
-            {"P", 8, 4, Side.NORTH, Side.EAST, Side.SOUTH, Side.WEST},
-            {"P", 8, 5, Side.NORTH, Side.EAST, Side.SOUTH, Side.WEST},
-            {"P", 8, 6, Side.NORTH, Side.EAST, Side.SOUTH, Side.WEST}
+            {"P", 6, 5, Side.SOUTH,Side.NORTH},
+
+            {"L", 3, 3, Side.EAST, Side.SOUTH},
+            {"L", 4, 3, Side.NORTH, Side.EAST},
+            {"L", 5, 3, Side.EAST, Side.SOUTH},
+            {"L", 6, 3, Side.NORTH, Side.SOUTH},
+
+            {"L", 3, 4, Side.WEST, Side.EAST},
+            {"L", 4, 4, Side.WEST, Side.SOUTH},
+            {"L", 5, 4, Side.NORTH, Side.WEST},
+            {"L", 7, 4, Side.NORTH, Side.EAST},
+
+            {"L", 3, 5, Side.WEST, Side.SOUTH},
+            {"L", 4, 5, Side.NORTH, Side.EAST},
+            {"L",5, 5, Side.EAST, Side.SOUTH},
+            {"L",7, 5, Side.WEST, Side.NORTH,Side.EAST},
+
+            {"L", 4, 6, Side.WEST, Side.SOUTH,Side.EAST},
+            {"L", 5, 6, Side.WEST, Side.NORTH,Side.EAST},
+            {"L",6, 6, Side.EAST, Side.SOUTH},
+            {"L",7, 6, Side.WEST, Side.NORTH},
+
+            {"L", 3, 7, Side.WEST, Side.SOUTH},
+            {"L",4, 7, Side.WEST, Side.NORTH},
+            {"L",6, 7, Side.WEST, Side.SOUTH},
+
+            {"B", 7, 3, Side.NORTH},
+            {"B", 6, 4, Side.SOUTH},
+            {"B", 3, 6, Side.EAST},
+            {"B", 5, 7, Side.WEST},
+            {"B", 7, 7, Side.NORTH}
     };
 
     // Level 24: Complex grid with multiple paths and bulbs
     private static final Object[][] LEVEL_24_ADVANCED = {
-            {"L", 2, 2, Side.EAST, Side.SOUTH},
-            {"L", 2, 3, Side.EAST, Side.WEST},
-            {"L", 2, 4, Side.EAST, Side.WEST},
-            {"L", 2, 5, Side.EAST, Side.WEST},
-            {"L", 2, 6, Side.EAST, Side.WEST},
-            {"L", 2, 7, Side.EAST, Side.WEST},
-            {"L", 2, 8, Side.WEST, Side.SOUTH},
-            {"L", 3, 2, Side.NORTH, Side.SOUTH},
-            {"L", 3, 8, Side.NORTH, Side.SOUTH},
-            {"L", 4, 2, Side.NORTH, Side.EAST},
-            {"L", 4, 3, Side.EAST, Side.WEST},
-            {"L", 4, 4, Side.EAST, Side.WEST},
-            {"L", 4, 5, Side.EAST, Side.WEST},
-            {"L", 4, 6, Side.EAST, Side.WEST},
-            {"L", 4, 7, Side.EAST, Side.WEST},
-            {"L", 4, 8, Side.NORTH, Side.WEST},
-            {"L", 5, 3, Side.NORTH, Side.SOUTH},
-            {"L", 5, 7, Side.NORTH, Side.SOUTH},
-            {"L", 6, 3, Side.NORTH, Side.EAST},
-            {"L", 6, 4, Side.EAST, Side.WEST},
-            {"L", 6, 5, Side.EAST, Side.WEST},
-            {"L", 6, 6, Side.EAST, Side.WEST},
-            {"L", 6, 7, Side.NORTH, Side.WEST},
-            {"L", 7, 2, Side.EAST, Side.SOUTH},
-            {"L", 7, 3, Side.NORTH, Side.WEST},
-            {"L", 7, 7, Side.NORTH, Side.EAST},
-            {"L", 7, 8, Side.WEST, Side.SOUTH},
-            {"L", 8, 2, Side.NORTH, Side.EAST},
-            {"L", 8, 3, Side.EAST, Side.WEST},
-            {"L", 8, 4, Side.EAST, Side.WEST},
-            {"L", 8, 5, Side.EAST, Side.WEST},
-            {"L", 8, 6, Side.EAST, Side.WEST},
-            {"L", 8, 7, Side.EAST, Side.WEST},
-            {"L", 8, 8, Side.NORTH, Side.WEST},
-            {"L", 9, 3, Side.NORTH, Side.SOUTH},
-            {"L", 9, 7, Side.NORTH, Side.SOUTH},
-            {"L", 10, 3, Side.NORTH, Side.EAST},
-            {"L", 10, 4, Side.EAST, Side.WEST},
-            {"L", 10, 5, Side.EAST, Side.WEST},
-            {"L", 10, 6, Side.EAST, Side.WEST},
-            {"L", 10, 7, Side.NORTH, Side.WEST},
-            {"L", 11, 4, Side.NORTH, Side.SOUTH},
-            {"L", 11, 5, Side.NORTH, Side.SOUTH},
-            {"L", 11, 6, Side.NORTH, Side.SOUTH},
-            {"B", 1, 5, Side.SOUTH},
-            {"B", 3, 1, Side.EAST},
-            {"B", 3, 9, Side.WEST},
-            {"B", 5, 2, Side.EAST},
-            {"B", 5, 8, Side.WEST},
-            {"B", 7, 1, Side.EAST},
-            {"B", 7, 9, Side.WEST},
-            {"B", 9, 2, Side.EAST},
-            {"B", 9, 8, Side.WEST},
-            {"B", 12, 5, Side.NORTH},
-            {"P", 3, 5, Side.NORTH, Side.EAST, Side.SOUTH, Side.WEST},
-            {"P", 5, 4, Side.NORTH, Side.EAST, Side.SOUTH, Side.WEST},
-            {"P", 5, 5, Side.NORTH, Side.EAST, Side.SOUTH, Side.WEST},
-            {"P", 5, 6, Side.NORTH, Side.EAST, Side.SOUTH, Side.WEST},
-            {"P", 9, 4, Side.NORTH, Side.EAST, Side.SOUTH, Side.WEST},
-            {"P", 9, 5, Side.NORTH, Side.EAST, Side.SOUTH, Side.WEST},
-            {"P", 9, 6, Side.NORTH, Side.EAST, Side.SOUTH, Side.WEST}
+            {"P", 6, 8, Side.WEST,Side.SOUTH},
+
+            {"L", 3, 3, Side.SOUTH, Side.EAST},
+            {"L", 5, 3, Side.SOUTH, Side.EAST},
+            {"L", 6, 3, Side.NORTH,Side.EAST,Side.SOUTH},
+            {"L", 7, 3, Side.SOUTH, Side.NORTH},
+            {"L", 8, 3, Side.EAST, Side.NORTH},
+
+            {"L", 3, 4, Side.SOUTH,Side.WEST,Side.EAST},
+            {"L", 6, 4, Side.WEST,Side.SOUTH,Side.EAST},
+            {"L", 8, 4, Side.EAST,Side.WEST},
+
+            {"L",  3, 5, Side.EAST,Side.WEST},
+            {"L",  5, 5, Side.SOUTH, Side.NORTH},
+            {"L",  6, 5, Side.WEST, Side.EAST,Side.NORTH},
+            {"L",  8, 5, Side.WEST, Side.EAST},
+
+            {"L",  3, 6, Side.WEST,Side.SOUTH},
+            {"L",  4, 6, Side.SOUTH,Side.NORTH},
+            {"L",  5, 6, Side.NORTH, Side.EAST},
+            {"L",  6, 6, Side.SOUTH,Side.WEST},
+            {"L",  7, 6, Side.NORTH, Side.WEST,Side.EAST},
+            {"L",  8, 6, Side.WEST,Side.EAST},
+
+            {"L",  3, 7, Side.EAST, Side.SOUTH},
+            {"L",  5, 7, Side.SOUTH, Side.EAST,Side.WEST},
+            {"L",  6, 7, Side.NORTH,Side.SOUTH,  Side.EAST},
+            {"L",  7, 7, Side.WEST, Side.NORTH},
+            {"L",  8, 7, Side.WEST, Side.EAST},
+
+            {"L",  3, 8, Side.SOUTH, Side.WEST},
+            {"L",  4, 8, Side.NORTH,  Side.SOUTH},
+            {"L",  5, 8, Side.NORTH, Side.WEST},
+
+            {"B", 4, 3, Side.NORTH},
+
+            {"B", 4, 4, Side.NORTH},
+            {"B", 5, 4, Side.WEST},
+            {"B", 7, 4, Side.NORTH},
+
+            {"B", 4, 5, Side.SOUTH},
+            {"B", 7 , 5, Side.EAST},
+
+            {"B",  4, 7, Side.NORTH},
+
+            {"B",  7, 8, Side.NORTH},
+            {"B",  8, 8, Side.WEST}
+
     };
 
     // Level 25: Complex grid with multiple paths and power sources
     private static final Object[][] LEVEL_25_ADVANCED = {
-            {"L", 2, 2, Side.EAST, Side.SOUTH},
-            {"L", 2, 3, Side.EAST, Side.WEST},
-            {"L", 2, 4, Side.EAST, Side.WEST},
-            {"L", 2, 5, Side.EAST, Side.WEST},
-            {"L", 2, 6, Side.EAST, Side.WEST},
-            {"L", 2, 7, Side.EAST, Side.WEST},
-            {"L", 2, 8, Side.WEST, Side.SOUTH},
-            {"L", 3, 2, Side.NORTH, Side.SOUTH},
-            {"L", 3, 8, Side.NORTH, Side.SOUTH},
-            {"L", 4, 2, Side.NORTH, Side.EAST},
-            {"L", 4, 3, Side.EAST, Side.WEST},
-            {"L", 4, 4, Side.EAST, Side.WEST},
-            {"L", 4, 5, Side.EAST, Side.WEST},
-            {"L", 4, 6, Side.EAST, Side.WEST},
-            {"L", 4, 7, Side.EAST, Side.WEST},
-            {"L", 4, 8, Side.NORTH, Side.WEST},
-            {"L", 5, 2, Side.EAST, Side.SOUTH},
-            {"L", 5, 3, Side.NORTH, Side.WEST},
-            {"L", 5, 7, Side.NORTH, Side.EAST},
-            {"L", 5, 8, Side.WEST, Side.SOUTH},
-            {"L", 6, 2, Side.NORTH, Side.SOUTH},
-            {"L", 6, 8, Side.NORTH, Side.SOUTH},
-            {"L", 7, 2, Side.NORTH, Side.EAST},
-            {"L", 7, 3, Side.EAST, Side.WEST},
-            {"L", 7, 4, Side.EAST, Side.WEST},
-            {"L", 7, 5, Side.EAST, Side.WEST},
-            {"L", 7, 6, Side.EAST, Side.WEST},
-            {"L", 7, 7, Side.EAST, Side.WEST},
-            {"L", 7, 8, Side.NORTH, Side.WEST},
-            {"L", 8, 2, Side.EAST, Side.SOUTH},
-            {"L", 8, 3, Side.NORTH, Side.WEST},
-            {"L", 8, 7, Side.NORTH, Side.EAST},
-            {"L", 8, 8, Side.WEST, Side.SOUTH},
-            {"L", 9, 2, Side.NORTH, Side.SOUTH},
-            {"L", 9, 8, Side.NORTH, Side.SOUTH},
-            {"L", 10, 2, Side.NORTH, Side.EAST},
-            {"L", 10, 3, Side.EAST, Side.WEST},
-            {"L", 10, 4, Side.EAST, Side.WEST},
-            {"L", 10, 5, Side.EAST, Side.WEST},
-            {"L", 10, 6, Side.EAST, Side.WEST},
-            {"L", 10, 7, Side.EAST, Side.WEST},
-            {"L", 10, 8, Side.NORTH, Side.WEST},
-            {"L", 11, 4, Side.NORTH, Side.SOUTH},
-            {"L", 11, 5, Side.NORTH, Side.SOUTH},
-            {"L", 11, 6, Side.NORTH, Side.SOUTH},
-            {"L", 12, 4, Side.NORTH, Side.EAST},
-            {"L", 12, 5, Side.EAST, Side.WEST},
-            {"L", 12, 6, Side.NORTH, Side.WEST},
-            {"B", 1, 5, Side.SOUTH},
-            {"B", 3, 1, Side.EAST},
-            {"B", 3, 9, Side.WEST},
-            {"B", 6, 1, Side.EAST},
-            {"B", 6, 9, Side.WEST},
-            {"B", 9, 1, Side.EAST},
-            {"B", 9, 9, Side.WEST},
-            {"B", 13, 5, Side.NORTH},
-            {"P", 3, 5, Side.NORTH, Side.EAST, Side.SOUTH, Side.WEST},
-            {"P", 5, 4, Side.NORTH, Side.EAST, Side.SOUTH, Side.WEST},
-            {"P", 5, 5, Side.NORTH, Side.EAST, Side.SOUTH, Side.WEST},
-            {"P", 5, 6, Side.NORTH, Side.EAST, Side.SOUTH, Side.WEST},
-            {"P", 8, 4, Side.NORTH, Side.EAST, Side.SOUTH, Side.WEST},
-            {"P", 8, 5, Side.NORTH, Side.EAST, Side.SOUTH, Side.WEST},
-            {"P", 8, 6, Side.NORTH, Side.EAST, Side.SOUTH, Side.WEST},
-            {"P", 11, 3, Side.EAST, Side.SOUTH},
-            {"P", 11, 7, Side.SOUTH, Side.WEST}
+            {"P", 7, 7, Side.WEST,Side.NORTH,Side.EAST},
+
+            {"L", 3, 3, Side.SOUTH, Side.EAST},
+            {"L", 5, 3, Side.SOUTH, Side.EAST},
+            {"L", 6, 3, Side.NORTH,Side.SOUTH},
+            {"L", 7, 3, Side.EAST, Side.NORTH},
+
+            {"L", 3, 4, Side.SOUTH,Side.WEST,Side.EAST},
+            {"L", 5, 4, Side.WEST,Side.EAST},
+            {"L", 7, 4, Side.WEST,Side.SOUTH},
+            {"L", 8, 4, Side.NORTH,Side.WEST,Side.EAST},
+
+            {"L",  3, 5, Side.EAST,Side.WEST},
+            {"L",  5, 5, Side.SOUTH, Side.WEST},
+            {"L",  6, 5, Side.WEST, Side.EAST,Side.NORTH},
+            {"L",  8, 5, Side.WEST, Side.EAST},
+
+            {"L",  3, 6, Side.WEST,Side.EAST},
+            {"L",  4, 6, Side.WEST,Side.EAST},
+            {"L",  6, 6, Side.NORTH, Side.EAST,Side.WEST},
+            {"L",  7, 6, Side.EAST,Side.WEST},
+            {"L",  8, 6, Side.WEST,Side.EAST},
+
+            {"L",  3, 7, Side.EAST, Side.SOUTH,Side.WEST},
+            {"L",  4, 7, Side.SOUTH, Side.NORTH,Side.WEST},
+            {"L",  5, 7, Side.NORTH,Side.SOUTH},
+            {"L",  6, 7, Side.WEST, Side.NORTH,Side.SOUTH},
+
+            {"L",  3, 8, Side.SOUTH, Side.WEST},
+            {"L",  6, 8, Side.NORTH,  Side.SOUTH},
+            {"L",  7, 8, Side.NORTH, Side.WEST,Side.SOUTH},
+
+            {"B", 4, 3, Side.NORTH},
+            {"B", 8, 3, Side.EAST},
+
+            {"B", 4, 4, Side.NORTH},
+            {"B", 6, 4, Side.EAST},
+
+            {"B", 4, 5, Side.EAST},
+            {"B", 7 , 5, Side.EAST},
+
+            {"B",  5, 6, Side.SOUTH},
+
+            {"B",  8, 7, Side.WEST},
+
+            {"B",  4, 8, Side.NORTH},
+            {"B",  5, 8, Side.SOUTH},
+            {"B",  8, 8, Side.NORTH}
     };
 
     // Level 26: Complex grid with multiple paths and bulbs
     private static final Object[][] LEVEL_26_ADVANCED = {
-            {"L", 2, 2, Side.EAST, Side.SOUTH},
-            {"L", 2, 3, Side.EAST, Side.WEST},
-            {"L", 2, 4, Side.EAST, Side.WEST},
-            {"L", 2, 5, Side.EAST, Side.WEST},
-            {"L", 2, 6, Side.EAST, Side.WEST},
-            {"L", 2, 7, Side.EAST, Side.WEST},
-            {"L", 2, 8, Side.WEST, Side.SOUTH},
-            {"L", 3, 2, Side.NORTH, Side.SOUTH},
-            {"L", 3, 8, Side.NORTH, Side.SOUTH},
-            {"L", 4, 2, Side.NORTH, Side.EAST},
-            {"L", 4, 3, Side.EAST, Side.WEST},
-            {"L", 4, 4, Side.EAST, Side.WEST},
-            {"L", 4, 5, Side.EAST, Side.WEST},
-            {"L", 4, 6, Side.EAST, Side.WEST},
-            {"L", 4, 7, Side.EAST, Side.WEST},
-            {"L", 4, 8, Side.NORTH, Side.WEST},
-            {"L", 5, 3, Side.NORTH, Side.SOUTH},
-            {"L", 5, 7, Side.NORTH, Side.SOUTH},
-            {"L", 6, 3, Side.NORTH, Side.EAST},
-            {"L", 6, 4, Side.EAST, Side.WEST},
-            {"L", 6, 5, Side.EAST, Side.WEST},
-            {"L", 6, 6, Side.EAST, Side.WEST},
-            {"L", 6, 7, Side.NORTH, Side.WEST},
-            {"L", 7, 2, Side.EAST, Side.SOUTH},
-            {"L", 7, 3, Side.NORTH, Side.WEST},
-            {"L", 7, 7, Side.NORTH, Side.EAST},
-            {"L", 7, 8, Side.WEST, Side.SOUTH},
-            {"L", 8, 2, Side.NORTH, Side.EAST},
-            {"L", 8, 3, Side.EAST, Side.WEST},
-            {"L", 8, 4, Side.EAST, Side.WEST},
-            {"L", 8, 5, Side.EAST, Side.WEST},
-            {"L", 8, 6, Side.EAST, Side.WEST},
-            {"L", 8, 7, Side.EAST, Side.WEST},
-            {"L", 8, 8, Side.NORTH, Side.WEST},
-            {"L", 9, 3, Side.NORTH, Side.SOUTH},
-            {"L", 9, 7, Side.NORTH, Side.SOUTH},
-            {"L", 10, 3, Side.NORTH, Side.EAST},
-            {"L", 10, 4, Side.EAST, Side.WEST},
-            {"L", 10, 5, Side.EAST, Side.WEST},
-            {"L", 10, 6, Side.EAST, Side.WEST},
-            {"L", 10, 7, Side.NORTH, Side.WEST},
-            {"L", 11, 2, Side.EAST, Side.SOUTH},
-            {"L", 11, 3, Side.NORTH, Side.WEST},
-            {"L", 11, 7, Side.NORTH, Side.EAST},
-            {"L", 11, 8, Side.WEST, Side.SOUTH},
-            {"L", 12, 2, Side.NORTH, Side.EAST},
-            {"L", 12, 3, Side.EAST, Side.WEST},
-            {"L", 12, 4, Side.EAST, Side.WEST},
-            {"L", 12, 5, Side.EAST, Side.WEST},
-            {"L", 12, 6, Side.EAST, Side.WEST},
-            {"L", 12, 7, Side.EAST, Side.WEST},
-            {"L", 12, 8, Side.NORTH, Side.WEST},
-            {"B", 1, 5, Side.SOUTH},
-            {"B", 3, 1, Side.EAST},
-            {"B", 3, 9, Side.WEST},
-            {"B", 5, 2, Side.EAST},
-            {"B", 5, 8, Side.WEST},
-            {"B", 7, 1, Side.EAST},
-            {"B", 7, 9, Side.WEST},
-            {"B", 9, 2, Side.EAST},
-            {"B", 9, 8, Side.WEST},
-            {"B", 11, 1, Side.EAST},
-            {"B", 11, 9, Side.WEST},
-            {"B", 13, 5, Side.NORTH},
-            {"P", 3, 5, Side.NORTH, Side.EAST, Side.SOUTH, Side.WEST},
-            {"P", 5, 4, Side.NORTH, Side.EAST, Side.SOUTH, Side.WEST},
-            {"P", 5, 5, Side.NORTH, Side.EAST, Side.SOUTH, Side.WEST},
-            {"P", 5, 6, Side.NORTH, Side.EAST, Side.SOUTH, Side.WEST},
-            {"P", 9, 4, Side.NORTH, Side.EAST, Side.SOUTH, Side.WEST},
-            {"P", 9, 5, Side.NORTH, Side.EAST, Side.SOUTH, Side.WEST},
-            {"P", 9, 6, Side.NORTH, Side.EAST, Side.SOUTH, Side.WEST}
+            {"P", 5, 5, Side.EAST,Side.NORTH},
+
+            {"L", 3, 3, Side.SOUTH, Side.EAST},
+            {"L", 4, 3, Side.SOUTH, Side.NORTH},
+            {"L", 5, 3, Side.NORTH,Side.EAST},
+            {"L", 7, 3, Side.EAST, Side.NORTH},
+
+            {"L", 3, 4, Side.SOUTH,Side.WEST},
+            {"L", 5, 4, Side.WEST,Side.SOUTH},
+            {"L", 6, 4, Side.EAST,Side.NORTH},
+            {"L", 7, 4, Side.WEST,Side.EAST},
+            {"L", 8, 4, Side.WEST,Side.EAST},
+
+            {"L",  6, 5, Side.EAST,Side.WEST},
+            {"L",  7, 5, Side.EAST, Side.WEST},
+            {"L",  8, 5, Side.WEST, Side.EAST},
+
+            {"L",  3, 6, Side.EAST, Side.WEST,Side.SOUTH},
+            {"L",  5, 6, Side.WEST,  Side.SOUTH,Side.EAST},
+            {"L",  6, 6, Side.NORTH, Side.WEST},
+            {"L",  7, 6, Side.SOUTH,Side.EAST,Side.WEST},
+            {"L",  8, 6, Side.NORTH, Side.WEST},
+
+            {"L",  3, 7, Side.EAST,  Side.SOUTH,Side.WEST},
+            {"L",  4, 7, Side.SOUTH, Side.NORTH},
+            {"L",  5, 7, Side.NORTH,Side.SOUTH,  Side.WEST},
+            {"L",  6, 7, Side.SOUTH, Side.NORTH},
+            {"L",  7, 7, Side.WEST, Side.EAST,Side.NORTH},
+
+            {"L",  3, 8, Side.SOUTH, Side.WEST},
+            {"L",  5, 8, Side.WEST,  Side.SOUTH},
+            {"L",  7, 8, Side.SOUTH,Side.NORTH, Side.WEST},
+            {"L",  8, 8, Side.WEST,  Side.NORTH},
+
+            {"B", 6, 3, Side.SOUTH},
+            {"B", 8, 3, Side.EAST},
+
+            {"B", 4, 4, Side.NORTH},
+
+            {"B", 3, 5, Side.EAST},
+            {"B", 4 , 5, Side.SOUTH},
+
+            {"B",  4, 6, Side.NORTH},
+
+            {"B",  8, 7, Side.EAST},
+
+            {"B",  4, 8, Side.NORTH},
+            {"B",  6, 8, Side.SOUTH}
     };
 
     // Level 27: Complex grid with multiple paths and power sources
     private static final Object[][] LEVEL_27_ADVANCED = {
-            {"L", 2, 2, Side.EAST, Side.SOUTH},
-            {"L", 2, 3, Side.EAST, Side.WEST},
-            {"L", 2, 4, Side.EAST, Side.WEST},
-            {"L", 2, 5, Side.EAST, Side.WEST},
-            {"L", 2, 6, Side.EAST, Side.WEST},
-            {"L", 2, 7, Side.EAST, Side.WEST},
-            {"L", 2, 8, Side.WEST, Side.SOUTH},
-            {"L", 3, 2, Side.NORTH, Side.SOUTH},
-            {"L", 3, 8, Side.NORTH, Side.SOUTH},
-            {"L", 4, 2, Side.NORTH, Side.EAST},
-            {"L", 4, 3, Side.EAST, Side.WEST},
-            {"L", 4, 4, Side.EAST, Side.WEST},
-            {"L", 4, 5, Side.EAST, Side.WEST},
-            {"L", 4, 6, Side.EAST, Side.WEST},
-            {"L", 4, 7, Side.EAST, Side.WEST},
-            {"L", 4, 8, Side.NORTH, Side.WEST},
-            {"L", 5, 2, Side.EAST, Side.SOUTH},
-            {"L", 5, 3, Side.NORTH, Side.WEST},
-            {"L", 5, 7, Side.NORTH, Side.EAST},
-            {"L", 5, 8, Side.WEST, Side.SOUTH},
-            {"L", 6, 2, Side.NORTH, Side.SOUTH},
-            {"L", 6, 8, Side.NORTH, Side.SOUTH},
-            {"L", 7, 2, Side.NORTH, Side.EAST},
-            {"L", 7, 3, Side.EAST, Side.WEST},
-            {"L", 7, 4, Side.EAST, Side.WEST},
-            {"L", 7, 5, Side.EAST, Side.WEST},
-            {"L", 7, 6, Side.EAST, Side.WEST},
-            {"L", 7, 7, Side.EAST, Side.WEST},
-            {"L", 7, 8, Side.NORTH, Side.WEST},
-            {"L", 8, 2, Side.EAST, Side.SOUTH},
-            {"L", 8, 3, Side.NORTH, Side.WEST},
-            {"L", 8, 7, Side.NORTH, Side.EAST},
-            {"L", 8, 8, Side.WEST, Side.SOUTH},
-            {"L", 9, 2, Side.NORTH, Side.SOUTH},
-            {"L", 9, 8, Side.NORTH, Side.SOUTH},
-            {"L", 10, 2, Side.NORTH, Side.EAST},
-            {"L", 10, 3, Side.EAST, Side.WEST},
-            {"L", 10, 4, Side.EAST, Side.WEST},
-            {"L", 10, 5, Side.EAST, Side.WEST},
-            {"L", 10, 6, Side.EAST, Side.WEST},
-            {"L", 10, 7, Side.EAST, Side.WEST},
-            {"L", 10, 8, Side.NORTH, Side.WEST},
-            {"L", 11, 4, Side.NORTH, Side.SOUTH},
-            {"L", 11, 5, Side.NORTH, Side.SOUTH},
-            {"L", 11, 6, Side.NORTH, Side.SOUTH},
-            {"L", 12, 4, Side.NORTH, Side.EAST},
-            {"L", 12, 5, Side.EAST, Side.WEST},
-            {"L", 12, 6, Side.NORTH, Side.WEST},
-            {"B", 1, 5, Side.SOUTH},
-            {"B", 3, 1, Side.EAST},
-            {"B", 3, 9, Side.WEST},
-            {"B", 6, 1, Side.EAST},
-            {"B", 6, 9, Side.WEST},
-            {"B", 9, 1, Side.EAST},
-            {"B", 9, 9, Side.WEST},
-            {"B", 13, 5, Side.NORTH},
-            {"P", 3, 5, Side.NORTH, Side.EAST, Side.SOUTH, Side.WEST},
-            {"P", 5, 4, Side.NORTH, Side.EAST, Side.SOUTH, Side.WEST},
-            {"P", 5, 5, Side.NORTH, Side.EAST, Side.SOUTH, Side.WEST},
-            {"P", 5, 6, Side.NORTH, Side.EAST, Side.SOUTH, Side.WEST},
-            {"P", 8, 4, Side.NORTH, Side.EAST, Side.SOUTH, Side.WEST},
-            {"P", 8, 5, Side.NORTH, Side.EAST, Side.SOUTH, Side.WEST},
-            {"P", 8, 6, Side.NORTH, Side.EAST, Side.SOUTH, Side.WEST},
-            {"P", 11, 3, Side.EAST, Side.SOUTH},
-            {"P", 11, 7, Side.SOUTH, Side.WEST}
+            {"P", 6, 5, Side.SOUTH,Side.NORTH},
+
+            {"L", 3, 3, Side.EAST, Side.SOUTH},
+            {"L", 4, 3, Side.NORTH, Side.EAST},
+            {"L", 5, 3, Side.EAST, Side.SOUTH},
+            {"L", 6, 3, Side.NORTH, Side.SOUTH},
+
+            {"L", 3, 4, Side.WEST, Side.EAST},
+            {"L", 4, 4, Side.WEST, Side.SOUTH},
+            {"L", 5, 4, Side.NORTH, Side.WEST},
+            {"L", 7, 4, Side.NORTH, Side.EAST},
+
+            {"L", 3, 5, Side.WEST, Side.SOUTH},
+            {"L", 4, 5, Side.NORTH, Side.EAST},
+            {"L",5, 5, Side.EAST, Side.SOUTH},
+            {"L",7, 5, Side.WEST, Side.NORTH,Side.EAST},
+
+            {"L", 4, 6, Side.WEST, Side.SOUTH,Side.EAST},
+            {"L", 5, 6, Side.WEST, Side.NORTH,Side.EAST},
+            {"L",6, 6, Side.EAST, Side.SOUTH},
+            {"L",7, 6, Side.WEST, Side.NORTH},
+
+            {"L", 3, 7, Side.WEST, Side.SOUTH},
+            {"L",4, 7, Side.WEST, Side.NORTH},
+            {"L",6, 7, Side.WEST, Side.SOUTH},
+
+            {"B", 7, 3, Side.NORTH},
+            {"B", 6, 4, Side.SOUTH},
+            {"B", 3, 6, Side.EAST},
+            {"B", 5, 7, Side.WEST},
+            {"B", 7, 7, Side.NORTH}
     };
 
     // Level 28: Complex grid with multiple paths and bulbs
     private static final Object[][] LEVEL_28_ADVANCED = {
-            {"L", 2, 2, Side.EAST, Side.SOUTH},
-            {"L", 2, 3, Side.EAST, Side.WEST},
-            {"L", 2, 4, Side.EAST, Side.WEST},
-            {"L", 2, 5, Side.EAST, Side.WEST},
-            {"L", 2, 6, Side.EAST, Side.WEST},
-            {"L", 2, 7, Side.EAST, Side.WEST},
-            {"L", 2, 8, Side.WEST, Side.SOUTH},
-            {"L", 3, 2, Side.NORTH, Side.SOUTH},
-            {"L", 3, 8, Side.NORTH, Side.SOUTH},
-            {"L", 4, 2, Side.NORTH, Side.EAST},
-            {"L", 4, 3, Side.EAST, Side.WEST},
-            {"L", 4, 4, Side.EAST, Side.WEST},
-            {"L", 4, 5, Side.EAST, Side.WEST},
-            {"L", 4, 6, Side.EAST, Side.WEST},
-            {"L", 4, 7, Side.EAST, Side.WEST},
-            {"L", 4, 8, Side.NORTH, Side.WEST},
-            {"L", 5, 3, Side.NORTH, Side.SOUTH},
-            {"L", 5, 7, Side.NORTH, Side.SOUTH},
-            {"L", 6, 3, Side.NORTH, Side.EAST},
-            {"L", 6, 4, Side.EAST, Side.WEST},
-            {"L", 6, 5, Side.EAST, Side.WEST},
-            {"L", 6, 6, Side.EAST, Side.WEST},
-            {"L", 6, 7, Side.NORTH, Side.WEST},
-            {"L", 7, 2, Side.EAST, Side.SOUTH},
-            {"L", 7, 3, Side.NORTH, Side.WEST},
-            {"L", 7, 7, Side.NORTH, Side.EAST},
-            {"L", 7, 8, Side.WEST, Side.SOUTH},
-            {"L", 8, 2, Side.NORTH, Side.EAST},
-            {"L", 8, 3, Side.EAST, Side.WEST},
-            {"L", 8, 4, Side.EAST, Side.WEST},
-            {"L", 8, 5, Side.EAST, Side.WEST},
-            {"L", 8, 6, Side.EAST, Side.WEST},
-            {"L", 8, 7, Side.EAST, Side.WEST},
-            {"L", 8, 8, Side.NORTH, Side.WEST},
-            {"L", 9, 3, Side.NORTH, Side.SOUTH},
-            {"L", 9, 7, Side.NORTH, Side.SOUTH},
-            {"L", 10, 3, Side.NORTH, Side.EAST},
-            {"L", 10, 4, Side.EAST, Side.WEST},
-            {"L", 10, 5, Side.EAST, Side.WEST},
-            {"L", 10, 6, Side.EAST, Side.WEST},
-            {"L", 10, 7, Side.NORTH, Side.WEST},
-            {"L", 11, 2, Side.EAST, Side.SOUTH},
-            {"L", 11, 3, Side.NORTH, Side.WEST},
-            {"L", 11, 7, Side.NORTH, Side.EAST},
-            {"L", 11, 8, Side.WEST, Side.SOUTH},
-            {"L", 12, 2, Side.NORTH, Side.EAST},
-            {"L", 12, 3, Side.EAST, Side.WEST},
-            {"L", 12, 4, Side.EAST, Side.WEST},
-            {"L", 12, 5, Side.EAST, Side.WEST},
-            {"L", 12, 6, Side.EAST, Side.WEST},
-            {"L", 12, 7, Side.EAST, Side.WEST},
-            {"L", 12, 8, Side.NORTH, Side.WEST},
-            {"B", 1, 5, Side.SOUTH},
-            {"B", 3, 1, Side.EAST},
-            {"B", 3, 9, Side.WEST},
-            {"B", 5, 2, Side.EAST},
-            {"B", 5, 8, Side.WEST},
-            {"B", 7, 1, Side.EAST},
-            {"B", 7, 9, Side.WEST},
-            {"B", 9, 2, Side.EAST},
-            {"B", 9, 8, Side.WEST},
-            {"B", 11, 1, Side.EAST},
-            {"B", 11, 9, Side.WEST},
-            {"B", 13, 5, Side.NORTH},
-            {"P", 3, 5, Side.NORTH, Side.EAST, Side.SOUTH, Side.WEST},
-            {"P", 5, 4, Side.NORTH, Side.EAST, Side.SOUTH, Side.WEST},
-            {"P", 5, 5, Side.NORTH, Side.EAST, Side.SOUTH, Side.WEST},
-            {"P", 5, 6, Side.NORTH, Side.EAST, Side.SOUTH, Side.WEST},
-            {"P", 9, 4, Side.NORTH, Side.EAST, Side.SOUTH, Side.WEST},
-            {"P", 9, 5, Side.NORTH, Side.EAST, Side.SOUTH, Side.WEST},
-            {"P", 9, 6, Side.NORTH, Side.EAST, Side.SOUTH, Side.WEST}
+            {"P", 7, 7, Side.WEST,Side.SOUTH},
+
+            {"L", 4, 3, Side.SOUTH, Side.EAST},
+            {"L", 5, 3, Side.SOUTH, Side.NORTH,Side.EAST},
+            {"L", 6, 3, Side.SOUTH, Side.NORTH},
+            {"L", 7, 3, Side.EAST, Side.NORTH},
+
+            {"L", 3, 4, Side.SOUTH,Side.WEST,Side.EAST},
+            {"L", 4, 4, Side.WEST,Side.NORTH},
+            {"L", 5, 4, Side.WEST,Side.SOUTH},
+            {"L", 6, 4, Side.NORTH,Side.EAST},
+            {"L", 7, 4, Side.WEST,Side.SOUTH},
+            {"L", 8, 4, Side.NORTH,Side.WEST,Side.EAST},
+
+            {"L",  3, 5, Side.EAST,Side.WEST},
+            {"L",  5, 5, Side.SOUTH, Side.NORTH},
+            {"L",  6, 5, Side.WEST, Side.NORTH,Side.SOUTH},
+
+            {"L",  3, 6, Side.EAST, Side.WEST},
+            {"L",  4, 6, Side.EAST,  Side.SOUTH},
+            {"L",  5, 6, Side.NORTH, Side.EAST},
+            {"L",  6, 6, Side.SOUTH,Side.EAST},
+            {"L",  7, 6, Side.NORTH, Side.EAST},
+
+            {"L",  3, 7, Side.EAST,  Side.SOUTH,Side.WEST},
+            {"L",  4, 7, Side.WEST, Side.NORTH},
+            {"L",  5, 7, Side.EAST,  Side.WEST},
+            {"L",  6, 7, Side.WEST, Side.EAST},
+            {"L",  8, 7, Side.WEST, Side.EAST,Side.NORTH},
+
+            {"L",  3, 8, Side.SOUTH, Side.WEST},
+            {"L",  5, 8, Side.WEST,  Side.SOUTH},
+            {"L",  6, 8, Side.SOUTH,Side.NORTH, Side.WEST},
+
+            {"B", 3, 3, Side.EAST},
+            {"B", 8, 3, Side.EAST},
+
+            {"B", 4, 5, Side.SOUTH},
+            {"B", 7 , 5, Side.NORTH},
+            {"B",  8, 5, Side.WEST},
+
+            {"B",  8, 6, Side.EAST},
+
+            {"B",  4, 8, Side.NORTH},
+            {"B",  7, 8, Side.NORTH},
+            {"B",  8, 8, Side.WEST}
     };
 
     // Level 29: Complex grid with multiple paths and power sources
     private static final Object[][] LEVEL_29_ADVANCED = {
-            {"L", 2, 2, Side.EAST, Side.SOUTH},
-            {"L", 2, 3, Side.EAST, Side.WEST},
-            {"L", 2, 4, Side.EAST, Side.WEST},
-            {"L", 2, 5, Side.EAST, Side.WEST},
-            {"L", 2, 6, Side.EAST, Side.WEST},
-            {"L", 2, 7, Side.EAST, Side.WEST},
-            {"L", 2, 8, Side.WEST, Side.SOUTH},
-            {"L", 3, 2, Side.NORTH, Side.SOUTH},
-            {"L", 3, 8, Side.NORTH, Side.SOUTH},
-            {"L", 4, 2, Side.NORTH, Side.EAST},
-            {"L", 4, 3, Side.EAST, Side.WEST},
-            {"L", 4, 4, Side.EAST, Side.WEST},
-            {"L", 4, 5, Side.EAST, Side.WEST},
-            {"L", 4, 6, Side.EAST, Side.WEST},
-            {"L", 4, 7, Side.EAST, Side.WEST},
-            {"L", 4, 8, Side.NORTH, Side.WEST},
-            {"L", 5, 2, Side.EAST, Side.SOUTH},
-            {"L", 5, 3, Side.NORTH, Side.WEST},
-            {"L", 5, 7, Side.NORTH, Side.EAST},
-            {"L", 5, 8, Side.WEST, Side.SOUTH},
-            {"L", 6, 2, Side.NORTH, Side.SOUTH},
-            {"L", 6, 8, Side.NORTH, Side.SOUTH},
-            {"L", 7, 2, Side.NORTH, Side.EAST},
-            {"L", 7, 3, Side.EAST, Side.WEST},
-            {"L", 7, 4, Side.EAST, Side.WEST},
-            {"L", 7, 5, Side.EAST, Side.WEST},
-            {"L", 7, 6, Side.EAST, Side.WEST},
-            {"L", 7, 7, Side.EAST, Side.WEST},
-            {"L", 7, 8, Side.NORTH, Side.WEST},
-            {"L", 8, 2, Side.EAST, Side.SOUTH},
-            {"L", 8, 3, Side.NORTH, Side.WEST},
-            {"L", 8, 7, Side.NORTH, Side.EAST},
-            {"L", 8, 8, Side.WEST, Side.SOUTH},
-            {"L", 9, 2, Side.NORTH, Side.SOUTH},
-            {"L", 9, 8, Side.NORTH, Side.SOUTH},
-            {"L", 10, 2, Side.NORTH, Side.EAST},
-            {"L", 10, 3, Side.EAST, Side.WEST},
-            {"L", 10, 4, Side.EAST, Side.WEST},
-            {"L", 10, 5, Side.EAST, Side.WEST},
-            {"L", 10, 6, Side.EAST, Side.WEST},
-            {"L", 10, 7, Side.EAST, Side.WEST},
-            {"L", 10, 8, Side.NORTH, Side.WEST},
-            {"L", 11, 4, Side.NORTH, Side.SOUTH},
-            {"L",  11, 5, Side.NORTH, Side.SOUTH},
-            {"L", 11, 6, Side.NORTH, Side.SOUTH},
-            {"L", 12, 4, Side.NORTH, Side.EAST},
-            {"L", 12, 5, Side.EAST, Side.WEST},
-            {"L", 12, 6, Side.NORTH, Side.WEST},
-            {"B", 1, 5, Side.SOUTH},
-            {"B", 3, 1, Side.EAST},
-            {"B", 3, 9, Side.WEST},
-            {"B", 6, 1, Side.EAST},
-            {"B", 6, 9, Side.WEST},
-            {"B", 9, 1, Side.EAST},
-            {"B", 9, 9, Side.WEST},
-            {"B", 13, 5, Side.NORTH},
-            {"P", 3, 5, Side.NORTH, Side.EAST, Side.SOUTH, Side.WEST},
-            {"P", 5, 4, Side.NORTH, Side.EAST, Side.SOUTH, Side.WEST},
-            {"P", 5, 5, Side.NORTH, Side.EAST, Side.SOUTH, Side.WEST},
-            {"P", 5, 6, Side.NORTH, Side.EAST, Side.SOUTH, Side.WEST},
-            {"P", 8, 4, Side.NORTH, Side.EAST, Side.SOUTH, Side.WEST},
-            {"P", 8, 5, Side.NORTH, Side.EAST, Side.SOUTH, Side.WEST},
-            {"P", 8, 6, Side.NORTH, Side.EAST, Side.SOUTH, Side.WEST},
-            {"P", 11, 3, Side.EAST, Side.SOUTH},
-            {"P", 11, 7, Side.SOUTH, Side.WEST}
+            {"P", 7, 7, Side.WEST,Side.NORTH,Side.EAST},
+
+            {"L", 3, 3, Side.SOUTH, Side.EAST},
+            {"L", 5, 3, Side.SOUTH, Side.EAST},
+            {"L", 6, 3, Side.NORTH,Side.SOUTH},
+            {"L", 7, 3, Side.EAST, Side.NORTH},
+
+            {"L", 3, 4, Side.SOUTH,Side.WEST,Side.EAST},
+            {"L", 5, 4, Side.WEST,Side.EAST},
+            {"L", 7, 4, Side.WEST,Side.SOUTH},
+            {"L", 8, 4, Side.NORTH,Side.WEST,Side.EAST},
+
+            {"L",  3, 5, Side.EAST,Side.WEST},
+            {"L",  5, 5, Side.SOUTH, Side.WEST},
+            {"L",  6, 5, Side.WEST, Side.EAST,Side.NORTH},
+            {"L",  8, 5, Side.WEST, Side.EAST},
+
+            {"L",  3, 6, Side.WEST,Side.EAST},
+            {"L",  4, 6, Side.WEST,Side.EAST},
+            {"L",  6, 6, Side.NORTH, Side.EAST,Side.WEST},
+            {"L",  7, 6, Side.EAST,Side.WEST},
+            {"L",  8, 6, Side.WEST,Side.EAST},
+
+            {"L",  3, 7, Side.EAST, Side.SOUTH,Side.WEST},
+            {"L",  4, 7, Side.SOUTH, Side.NORTH,Side.WEST},
+            {"L",  5, 7, Side.NORTH,Side.SOUTH},
+            {"L",  6, 7, Side.WEST, Side.NORTH,Side.SOUTH},
+
+            {"L",  3, 8, Side.SOUTH, Side.WEST},
+            {"L",  6, 8, Side.NORTH,  Side.SOUTH},
+            {"L",  7, 8, Side.NORTH, Side.WEST,Side.SOUTH},
+
+            {"B", 4, 3, Side.NORTH},
+            {"B", 8, 3, Side.EAST},
+
+            {"B", 4, 4, Side.NORTH},
+            {"B", 6, 4, Side.EAST},
+
+            {"B", 4, 5, Side.EAST},
+            {"B", 7 , 5, Side.EAST},
+
+            {"B",  5, 6, Side.SOUTH},
+
+            {"B",  8, 7, Side.WEST},
+
+            {"B",  4, 8, Side.NORTH},
+            {"B",  5, 8, Side.SOUTH},
+            {"B",  8, 8, Side.NORTH}
     };
 
     // Level 30: Most complex level with multiple paths, power sources, and bulbs
     private static final Object[][] LEVEL_30_ADVANCED = {
-            {"L", 2, 2, Side.EAST, Side.SOUTH},
-            {"L", 2, 3, Side.EAST, Side.WEST},
-            {"L", 2, 4, Side.EAST, Side.WEST},
-            {"L", 2, 5, Side.EAST, Side.WEST},
-            {"L", 2, 6, Side.EAST, Side.WEST},
-            {"L", 2, 7, Side.EAST, Side.WEST},
-            {"L", 2, 8, Side.WEST, Side.SOUTH},
-            {"L", 3, 2, Side.NORTH, Side.SOUTH},
-            {"L", 3, 8, Side.NORTH, Side.SOUTH},
-            {"L", 4, 2, Side.NORTH, Side.EAST},
-            {"L", 4, 3, Side.EAST, Side.WEST},
-            {"L", 4, 4, Side.EAST, Side.WEST},
-            {"L", 4, 5, Side.EAST, Side.WEST},
-            {"L", 4, 6, Side.EAST, Side.WEST},
-            {"L", 4, 7, Side.EAST, Side.WEST},
-            {"L", 4, 8, Side.NORTH, Side.WEST},
-            {"L", 5, 3, Side.NORTH, Side.SOUTH},
-            {"L", 5, 7, Side.NORTH, Side.SOUTH},
-            {"L", 6, 3, Side.NORTH, Side.EAST},
-            {"L", 6, 4, Side.EAST, Side.WEST},
-            {"L", 6, 5, Side.EAST, Side.WEST},
-            {"L", 6, 6, Side.EAST, Side.WEST},
-            {"L", 6, 7, Side.NORTH, Side.WEST},
-            {"L", 7, 2, Side.EAST, Side.SOUTH},
-            {"L", 7, 3, Side.NORTH, Side.WEST},
-            {"L", 7, 7, Side.NORTH, Side.EAST},
-            {"L", 7, 8, Side.WEST, Side.SOUTH},
-            {"L", 8, 2, Side.NORTH, Side.EAST},
-            {"L", 8, 3, Side.EAST, Side.WEST},
-            {"L", 8, 4, Side.EAST, Side.WEST},
-            {"L", 8, 5, Side.EAST, Side.WEST},
-            {"L", 8, 6, Side.EAST, Side.WEST},
-            {"L", 8, 7, Side.EAST, Side.WEST},
-            {"L", 8, 8, Side.NORTH, Side.WEST},
-            {"L", 9, 3, Side.NORTH, Side.SOUTH},
-            {"L", 9, 7, Side.NORTH, Side.SOUTH},
-            {"L", 10, 3, Side.NORTH, Side.EAST},
-            {"L", 10, 4, Side.EAST, Side.WEST},
-            {"L", 10, 5, Side.EAST, Side.WEST},
-            {"L", 10, 6, Side.EAST, Side.WEST},
-            {"L", 10, 7, Side.NORTH, Side.WEST},
-            {"L", 11, 2, Side.EAST, Side.SOUTH},
-            {"L", 11, 3, Side.NORTH, Side.WEST},
-            {"L", 11, 7, Side.NORTH, Side.EAST},
-            {"L", 11, 8, Side.WEST, Side.SOUTH},
-            {"L", 12, 2, Side.NORTH, Side.EAST},
-            {"L", 12, 3, Side.EAST, Side.WEST},
-            {"L", 12, 4, Side.EAST, Side.WEST},
-            {"L", 12, 5, Side.EAST, Side.WEST},
-            {"L", 12, 6, Side.EAST, Side.WEST},
-            {"L", 12, 7, Side.EAST, Side.WEST},
-            {"L", 12, 8, Side.NORTH, Side.WEST},
-            {"L", 13, 4, Side.NORTH, Side.SOUTH},
-            {"L", 13, 5, Side.NORTH, Side.SOUTH},
-            {"L", 13, 6, Side.NORTH, Side.SOUTH},
-            {"L", 14, 4, Side.NORTH, Side.EAST},
-            {"L", 14, 5, Side.EAST, Side.WEST},
-            {"L", 14, 6, Side.NORTH, Side.WEST},
-            {"B", 1, 5, Side.SOUTH},
-            {"B", 3, 1, Side.EAST},
-            {"B", 3, 9, Side.WEST},
-            {"B", 5, 2, Side.EAST},
-            {"B", 5, 8, Side.WEST},
-            {"B", 7, 1, Side.EAST},
-            {"B", 7, 9, Side.WEST},
-            {"B", 9, 2, Side.EAST},
-            {"B", 9, 8, Side.WEST},
-            {"B", 11, 1, Side.EAST},
-            {"B", 11, 9, Side.WEST},
-            {"B", 15, 5, Side.NORTH},
-            {"P", 3, 5, Side.NORTH, Side.EAST, Side.SOUTH, Side.WEST},
-            {"P", 5, 4, Side.NORTH, Side.EAST, Side.SOUTH, Side.WEST},
-            {"P", 5, 5, Side.NORTH, Side.EAST, Side.SOUTH, Side.WEST},
-            {"P", 5, 6, Side.NORTH, Side.EAST, Side.SOUTH, Side.WEST},
-            {"P", 9, 4, Side.NORTH, Side.EAST, Side.SOUTH, Side.WEST},
-            {"P", 9, 5, Side.NORTH, Side.EAST, Side.SOUTH, Side.WEST},
-            {"P", 9, 6, Side.NORTH, Side.EAST, Side.SOUTH, Side.WEST},
-            {"P", 13, 3, Side.EAST, Side.SOUTH},
-            {"P", 13, 7, Side.SOUTH, Side.WEST}
+            {"P", 6, 8, Side.WEST,Side.SOUTH},
+
+            {"L", 3, 3, Side.SOUTH, Side.EAST},
+            {"L", 5, 3, Side.SOUTH, Side.EAST},
+            {"L", 6, 3, Side.NORTH,Side.EAST,Side.SOUTH},
+            {"L", 7, 3, Side.SOUTH, Side.NORTH},
+            {"L", 8, 3, Side.EAST, Side.NORTH},
+
+            {"L", 3, 4, Side.SOUTH,Side.WEST,Side.EAST},
+            {"L", 6, 4, Side.WEST,Side.SOUTH,Side.EAST},
+            {"L", 8, 4, Side.EAST,Side.WEST},
+
+            {"L",  3, 5, Side.EAST,Side.WEST},
+            {"L",  5, 5, Side.SOUTH, Side.NORTH},
+            {"L",  6, 5, Side.WEST, Side.EAST,Side.NORTH},
+            {"L",  8, 5, Side.WEST, Side.EAST},
+
+            {"L",  3, 6, Side.WEST,Side.SOUTH},
+            {"L",  4, 6, Side.SOUTH,Side.NORTH},
+            {"L",  5, 6, Side.NORTH, Side.EAST},
+            {"L",  6, 6, Side.SOUTH,Side.WEST},
+            {"L",  7, 6, Side.NORTH, Side.WEST,Side.EAST},
+            {"L",  8, 6, Side.WEST,Side.EAST},
+
+            {"L",  3, 7, Side.EAST, Side.SOUTH},
+            {"L",  5, 7, Side.SOUTH, Side.EAST,Side.WEST},
+            {"L",  6, 7, Side.NORTH,Side.SOUTH,  Side.EAST},
+            {"L",  7, 7, Side.WEST, Side.NORTH},
+            {"L",  8, 7, Side.WEST, Side.EAST},
+
+            {"L",  3, 8, Side.SOUTH, Side.WEST},
+            {"L",  4, 8, Side.NORTH,  Side.SOUTH},
+            {"L",  5, 8, Side.NORTH, Side.WEST},
+
+            {"B", 4, 3, Side.NORTH},
+
+            {"B", 4, 4, Side.NORTH},
+            {"B", 5, 4, Side.WEST},
+            {"B", 7, 4, Side.NORTH},
+
+            {"B", 4, 5, Side.SOUTH},
+            {"B", 7 , 5, Side.EAST},
+
+            {"B",  4, 7, Side.NORTH},
+
+            {"B",  7, 8, Side.NORTH},
+            {"B",  8, 8, Side.WEST}
     };
 
-    // Add more level definitions for levels 22-30
 
     /**
      * Creates a SwingNode containing the game for the specified level and difficulty.
@@ -1299,7 +1050,6 @@ public class GameLevels {
      * @return A SwingNode containing the game
      */
     public static SwingNode createGameLevel(int levelNumber, int difficulty, Runnable levelCompletedCallback) {
-        //System.out.println("Создание уровня " + levelNumber + " с сложностью " + difficulty);
 
         SwingNode swingNode = new SwingNode();
 
@@ -1334,9 +1084,10 @@ public class GameLevels {
                 EnvPresenter solvedPr = new EnvPresenter(game);
                 solvedPr.init();
                 JPanel solvedPanel = solvedPr.getGamePanel();
-                Platform.runLater(() -> swingNode.setContent(solvedPanel));
                 Game solvedGame = game.deepCopy();
+                Platform.runLater(() -> swingNode.setContent(solvedPanel));
                 Platform.runLater(() -> swingNode.getProperties().put("solvedGame", solvedGame));
+
                 Platform.runLater(() -> {
                    // swingNode.setContent(solvedPanel);
                     PauseTransition pause = new PauseTransition(Duration.seconds(1));
@@ -1352,6 +1103,9 @@ public class GameLevels {
                                 }
                             } while (game.anyBulbLit());
 
+                            for (GameNode node : game.getNodes()) {
+                                node.resetRotationCount();
+                            }
 
                             EnvPresenter playPr = new EnvPresenter(game);
                             if (levelCompletedCallback != null) {
@@ -1360,15 +1114,76 @@ public class GameLevels {
                             playPr.init();
                             JPanel playPanel = playPr.getGamePanel();
 
-
                             Platform.runLater(() -> {
                                 swingNode.setUserData(playPr);
                                 swingNode.setContent(playPanel);
+
+                                Tooltip tip = new Tooltip();
+                                tip.setShowDelay(Duration.seconds(1));   // показывать через 1 секунду удержания
+                                Tooltip.install(swingNode, tip);
+                                final int cols = game.cols();
+                                final int rows = game.rows();
+
+
+                                swingNode.setOnMouseMoved(ev -> {
+                                    Bounds b = swingNode.getLayoutBounds();
+                                    double w = b.getWidth(), h = b.getHeight();
+                                    double cellW = w / cols, cellH = h / rows;
+
+                                    int col = Math.min(cols, Math.max(1, (int)(ev.getX()/cellW) + 1));
+                                    int row = Math.min(rows, Math.max(1, (int)(ev.getY()/cellH) + 1));
+
+                                    Set<Side> cur = game.getGameNode(row, col).getConnectors();
+                                    Set<Side> tgt = solvedGame.getGameNode(row, col).getConnectors();
+
+                                    int remaining = rotationsNeeded(cur, tgt);
+                                    int actual= game.getGameNode(row, col).getRotationCount();
+
+
+                                    tip.setText("GameNode " + row + "," + col +
+                                            "\n Need Rotations: " + remaining +
+                                            "\n Actual Rotations: " + actual);
+                                });
+                                swingNode.setOnMouseExited(ev -> tip.hide());
+
+                                /*swingNode.setOnMouseClicked(mouseEvent -> {
+                                    if (mouseEvent.getClickCount() == 3) {
+                                        // Вычисляем, над какой клеткой мы кликнули
+                                        double x = mouseEvent.getX(), y = mouseEvent.getY();
+                                        int cols = game.cols(), rows = game.rows();
+                                        Bounds bounds = swingNode.getLayoutBounds();
+                                        double cellW = bounds.getWidth()  / cols;
+                                        double cellH = bounds.getHeight() / rows;
+
+                                        int col = Math.min(cols, Math.max(1, (int)(x / cellW) + 1));
+                                        int row = Math.min(rows, Math.max(1, (int)(y / cellH) + 1));
+                                        Position pos = new Position(row, col);
+
+                                        // Находим текущие и целевые коннекторы
+                                        Set<Side> cur = game.getGameNode(row, col).getConnectors();
+                                        Set<Side> tgt = solvedGame.getGameNode(row, col).getConnectors();
+
+                                        int remaining = rotationsNeeded(cur, tgt);
+                                        int done      = game.getGameNode(row, col).getRotationCount();
+
+                                        // Показываем JavaFX Alert
+                                        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                                        alert.setTitle("Информация о клетке");
+                                        alert.setHeaderText(String.format("Поле [%d,@%d]", row, col));
+                                        alert.setContentText(
+                                                "Осталось вращений: " + remaining + "\n" +
+                                                        "Сделано вращений: " + done
+                                        );
+                                        alert.showAndWait();
+                                    }
+                                });*/
                             });
+
                         });
                     });
                     pause.play();
                 });
+
             } catch (Exception e) {
                 System.err.println("ERROR during initializetion: " + e.getMessage());
                 e.printStackTrace();
@@ -1377,6 +1192,58 @@ public class GameLevels {
 
         return swingNode;
     }
+    /*private static void onCellHover(MouseEvent evt, Tooltip tip, Game game, Game solvedGame) {
+        // вычисляем над какой клеткой курсор
+        int cols = game.cols();
+        int rows = game.rows();
+
+        Bounds b = swingNode.getLayoutBounds();
+        double w = b.getWidth(), h = b.getHeight();
+
+        double cellW = w  / cols;
+        double cellH = h  / rows;
+
+        int col = Math.min(cols, Math.max(1, (int)(evt.getX() / cellW) + 1));
+        int row = Math.min(rows, Math.max(1, (int)(evt.getY() / cellH) + 1));
+
+        // получаем коннекторы
+        Set<Side> cur = game.getGameNode(row, col).getConnectors();
+        Set<Side> tgt = solvedGame.getGameNode(row, col).getConnectors();
+
+        int remaining = rotationsNeeded(cur, tgt);
+        int done      = game.getGameNode(row, col).getRotationCount();
+
+        // обновляем текст подсказки
+        tip.setText(
+                String.format("Ячейка [%d,@%d]\nОсталось вращений: %d\nСделано вращений: %d",
+                        row, col, remaining, done)
+        );
+    }*/
+
+    private static int rotationsNeeded(Set<Side> cur, Set<Side> tgt) {
+        for (int k = 0; k < 4; k++) {
+            final int kk = k;
+            Set<Side> rot = cur.stream()
+                    .map(s -> rotateCW(s, kk))
+                    .collect(Collectors.toSet());
+            if (rot.equals(tgt)) return kk;
+        }
+        return 0;
+    }
+
+    private static Side rotateCW(Side s, int times) {
+        Side r = s;
+        for (int i = 0; i < times; i++) {
+            r = switch(r) {
+                case NORTH -> Side.EAST;
+                case EAST  -> Side.SOUTH;
+                case SOUTH -> Side.WEST;
+                case WEST  -> Side.NORTH;
+            };
+        }
+        return r;
+    }
+
 
     /**
      * Gets the level definition for the specified level and difficulty.
@@ -1438,9 +1305,9 @@ public class GameLevels {
      */
     private static int getGridSizeForDifficulty(int difficulty) {
         return switch (difficulty) {
-            case 0 -> 10; // Beginner
-            case 1 -> 14; // Intermediate
-            case 2 -> 16; // Advanced
+            case 0 -> 9; // Beginner
+            case 1 -> 11; // Intermediate
+            case 2 -> 9; // Advanced
             default -> 10;
         };
     }

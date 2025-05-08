@@ -2,11 +2,9 @@ visualization/view/GameBridge.class
 ija/ijaProject/common/Side.class
 ija/ijaProject/game/levels/LevelManager.class
 ija/ijaProject/MainApp.class
-ija/ijaProject/game/RotateEvent.class
 visualization/view/GameMenuView.class
 ija/ijaProject/settings/LanguageManager.class
 ija/ijaProject/common/GameNode$1.class
-ija/ijaProject/game/GameEvent.class
 ija/ijaProject/settings/SettingsManager$1.class
 visualization/view/InfoPresenter$1.class
 visualization/view/FieldView$1.class
@@ -27,7 +25,7 @@ visualization/view/LevelsView.class
 visualization/view/GamePlayView.class
 ija/ijaProject/settings/LanguageManager$1.class
 visualization/common/ToolField.class
-ija/ijaProject/game/GameReplayer.class
+ija/ijaProject/game/levels/GameLevels$1.class
 ija/ijaProject/settings/SoundManager.class
 visualization/view/SettingsView.class
 visualization/view/InfoPresenter.class

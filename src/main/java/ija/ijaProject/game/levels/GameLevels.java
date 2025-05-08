@@ -171,61 +171,58 @@ public class GameLevels {
 
     // Level 11: Introduction to intermediate difficulty
     private static final Object[][] LEVEL_11_INTERMEDIATE = {
-            {"L", 3, 3, Side.EAST, Side.SOUTH},
-            {"L", 3, 4, Side.EAST, Side.WEST},
-            {"L", 3, 5, Side.EAST, Side.WEST},
-            {"L", 3, 6, Side.EAST, Side.WEST},
-            {"L", 3, 7, Side.WEST, Side.SOUTH},
-            {"L", 4, 3, Side.NORTH, Side.SOUTH},
-            {"L", 4, 7, Side.NORTH, Side.SOUTH},
+            {"P", 2, 2, Side.SOUTH},
+            {"L", 3, 2, Side.NORTH, Side.SOUTH},
+            {"L", 4, 2, Side.NORTH, Side.EAST,Side.SOUTH},
+            {"L", 4, 3, Side.WEST, Side.SOUTH,Side.NORTH},
             {"L", 5, 3, Side.NORTH, Side.EAST},
-            {"L", 5, 4, Side.EAST, Side.WEST},
-            {"L", 5, 5, Side.EAST, Side.WEST},
-            {"L", 5, 6, Side.EAST, Side.WEST},
-            {"L", 5, 7, Side.NORTH, Side.WEST},
+            {"L", 5, 4, Side.WEST, Side.SOUTH},
             {"L", 6, 4, Side.NORTH, Side.SOUTH},
-            {"L", 6, 5, Side.NORTH, Side.SOUTH},
-            {"L", 6, 6, Side.NORTH, Side.SOUTH},
-            {"B", 2, 5, Side.SOUTH},
-            {"B", 4, 2, Side.EAST},
-            {"B", 4, 8, Side.WEST},
-            {"B", 7, 5, Side.NORTH},
-            {"P", 4, 5, Side.NORTH, Side.EAST, Side.SOUTH, Side.WEST}
+            {"L", 7, 4, Side.NORTH, Side.EAST, Side.SOUTH},
+            {"L", 8, 4, Side.NORTH, Side.EAST},
+            {"L", 8, 5, Side.WEST, Side.SOUTH},
+            {"L", 9, 5, Side.NORTH, Side.SOUTH},
+            {"L",10, 5, Side.WEST, Side.NORTH},
+            {"B", 3, 3, Side.SOUTH},
+            {"B", 5, 2, Side.NORTH},
+            {"B", 7, 5, Side.WEST},
+            {"B",10, 4, Side.EAST}
     };
 
     // Level 12: Complex grid with multiple paths
     private static final Object[][] LEVEL_12_INTERMEDIATE = {
-            {"L", 2, 4, Side.EAST, Side.SOUTH},
-            {"L", 2, 5, Side.EAST, Side.WEST},
-            {"L", 2, 6, Side.WEST, Side.SOUTH},
-            {"L", 3, 4, Side.NORTH, Side.EAST},
-            {"L", 3, 6, Side.NORTH, Side.WEST},
-            {"L", 4, 3, Side.EAST, Side.SOUTH},
-            {"L", 4, 4, Side.NORTH, Side.WEST},
-            {"L", 4, 5, Side.EAST, Side.SOUTH},
-            {"L", 4, 6, Side.NORTH, Side.WEST},
-            {"L", 4, 7, Side.WEST, Side.SOUTH},
-            {"L", 5, 3, Side.NORTH, Side.EAST},
-            {"L", 5, 5, Side.NORTH, Side.EAST},
-            {"L", 5, 7, Side.NORTH, Side.WEST},
-            {"L", 6, 3, Side.EAST, Side.SOUTH},
-            {"L", 6, 4, Side.EAST, Side.WEST},
-            {"L", 6, 5, Side.EAST, Side.WEST},
-            {"L", 6, 6, Side.EAST, Side.WEST},
-            {"L", 6, 7, Side.WEST, Side.SOUTH},
-            {"L", 7, 3, Side.NORTH, Side.EAST},
-            {"L", 7, 4, Side.EAST, Side.WEST},
-            {"L", 7, 5, Side.EAST, Side.WEST},
-            {"L", 7, 6, Side.EAST, Side.WEST},
-            {"L", 7, 7, Side.NORTH, Side.WEST},
+            {"P", 5, 6, Side.SOUTH, Side.EAST,Side.WEST},
+
+            {"L", 4, 3, Side.SOUTH, Side.EAST},
+            {"L", 5, 3, Side.NORTH, Side.SOUTH},
+
+            {"L", 3, 4, Side.WEST,  Side.EAST},
+            {"L", 4, 4, Side.EAST,Side.WEST, Side.SOUTH},
+            {"L", 5, 4, Side.NORTH, Side.SOUTH},
+            {"L",  7, 4, Side.EAST, Side.WEST},
+
+            {"L",  3, 5, Side.WEST,  Side.EAST,Side.SOUTH},
+            {"L",  4, 5, Side.WEST,  Side.SOUTH,Side.NORTH},
+            {"L",  5, 5, Side.NORTH, Side.EAST},
+            {"L",  6, 5, Side.SOUTH,  Side.EAST},
+            {"L",  7, 5, Side.WEST,  Side.NORTH},
+
+            {"L",  3, 6, Side.WEST, Side.EAST},
+            {"L",  6, 6, Side.NORTH,  Side.WEST},
+
+            {"L",  4, 7, Side.WEST,  Side.SOUTH},
+            {"L",  5, 7, Side.NORTH, Side.WEST,Side.SOUTH},
+            {"L",  6, 7, Side.NORTH,  Side.SOUTH},
+
+
             {"B", 3, 3, Side.EAST},
-            {"B", 3, 7, Side.WEST},
-            {"B", 5, 2, Side.EAST},
-            {"B", 5, 8, Side.WEST},
-            {"B", 8, 5, Side.NORTH},
-            {"P", 3, 5, Side.NORTH, Side.EAST, Side.SOUTH, Side.WEST},
-            {"P", 5, 4, Side.NORTH, Side.EAST, Side.SOUTH, Side.WEST},
-            {"P", 5, 6, Side.NORTH, Side.EAST, Side.SOUTH, Side.WEST}
+            {"B", 6, 3, Side.NORTH},
+            {"B", 7, 3, Side.EAST},
+            {"B", 6 , 4, Side.NORTH},
+            {"B",  4, 6, Side.EAST},
+            {"B",  7, 7, Side.NORTH},
+            {"B",  3, 7, Side.WEST}
+
     };
 
     // Level 13: Introducing complex interdependence
@@ -1334,128 +1331,44 @@ public class GameLevels {
 
                 game.init();
 
-                Function<Game, EnvPresenter> makePresenter = gm -> {
-                    EnvPresenter pr = new EnvPresenter(gm);
-                    if (levelCompletedCallback != null) {
-                        pr.setLevelCompletedCallback(levelCompletedCallback);
-                    }
-                    pr.init();
-                    return pr;
-                };
-
-
                 EnvPresenter solvedPr = new EnvPresenter(game);
                 solvedPr.init();
-                //JPanel solvedPanel = solvedPr.getGamePanel();
-                Platform.runLater(() -> {
-                    swingNode.setContent(solvedPr.getGamePanel());
-                });
+                JPanel solvedPanel = solvedPr.getGamePanel();
+                Platform.runLater(() -> swingNode.setContent(solvedPanel));
                 Game solvedGame = game.deepCopy();
-                SwingNode infoSwingNode = new SwingNode();
-                SwingUtilities.invokeLater(() -> {
-                    InfoPresenter info = new InfoPresenter(game, solvedGame);
-                    infoSwingNode.setContent(info.getPanel());
-                });
-                PauseTransition pause = new PauseTransition(Duration.seconds(2));
-
-                pause.setOnFinished(evt -> {
-
-                    List<Position> positions = game.getNodes().stream()
-                            .map(GameNode::getPosition)
-                            .toList();
-                    Random rnd = new Random();
-                    int moves = 12 + difficulty * 5;
-                    do {
-                        for (int i = 0; i < moves; i++) {
-                            game.rotateNode(positions.get(rnd.nextInt(positions.size())));
-                        }
-                    } while (game.anyBulbLit());
-
-
-
-                    /*JFrame infoFrame = new JFrame("Info o otočkách");
-                    infoFrame.getContentPane().add(infoPr.getPanel());
-                    infoFrame.pack();
-                    infoFrame.setLocationRelativeTo(null);
-                    infoFrame.setVisible(true);*/
-
-                    EnvPresenter scramblePr = new EnvPresenter(game);
-                    scramblePr.setLevelCompletedCallback(levelCompletedCallback);
-                    scramblePr.init();
-                    Platform.runLater(() -> swingNode.setContent(scramblePr.getGamePanel()));
-                    InfoPresenter infoPr = new InfoPresenter(game,solvedGame);
-
-                    for (GameNode node : game.getNodes()) {
-                        node.addObserver(infoPr);
-                    }
-                });
+                Platform.runLater(() -> swingNode.getProperties().put("solvedGame", solvedGame));
                 Platform.runLater(() -> {
-                    Stage infoStage = new Stage();
-                    infoStage.setTitle("Info o otočení");
-                    // vlož SwingNode přímo do JavaFX layoutu
-                    StackPane root = new StackPane(infoSwingNode);
-                    root.setStyle("-fx-background-color: #0f1e2e;"); // stejné pozadí jako hra
-                    // uprav velikost okna podle panelu
-                    Scene scene = new Scene(root,
-                            game.cols() * InfoPresenter.TILE_SIZE,
-                            game.rows() * InfoPresenter.TILE_SIZE
-                    );
-                    infoStage.setScene(scene);
-                    infoStage.show();
+                   // swingNode.setContent(solvedPanel);
+                    PauseTransition pause = new PauseTransition(Duration.seconds(1));
+                    pause.setOnFinished(evt -> {
+                        SwingUtilities.invokeLater(() -> {
+                            List<Position> posList = game.getNodes().stream()
+                                    .map(GameNode::getPosition).toList();
+                            Random rnd = new Random();
+                            int moves = 12 + difficulty * 5;
+                            do {
+                                for (int i = 0; i < moves; i++) {
+                                    game.rotateNode(posList.get(rnd.nextInt(posList.size())));
+                                }
+                            } while (game.anyBulbLit());
+
+
+                            EnvPresenter playPr = new EnvPresenter(game);
+                            if (levelCompletedCallback != null) {
+                                playPr.setLevelCompletedCallback(levelCompletedCallback);
+                            }
+                            playPr.init();
+                            JPanel playPanel = playPr.getGamePanel();
+
+
+                            Platform.runLater(() -> {
+                                swingNode.setUserData(playPr);
+                                swingNode.setContent(playPanel);
+                            });
+                        });
+                    });
+                    pause.play();
                 });
-                pause.play();
-
-
-                /* List<Position> positions = game.getNodes().stream()
-                        .map(GameNode::getPosition)
-                        .collect(Collectors.toList());
-
-
-                int baseMoves     = 10;
-                int movesPerLevel = 5;
-                int scrambleMoves = baseMoves + difficulty * movesPerLevel;
-
-                Random rnd = new Random();
-                do {
-                    for (int i = 0; i < scrambleMoves; i++) {
-                        Position p = positions.get(rnd.nextInt(positions.size()));
-                        game.rotateNode(p);
-                    }
-                } while (game.anyBulbLit());
-                */
-                /*
-                EnvPresenter presenter = new EnvPresenter(game);
-
-                // Set the level completed callback
-                if (levelCompletedCallback != null) {
-                    presenter.setLevelCompletedCallback(levelCompletedCallback);
-                }
-
-                presenter.init();
-
-
-                // Get the internal panel from presenter
-                JPanel contentPanel = presenter.getGamePanel();
-
-
-                // Store the presenter in the SwingNode's user data for later access
-                final EnvPresenter finalPresenter = presenter;
-                final JPanel finalContentPanel = contentPanel;
-
-                Platform.runLater(() -> {
-                    try {
-                        swingNode.setUserData(finalPresenter);
-                        System.out.println("EnvPresenter установлен в userData: " + swingNode.getUserData());
-
-                        swingNode.setContent(finalContentPanel);
-                        System.out.println("Контент установлен для SwingNode");
-
-                        System.out.println("Уровень " + levelNumber + " успешно инициализирован");
-                    } catch (Exception e) {
-                        System.err.println("Ошибка при установке контента SwingNode: " + e.getMessage());
-                        e.printStackTrace();
-                    }
-                });*/
             } catch (Exception e) {
                 System.err.println("ERROR during initializetion: " + e.getMessage());
                 e.printStackTrace();
@@ -1526,8 +1439,8 @@ public class GameLevels {
     private static int getGridSizeForDifficulty(int difficulty) {
         return switch (difficulty) {
             case 0 -> 10; // Beginner
-            case 1 -> 12; // Intermediate
-            case 2 -> 14; // Advanced
+            case 1 -> 14; // Intermediate
+            case 2 -> 16; // Advanced
             default -> 10;
         };
     }

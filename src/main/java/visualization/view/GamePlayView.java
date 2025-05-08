@@ -1,5 +1,6 @@
 package visualization.view;
 
+import ija.ijaProject.common.GameNode;
 import ija.ijaProject.game.levels.LevelManager;
 import ija.ijaProject.game.Game;
 import ija.ijaProject.game.levels.GameLevels;
@@ -29,9 +30,11 @@ import javafx.util.Duration;
 import visualization.EnvPresenter;
 import visualization.common.ToolEnvironment;
 
+
 import javax.swing.*;
 import java.awt.*;
 import java.lang.reflect.Field;
+
 
 /**
  * GamePlayView provides the visualization and UI for the game screen.
@@ -39,6 +42,8 @@ import java.lang.reflect.Field;
  */
 public class GamePlayView {
 
+    private static final int CELL_SIZE =40 ;
+    private static final String BG_COLOR_HEX = "#0F172A";
     private final StackPane root;
     private final BorderPane layout;
     private final Stage stage;
@@ -54,7 +59,10 @@ public class GamePlayView {
     private Runnable onLevelCompleted;
     private boolean levelAlreadyCompleted = false;
     private Timeline gameNodeCheckTimeline;
-
+    //private final SwingNode swingNode;
+    private Game solvedGame;
+    private Button infoButton;
+    private Stage infoStage;
     /**
      * Creates a new GamePlayView for the specified level and difficulty.
      *
@@ -62,11 +70,14 @@ public class GamePlayView {
      * @param levelNumber The level number
      * @param difficulty The difficulty level (0=Beginner, 1=Intermediate, 2=Advanced)
      */
+
     public GamePlayView(Stage stage, int levelNumber, int difficulty) {
         this.stage = stage;
         this.levelNumber = levelNumber;
         this.difficulty = difficulty;
-
+        //this.swingNode = GameLevels.createGameLevel(levelNumber, difficulty, /* callback */ null);
+        //this.swingNode = GameLevels.createGameLevel(levelNumber, difficulty, this::handleLevelCompleted);
+        //this.presenter = (EnvPresenter) swingNode.getUserData();
         // Check if this level was already completed before
         levelAlreadyCompleted = LevelManager.getInstance().isLevelCompleted(levelNumber, difficulty);
 
@@ -86,6 +97,7 @@ public class GamePlayView {
         System.out.println("Starting game with level: " + levelNumber + ", difficulty: " + difficulty);
         gameNode = GameLevels.createGameLevel(levelNumber, difficulty, this::handleLevelCompleted);
         System.out.println("gameNode=" + gameNode + ", class=" + (gameNode != null ? gameNode.getClass() : "null") + ", id=" + (gameNode != null ? gameNode.getId() : "null"));
+
 
         // Create a container for the game to add padding
         StackPane gameContainer = new StackPane(gameNode);
@@ -119,6 +131,9 @@ public class GamePlayView {
 
         // Set up game completion listener with a delay to ensure proper initialization
         Platform.runLater(this::setupGameCompletionListener);
+    }
+    private EnvPresenter getPlayPresenter() {
+        return (EnvPresenter) gameNode.getUserData();
     }
 
     /**
@@ -238,7 +253,55 @@ public class GamePlayView {
         // Add to header
         header.getChildren().addAll(backButton, levelText);
 
+        Button infoButton = new Button("Info");
+        infoButton.setStyle(
+                "-fx-background-color: rgba(14, 165, 233, 0.2);" +
+                        "-fx-background-radius: 30;" +
+                        "-fx-border-color: #0EA5E9;" +
+                        "-fx-border-width: 2;" +
+                        "-fx-border-radius: 30;" +
+                        "-fx-text-fill: white;" +
+                        "-fx-font-size: 14px;" +
+                        "-fx-font-weight: bold;" +
+                        "-fx-padding: 8 15;"
+        );
+        addButtonHoverEffect(infoButton);
+        infoButton.setOnAction(e -> openInfoWindow());
+        header.getChildren().add(infoButton);
+
         return header;
+    }
+
+    private void openInfoWindow() {
+        EnvPresenter p = getPlayPresenter();
+        if (p==null) {
+            return;
+        }
+        Game current = (Game) p.getEnvironment();
+        Game solved = (Game) gameNode.getProperties().get("solvedGame");
+        if (solved == null) {
+            solved = current.deepCopy();
+            solved.init();
+        }
+
+        InfoPresenter info = new InfoPresenter(current, solved);
+        for (GameNode node : current.getNodes()) {
+            node.addObserver(info);
+        }
+
+        SwingNode infoSwing = new SwingNode();
+        SwingUtilities.invokeLater(() -> infoSwing.setContent(info.getPanel()));
+
+        infoStage = new Stage();
+        infoStage.setTitle("Hint: rotations to solve");
+        StackPane root = new StackPane(infoSwing);
+        root.setStyle("-fx-background-color: " + BG_COLOR_HEX + ";"); // ваш фон
+        Scene scene = new Scene(root,
+                current.cols()*InfoPresenter.TILE_SIZE,
+                current.rows()*InfoPresenter.TILE_SIZE
+        );
+        infoStage.setScene(scene);
+        infoStage.show();
     }
 
     /**
@@ -319,11 +382,27 @@ public class GamePlayView {
 
         // Set button actions
         retryButton.setOnAction(e -> {
+
+            if (infoStage != null) {
+                infoStage.close();
+                infoStage = null;
+            }
             hideLevelCompleteOverlay();
             restartLevel();
         });
 
         nextLevelButton.setOnAction(e -> {
+            // Notify the MainApp that the level is completed
+            hideLevelCompleteOverlay();
+            if (infoStage != null) {
+                infoStage.close();
+                infoStage = null;
+            }
+
+            if (onLevelCompleted != null) {
+                onLevelCompleted.run();
+            }
+
             if (nextLevelHandler != null) {
                 nextLevelHandler.handle(e);
             }
@@ -507,13 +586,9 @@ public class GamePlayView {
         LevelManager.getInstance().markLevelCompleted(levelNumber, difficulty);
         levelAlreadyCompleted = true;
 
+
         // Show the completion overlay
         showLevelCompleteOverlay();
-
-        // Notify the MainApp that the level is completed
-        if (onLevelCompleted != null) {
-            onLevelCompleted.run();
-        }
     }
 
     /**

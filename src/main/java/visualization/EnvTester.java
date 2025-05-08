@@ -1,5 +1,6 @@
 package visualization;
 
+import ija.ijaProject.game.Game;
 import visualization.common.ToolEnvironment;
 import visualization.common.ToolField;
 import visualization.view.FieldView;

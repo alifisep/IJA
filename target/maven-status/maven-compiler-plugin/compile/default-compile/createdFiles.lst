@@ -22,6 +22,7 @@ visualization/EnvPresenter.class
 visualization/common/Observable$Observer.class
 visualization/common/ToolEnvironment.class
 visualization/EnvTester.class
+visualization/view/RotateInfoView.class
 visualization/view/LevelsView.class
 visualization/view/GamePlayView.class
 ija/ijaProject/settings/LanguageManager$1.class

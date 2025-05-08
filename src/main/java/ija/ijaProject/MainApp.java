@@ -1,5 +1,6 @@
 package ija.ijaProject;
 
+import ija.ijaProject.game.Game;
 import ija.ijaProject.game.levels.LevelManager;
 import ija.ijaProject.settings.LanguageManager;
 import ija.ijaProject.settings.SettingsManager;
@@ -9,9 +10,11 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
+import visualization.EnvPresenter;
 import visualization.view.*;
 
 public class MainApp extends Application {
+    private static final int CELL_SIZE =40 ;
     private Stage primaryStage;
 
     @Override
@@ -87,7 +90,6 @@ public class MainApp extends Application {
         Scene scene = new Scene(levelsView.getRoot(), 800, 600);
         primaryStage.setScene(scene);
     }
-
     /**
      * Shows the information screen.
      */

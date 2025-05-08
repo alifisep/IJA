@@ -32,11 +32,6 @@ public class EnvPresenter {
     private Runnable levelCompletedCallback;
     private boolean levelCompletionDetected = false;
     private final Timer levelCheckTimer;
-    /*private final Game game;
-
-    public Game getGame() {
-        return this.game;
-    }*/
 
     /**
      * Creates a new EnvPresenter for the given environment.

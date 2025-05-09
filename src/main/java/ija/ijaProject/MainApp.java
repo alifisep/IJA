@@ -1,3 +1,16 @@
+/**
+ * Soubor: src/main/java/ija.ijaProject/MainApp.java
+ *
+ * Popis:
+ * Hlavní třída aplikace VoltMaze.
+ * Zajišťuje celý cyklus životnosti JavaFX aplikace: zobrazení menu, výběr úrovní,
+ * herní obrazovku, informace a nastavení. Spravuje uložení nastavení při ukončení.
+ *
+ *
+ * @Author: Yaroslav Hryn (xhryny00),Oleksandr Musiichuk (xmusii00)
+ *
+ */
+
 package ija.ijaProject;
 
 import ija.ijaProject.game.Game;
@@ -13,10 +26,19 @@ import javafx.stage.WindowEvent;
 import visualization.EnvPresenter;
 import visualization.view.*;
 
+/** Hlavní třída aplikace VoltMaze.
+ * Zajišťuje celý cyklus životnosti JavaFX aplikace: zobrazení menu, výběr úrovní,
+ * herní obrazovku, informace a nastavení. Spravuje uložení nastavení při ukončení. */
 public class MainApp extends Application {
     private static final int CELL_SIZE =40 ;
     private Stage primaryStage;
 
+
+    /**
+     * Spustí JavaFX aplikaci.
+     *
+     * @param primaryStage primární okno aplikace
+     */
     @Override
     public void start(Stage primaryStage) {
         // Set this to true to make the JavaFX toolkit exit when the last window is closed
@@ -39,9 +61,9 @@ public class MainApp extends Application {
     }
 
     /**
-     * Handles the window close event to ensure proper application termination.
+     * Obslouží požadavek na zavření okna a zajistí korektní ukončení aplikace.
      *
-     * @param event The window event
+     * @param event událost zavření okna
      */
     private void handleWindowClose(WindowEvent event) {
         System.out.println("Window close requested");
@@ -50,12 +72,10 @@ public class MainApp extends Application {
     }
 
     /**
-     * Shows the main menu screen.
+     * Zobrazí úvodní hlavní menu s tlačítky Play, Info a Settings.
      */
     private void showMainMenu() {
-        // Create a main menu view
         GameMenuView menuView = new GameMenuView(primaryStage);
-
         // Set up button actions
         menuView.setOnPlayAction(e -> showLevels());
         menuView.setOnInfoAction(e -> showInfo());
@@ -67,7 +87,7 @@ public class MainApp extends Application {
     }
 
     /**
-     * Shows the levels selection screen.
+     * Zobrazí obrazovku výběru úrovní.
      */
     private void showLevels() {
         // Create a levels view
@@ -90,8 +110,9 @@ public class MainApp extends Application {
         Scene scene = new Scene(levelsView.getRoot(), 800, 600);
         primaryStage.setScene(scene);
     }
+
     /**
-     * Shows the information screen.
+     * Zobrazí informační stránku o hře.
      */
     private void showInfo() {
         // Create an info view
@@ -105,6 +126,12 @@ public class MainApp extends Application {
         primaryStage.setScene(scene);
     }
 
+    /**
+     * Zpracuje dokončení úrovně a rozhodne, zda spustit další úroveň nebo vrátit se k výběru.
+     *
+     * @param levelNumber číslo dokončené úrovně
+     * @param difficulty  úroveň obtížnosti (0=Beginner,1=Intermediate,2=Advanced)
+     */
     private void handleLevelCompleted(int levelNumber, int difficulty) {
         System.out.println("MainApp: Level " + levelNumber + " at difficulty " + difficulty + " completed!");
 
@@ -129,6 +156,9 @@ public class MainApp extends Application {
         }
     }
 
+    /**
+     * Zobrazí obrazovku nastavení aplikace.
+     */
     private void showSettings() {
         // Create a settings view
         SettingsView settingsView = new SettingsView(primaryStage);
@@ -148,6 +178,10 @@ public class MainApp extends Application {
         primaryStage.setTitle("VoltMaze - " + LanguageManager.getInstance().getString("settings"));
     }
 
+
+    /**
+     * Inicializuje manažery nastavení a jazyka před startem UI.
+     */
     @Override
     public void init() {
         // Initialize settings and language managers
@@ -162,10 +196,10 @@ public class MainApp extends Application {
     }
 
     /**
-     * Starts a game with the specified level and difficulty.
+     * Spustí herní obrazovku pro zvolenou úroveň a obtížnost.
      *
-     * @param levelNumber The level number
-     * @param difficulty The difficulty level (0=Beginner, 1=Intermediate, 2=Advanced)
+     * @param levelNumber číslo úrovně
+     * @param difficulty  úroveň obtížnosti
      */
     private void startGame(int levelNumber, int difficulty) {
         System.out.println("Starting game with level: " + levelNumber + ", difficulty: " + difficulty);
@@ -198,7 +232,7 @@ public class MainApp extends Application {
     }
 
     /**
-     * Returns to the levels selection screen.
+     * Vrátí se zpět do výběru úrovní.
      */
     private void returnToLevels() {
         showLevels();

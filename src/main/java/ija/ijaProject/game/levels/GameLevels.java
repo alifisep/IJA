@@ -1,3 +1,19 @@
+/**
+ * Soubor: src/main/java/ija.ijaProject/game/levels/GameLevels.java
+ *
+ * Popis:
+ * Třída GameLevels obsahuje statické definice jednotlivých úrovní hry VoltMaze
+ * pro obtížnosti Beginner, Intermediate a Advanced. Nabízí metody:
+ *   – getLevelDefinition(..): vrací pole objektů popisující uzly dané úrovně,
+ *   – getGridSizeForDifficulty(..): volí rozměr herní mřížky podle obtížnosti,
+ *   – createGameLevel(..): vytváří SwingNode s JavaFX/​Swing prezentací úrovně,
+ *       která nejprve zobrazí vyřešené uspořádání, pak provede scramble
+ *       a následně spustí interaktivní režim hry s tooltipem zobrazujícím
+ *       zbývající a provedená otočení uzlů.
+ * @Author: Yaroslav Hryn (xhryny00),Oleksandr Musiichuk (xmusii00)
+ *
+ */
+
 package ija.ijaProject.game.levels;
 
 import ija.ijaProject.common.GameNode;
@@ -199,7 +215,6 @@ public class GameLevels {
 
     // ==================== INTERMEDIATE LEVELS (11-20) ====================
 
-    // Level 11: Introduction to intermediate difficulty
     private static final Object[][] LEVEL_11_INTERMEDIATE = {
             {"P", 2, 2, Side.SOUTH},
             {"L", 3, 2, Side.NORTH, Side.SOUTH},
@@ -219,7 +234,6 @@ public class GameLevels {
             {"B",10, 4, Side.EAST}
     };
 
-    // Level 12: Complex grid with multiple paths
     private static final Object[][] LEVEL_12_INTERMEDIATE = {
             {"P", 5, 6, Side.SOUTH, Side.EAST,Side.WEST},
 
@@ -255,7 +269,6 @@ public class GameLevels {
 
     };
 
-    // Level 13: Introducing complex interdependence
     private static final Object[][] LEVEL_13_INTERMEDIATE = {
             {"P", 4, 4, Side.SOUTH,Side.EAST},
 
@@ -291,7 +304,6 @@ public class GameLevels {
             {"B",  5, 7, Side.SOUTH}
     };
 
-    // Level 14: Complex grid with multiple power sources
     private static final Object[][] LEVEL_14_INTERMEDIATE = {
             {"P", 6, 4, Side.NORTH,Side.EAST},
 
@@ -327,7 +339,6 @@ public class GameLevels {
             {"B",  3, 7, Side.WEST}
     };
 
-    // Level 15: Complex grid with multiple paths and bulbs
     private static final Object[][] LEVEL_15_INTERMEDIATE = {
             {"P", 5, 4, Side.NORTH,Side.SOUTH},
 
@@ -375,7 +386,6 @@ public class GameLevels {
             {"B",  7, 7, Side.EAST}
     };
 
-    // Level 16: Complex grid with multiple paths and power sources
     private static final Object[][] LEVEL_16_INTERMEDIATE = {
             {"P", 4, 6, Side.NORTH},
 
@@ -413,7 +423,6 @@ public class GameLevels {
             {"B",  3, 7, Side.SOUTH}
     };
 
-    // Level 17: Complex grid with multiple paths and bulbs
     private static final Object[][] LEVEL_17_INTERMEDIATE = {
             {"P", 2, 2, Side.SOUTH},
             {"L", 3, 2, Side.NORTH, Side.SOUTH},
@@ -434,7 +443,6 @@ public class GameLevels {
 
     };
 
-    // Level 18: Complex grid with multiple paths and power sources
     private static final Object[][] LEVEL_18_INTERMEDIATE = {
             {"P", 6, 4, Side.NORTH,Side.EAST},
 
@@ -470,7 +478,6 @@ public class GameLevels {
             {"B",  3, 7, Side.WEST}
     };
 
-    // Level 19: Complex grid with multiple paths and bulbs
     private static final Object[][] LEVEL_19_INTERMEDIATE = {
             {"P", 4, 4, Side.SOUTH,Side.EAST},
 
@@ -506,7 +513,6 @@ public class GameLevels {
             {"B",  5, 7, Side.SOUTH}
     };
 
-    // Level 20: Complex grid with multiple paths and power sources
     private static final Object[][] LEVEL_20_INTERMEDIATE = {
             {"P", 5, 4, Side.NORTH,Side.SOUTH},
 
@@ -556,7 +562,6 @@ public class GameLevels {
 
     // ==================== ADVANCED LEVELS (21-30) ====================
 
-    // Level 21: Introduction to advanced difficulty
     private static final Object[][] LEVEL_21_ADVANCED = {
             {"P", 7, 7, Side.WEST,Side.SOUTH},
 
@@ -606,7 +611,6 @@ public class GameLevels {
             {"B",  8, 8, Side.WEST}
     };
 
-    // Level 22: Complex grid with multiple paths
     private static final Object[][] LEVEL_22_ADVANCED = {
             {"P", 5, 5, Side.EAST,Side.NORTH},
 
@@ -662,7 +666,7 @@ public class GameLevels {
             {"B",  6, 8, Side.SOUTH}
     };
 
-    // Level 23: Complex grid with multiple power sources
+
     private static final Object[][] LEVEL_23_ADVANCED = {
             {"P", 6, 5, Side.SOUTH,Side.NORTH},
 
@@ -697,7 +701,6 @@ public class GameLevels {
             {"B", 7, 7, Side.NORTH}
     };
 
-    // Level 24: Complex grid with multiple paths and bulbs
     private static final Object[][] LEVEL_24_ADVANCED = {
             {"P", 6, 8, Side.WEST,Side.SOUTH},
 
@@ -749,7 +752,6 @@ public class GameLevels {
 
     };
 
-    // Level 25: Complex grid with multiple paths and power sources
     private static final Object[][] LEVEL_25_ADVANCED = {
             {"P", 7, 7, Side.WEST,Side.NORTH,Side.EAST},
 
@@ -801,7 +803,7 @@ public class GameLevels {
             {"B",  8, 8, Side.NORTH}
     };
 
-    // Level 26: Complex grid with multiple paths and bulbs
+
     private static final Object[][] LEVEL_26_ADVANCED = {
             {"P", 5, 5, Side.EAST,Side.NORTH},
 
@@ -853,7 +855,6 @@ public class GameLevels {
             {"B",  6, 8, Side.SOUTH}
     };
 
-    // Level 27: Complex grid with multiple paths and power sources
     private static final Object[][] LEVEL_27_ADVANCED = {
             {"P", 6, 5, Side.SOUTH,Side.NORTH},
 
@@ -888,7 +889,6 @@ public class GameLevels {
             {"B", 7, 7, Side.NORTH}
     };
 
-    // Level 28: Complex grid with multiple paths and bulbs
     private static final Object[][] LEVEL_28_ADVANCED = {
             {"P", 7, 7, Side.WEST,Side.SOUTH},
 
@@ -938,7 +938,6 @@ public class GameLevels {
             {"B",  8, 8, Side.WEST}
     };
 
-    // Level 29: Complex grid with multiple paths and power sources
     private static final Object[][] LEVEL_29_ADVANCED = {
             {"P", 7, 7, Side.WEST,Side.NORTH,Side.EAST},
 
@@ -990,7 +989,7 @@ public class GameLevels {
             {"B",  8, 8, Side.NORTH}
     };
 
-    // Level 30: Most complex level with multiple paths, power sources, and bulbs
+
     private static final Object[][] LEVEL_30_ADVANCED = {
             {"P", 6, 8, Side.WEST,Side.SOUTH},
 
@@ -1043,26 +1042,31 @@ public class GameLevels {
 
 
     /**
-     * Creates a SwingNode containing the game for the specified level and difficulty.
+     * Vytvoří JavaFX SwingNode obsahující herní úroveň.
+     * Nejprve zobrazí vyřešené (správné) uspořádání políček na 1 sekundu,
+     * pak provede náhodný scrambling (otočení uzlů), resetuje počitadla
+     * uživatelských otočení a přepne na herní (play) režim.
+     * Zároveň v play režimu po spočítání velikosti políčka zobrazuje
+     * po držení kurzoru 1 s tooltip s informací o zbývajících
+     * a provedených otočeních pro dané políčko.
      *
-     * @param levelNumber The level number (1-10 for each difficulty)
-     * @param difficulty The difficulty level (0=Beginner, 1=Intermediate, 2=Advanced)
-     * @return A SwingNode containing the game
+     * @param levelNumber           číslo úrovně v rámci dané obtížnosti (1–10)
+     * @param difficulty            obtížnost (0=Beginner, 1=Intermediate, 2=Advanced)
+     * @param levelCompletedCallback volatelný callback, který se vyvolá při dokončení úrovně
+     * @return SwingNode, do kterého je vložen Swingový panel s hrou
      */
     public static SwingNode createGameLevel(int levelNumber, int difficulty, Runnable levelCompletedCallback) {
 
         SwingNode swingNode = new SwingNode();
 
-        // Get the appropriate level definition
         Object[][] levelDef = getLevelDefinition(levelNumber, difficulty);
 
         SwingUtilities.invokeLater(() -> {
             try {
-                // Create game with appropriate grid size based on difficulty
+
                 int gridSize = getGridSizeForDifficulty(difficulty);
                 Game game = Game.create(gridSize, gridSize + 2);
 
-                // Add nodes from level definition
                 for (Object[] n : levelDef) {
                     String type = (String) n[0];
                     int row = (Integer) n[1];
@@ -1089,7 +1093,6 @@ public class GameLevels {
                 Platform.runLater(() -> swingNode.getProperties().put("solvedGame", solvedGame));
 
                 Platform.runLater(() -> {
-                   // swingNode.setContent(solvedPanel);
                     PauseTransition pause = new PauseTransition(Duration.seconds(1));
                     pause.setOnFinished(evt -> {
                         SwingUtilities.invokeLater(() -> {
@@ -1145,38 +1148,6 @@ public class GameLevels {
                                             "\n Actual Rotations: " + actual);
                                 });
                                 swingNode.setOnMouseExited(ev -> tip.hide());
-
-                                /*swingNode.setOnMouseClicked(mouseEvent -> {
-                                    if (mouseEvent.getClickCount() == 3) {
-                                        // Вычисляем, над какой клеткой мы кликнули
-                                        double x = mouseEvent.getX(), y = mouseEvent.getY();
-                                        int cols = game.cols(), rows = game.rows();
-                                        Bounds bounds = swingNode.getLayoutBounds();
-                                        double cellW = bounds.getWidth()  / cols;
-                                        double cellH = bounds.getHeight() / rows;
-
-                                        int col = Math.min(cols, Math.max(1, (int)(x / cellW) + 1));
-                                        int row = Math.min(rows, Math.max(1, (int)(y / cellH) + 1));
-                                        Position pos = new Position(row, col);
-
-                                        // Находим текущие и целевые коннекторы
-                                        Set<Side> cur = game.getGameNode(row, col).getConnectors();
-                                        Set<Side> tgt = solvedGame.getGameNode(row, col).getConnectors();
-
-                                        int remaining = rotationsNeeded(cur, tgt);
-                                        int done      = game.getGameNode(row, col).getRotationCount();
-
-                                        // Показываем JavaFX Alert
-                                        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                                        alert.setTitle("Информация о клетке");
-                                        alert.setHeaderText(String.format("Поле [%d,@%d]", row, col));
-                                        alert.setContentText(
-                                                "Осталось вращений: " + remaining + "\n" +
-                                                        "Сделано вращений: " + done
-                                        );
-                                        alert.showAndWait();
-                                    }
-                                });*/
                             });
 
                         });
@@ -1192,34 +1163,14 @@ public class GameLevels {
 
         return swingNode;
     }
-    /*private static void onCellHover(MouseEvent evt, Tooltip tip, Game game, Game solvedGame) {
-        // вычисляем над какой клеткой курсор
-        int cols = game.cols();
-        int rows = game.rows();
 
-        Bounds b = swingNode.getLayoutBounds();
-        double w = b.getWidth(), h = b.getHeight();
-
-        double cellW = w  / cols;
-        double cellH = h  / rows;
-
-        int col = Math.min(cols, Math.max(1, (int)(evt.getX() / cellW) + 1));
-        int row = Math.min(rows, Math.max(1, (int)(evt.getY() / cellH) + 1));
-
-        // получаем коннекторы
-        Set<Side> cur = game.getGameNode(row, col).getConnectors();
-        Set<Side> tgt = solvedGame.getGameNode(row, col).getConnectors();
-
-        int remaining = rotationsNeeded(cur, tgt);
-        int done      = game.getGameNode(row, col).getRotationCount();
-
-        // обновляем текст подсказки
-        tip.setText(
-                String.format("Ячейка [%d,@%d]\nОсталось вращений: %d\nСделано вращений: %d",
-                        row, col, remaining, done)
-        );
-    }*/
-
+    /**
+     * Vrátí minimum otočení o 90° CW, aby se množina current shodovala s target.
+     *
+     * @param cur aktuální množina connectorů
+     * @param tgt cílová množina connectorů
+     * @return počet otočení (0–3)
+     */
     private static int rotationsNeeded(Set<Side> cur, Set<Side> tgt) {
         for (int k = 0; k < 4; k++) {
             final int kk = k;
@@ -1231,6 +1182,13 @@ public class GameLevels {
         return 0;
     }
 
+    /**
+     * Otočí jednu stranu o 90° CW n-krát.
+     *
+     * @param s     vstupní strana
+     * @param times počet otočení
+     * @return nová strana po otočení
+     */
     private static Side rotateCW(Side s, int times) {
         Side r = s;
         for (int i = 0; i < times; i++) {

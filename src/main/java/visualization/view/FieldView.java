@@ -1,3 +1,19 @@
+/**
+ * Soubor: src/main/java/visualization/view/FieldView.java
+ *
+ * Popis:
+ * Třída FieldView zajišťuje kreslení jednotlivých políček herního plánu
+ *   ve Swing panelu. Reaguje na změny stavu modelového objektu ToolField
+ *   (implementovaného v GameNode) a zobrazuje jeho aktuální typ (vodič,
+ *   žárovka, zdroj) včetně stavu napájení. Podporuje zvýraznění při najetí
+ *   myší a přepínání stavu políčka po kliknutí.
+ *
+ *
+ * @Author: Yaroslav Hryn (xhryny00)
+ * @Author: Oleksandr Musiichuk (xmusii00)
+ *
+ */
+
 package visualization.view;
 
 import visualization.common.Observable;
@@ -9,11 +25,23 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.geom.*;
 
+/** Zajišťuje kreslení jednotlivých políček herního plánu
+ *   ve Swing panelu. Reaguje na změny stavu modelového objektu ToolField
+ *   (implementovaného v GameNode) a zobrazuje jeho aktuální typ (vodič,
+ *   žárovka, zdroj) včetně stavu napájení. Podporuje zvýraznění při najetí
+ *   myší a přepínání stavu políčka po kliknutí. */
+
 public class FieldView extends JPanel implements Observable.Observer {
     private final ToolField field;
     private boolean isHighlighted = false;
     private int updateCount = 0; // Add counter for updates
 
+    /**
+     * Vytvoří nové FieldView pro zadané modelové pole.
+     * Přidá posluchač pro notifikace a myší.
+     *
+     * @param field modelové pole, jehož stav se bude vizualizovat
+     */
     public FieldView(ToolField field) {
         this.field = field;
         this.field.addObserver(this);
@@ -42,16 +70,27 @@ public class FieldView extends JPanel implements Observable.Observer {
         });
     }
 
-    // Add this method to fix the first error
+    /**
+     * Resetuje čítač obdržených aktualizací.
+     */
     public void clearChanged() {
         updateCount = 0;
     }
 
-    // Add this method to fix the second error
+    /**
+     * Vrací počet dosavadních aktualizací (notifikací) tohoto políčka.
+     *
+     * @return počet volání update()
+     */
     public int numberUpdates() {
         return updateCount;
     }
 
+    /**
+     * Voláno při změně stavu modelového pole. Zvýší čítač a překreslí komponentu.
+     *
+     * @param observable zdroj notifikace
+     */
     @Override
     public void update(Observable observable) {
         // Increment update count when field changes
@@ -59,18 +98,22 @@ public class FieldView extends JPanel implements Observable.Observer {
         repaint();
     }
 
+    /**
+     * Překreslí obsah políčka dle jeho typu a stavu napájení.
+     * Také vykreslí zvýraznění, pokud je aktivní.
+     *
+     * @param g grafický kontext
+     */
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
         Graphics2D g2d = (Graphics2D) g.create();
 
-        // Enable anti-aliasing for smoother graphics
         g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
         int width = getWidth();
         int height = getHeight();
 
-        // Draw based on field type
         if (field.isLink()) {
             drawLinkNode(g2d, width, height);
         } else if (field.isBulb()) {
@@ -79,7 +122,6 @@ public class FieldView extends JPanel implements Observable.Observer {
             drawPowerNode(g2d, width, height);
         }
 
-        // Draw highlight if mouse is over the field
         if (isHighlighted) {
             g2d.setColor(new Color(14, 165, 233, 50));
             g2d.fillRect(0, 0, width, height);
@@ -137,7 +179,6 @@ public class FieldView extends JPanel implements Observable.Observer {
     private void drawBulbNode(Graphics2D g2d, int width, int height) {
         boolean isLit = field.light();
 
-        // Draw bulb base
         int baseWidth = 16;
         int baseHeight = 10;
         Rectangle2D base = new Rectangle2D.Double(
@@ -149,7 +190,6 @@ public class FieldView extends JPanel implements Observable.Observer {
         g2d.setColor(new Color(100, 116, 139));
         g2d.fill(base);
 
-        // Draw bulb glass
         int glassSize = 20;
         Ellipse2D glass = new Ellipse2D.Double(
                 width / 2 - glassSize / 2,
@@ -159,7 +199,6 @@ public class FieldView extends JPanel implements Observable.Observer {
         );
 
         if (isLit) {
-            // Draw glow for lit bulb
             for (int i = 3; i >= 0; i--) {
                 float alpha = 0.2f - (i * 0.05f);
                 g2d.setColor(new Color(250, 204, 21, (int)(alpha * 255)));
@@ -182,7 +221,6 @@ public class FieldView extends JPanel implements Observable.Observer {
         g2d.setStroke(new BasicStroke(1));
         g2d.draw(glass);
 
-        // Draw connections based on sides
         Color connectionColor = isLit ? new Color(250, 204, 21) : new Color(100, 116, 139);
         drawConnections(g2d, width, height, connectionColor);
     }
@@ -312,7 +350,7 @@ public class FieldView extends JPanel implements Observable.Observer {
         g2d.setPaint(baseColor);
     }
 
-    private void drawDirLines(Graphics2D g2d, int cx, int cy, int w, int h) {
+    /*private void drawDirLines(Graphics2D g2d, int cx, int cy, int w, int h) {
         if (field.north()) g2d.draw(new Line2D.Float(cx, cy, cx, 0));
         if (field.south()) g2d.draw(new Line2D.Float(cx, cy, cx, h));
         if (field.east()) g2d.draw(new Line2D.Float(cx, cy, w, cy));
@@ -320,5 +358,5 @@ public class FieldView extends JPanel implements Observable.Observer {
     }
     public ToolField getField() {
         return field;
-    }
+    }*/
 }

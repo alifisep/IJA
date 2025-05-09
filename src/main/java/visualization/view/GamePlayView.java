@@ -1,3 +1,15 @@
+/**
+ * Soubor: src/main/java/visualization/view/GamePlayView.java
+ *
+ * Popis:
+ * Tato třída spravuje zobrazení herního plátna JavaFX, včetně ovládacích prvků, hlavičky
+ * s tlačítkem zpět a informacemi o úrovni, a SwingNode obsahujícího hru. Zajišťuje inicializaci,
+ * sledování dokončení úrovně, přepínání mezi zobrazením hry a nápovědy a vykreslování překryvného
+ * dialogu po dokončení.
+ *
+ * @Author: Yaroslav Hryn (xhryny00), Oleksandr Musiichuk (xmusii00)
+ */
+
 package visualization.view;
 
 import ija.ijaProject.common.GameNode;
@@ -74,7 +86,6 @@ public class GamePlayView {
      * @param levelNumber The level number
      * @param difficulty The difficulty level (0=Beginner, 1=Intermediate, 2=Advanced)
      */
-
     public GamePlayView(Stage stage, int levelNumber, int difficulty) {
         this.stage = stage;
         this.levelNumber = levelNumber;
@@ -278,6 +289,9 @@ public class GamePlayView {
         return header;
     }
 
+    /**
+     * Otevře nové okno nápovědy s InfoPresenter.
+     */
     private void openInfoWindow() {
         EnvPresenter p = getPlayPresenter();
         if (p==null) {

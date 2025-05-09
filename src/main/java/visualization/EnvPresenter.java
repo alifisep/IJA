@@ -1,3 +1,14 @@
+/**
+ * Soubor: src/main/java/visualization/EnvPresenter.java
+ *
+ * Popis:
+ *
+ * Třída prezentující (vizualizující) model prostředí v GUI (Swing).
+ *
+ * @Author: Yaroslav Hryn (xhryny00),Oleksandr Musiichuk (xmusii00)
+ *
+ */
+
 package visualization;
 
 import ija.ijaProject.game.Game;
@@ -230,7 +241,7 @@ public class EnvPresenter {
         }
     }
 
-
+    /** Return the environment */
     public ToolEnvironment getEnvironment() {
         return env;
     }

@@ -1,3 +1,15 @@
+/**
+ * Soubor: src/main/java/visualization/view/GameMenuView.java
+ *
+ * Popis:
+ *   Třída reprezentuje hlavní menu VoltMaze. Zobrazuje animované pozadí
+ *   se "síťovými" linkami a částicemi, název hry s logem a tři tlačítka:
+ *   PLAY, INFO, SETTINGS.
+ *
+ * @author Yaroslav Hryn (xhryny00)
+ * @author Oleksandr Musiichuk (xmusii00)
+ */
+
 package visualization.view;
 
 import javafx.animation.*;
@@ -19,6 +31,9 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
+/** Reprezentuje hlavní menu VoltMaze. Zobrazuje animované pozadí
+ *   se "síťovými" linkami a částicemi, název hry s logem a tři tlačítka:
+ *   PLAY, INFO, SETTINGS. */
 public class GameMenuView {
 
     private final StackPane root;
@@ -27,6 +42,11 @@ public class GameMenuView {
     private Button infoButton;
     private Button settingsButton;
 
+    /**
+     * Vytvoří nové hlavní menu.
+     *
+     * @param stage primární Stage aplikace – pro ňí se vážou rozměry pozadí
+     */
     public GameMenuView(Stage stage) {
         this.stage = stage;
 
@@ -61,6 +81,11 @@ public class GameMenuView {
         startAnimations(circuitDecoration);
     }
 
+    /**
+     * Sestaví tmavé přechodové pozadí s mřížkou a pohybujícími se částicemi.
+     *
+     * @return Pane obsahující celé pozadí menu
+     */
     private Pane createAnimatedBackground() {
         Pane backgroundPane = new Pane();
 
@@ -92,6 +117,12 @@ public class GameMenuView {
         return backgroundPane;
     }
 
+    /**
+     * Vytvoří linky mřížky (horizontální a vertikální),
+     * které se přizpůsobují rozměrům Stage.
+     *
+     * @return Group obsahující tvarové prvky Line
+     */
     private Group createGridLines() {
         Group gridLines = new Group();
 
@@ -121,6 +152,11 @@ public class GameMenuView {
         return gridLines;
     }
 
+    /**
+     * Rozmístí a animuje "energetické částice" jako kružnice s glow efektem.
+     *
+     * @return Group s animovanými kružnicemi
+     */
     private Group createEnergyParticles() {
         Group particles = new Group();
 
@@ -164,6 +200,11 @@ public class GameMenuView {
         return particles;
     }
 
+    /**
+     * Vytvoří logo s textem „VoltMaze“ a bleskem.
+     *
+     * @return StackPane obsahující grafiku loga a text
+     */
     private StackPane createGameTitle() {
         StackPane titleContainer = new StackPane();
 
@@ -207,6 +248,13 @@ public class GameMenuView {
         return titleContainer;
     }
 
+    /**
+     * Vytvoří a naformátuje detailní tvar blesku pro logo.
+     * Souřadnice bodů definují konturu blesku, která se následně
+     * styluje výplní, obrysem, měřítkem a glow efektem.
+     *
+     * @return Polygon představující blesk s aplikovaným stylem a efektem
+     */
     private Polygon createLightningBolt() {
         // Create a detailed lightning bolt
         Polygon lightning = new Polygon(
@@ -215,7 +263,7 @@ public class GameMenuView {
                 25.0, 15.0,
                 35.0, 30.0,
                 30.0, 30.0,
-                40.0, 50.0,  // Bottom point
+                40.0, 50.0,
                 15.0, 35.0,
                 25.0, 35.0,
                 15.0, 20.0,
@@ -240,6 +288,11 @@ public class GameMenuView {
         return lightning;
     }
 
+    /**
+     * Položí tlačítka PLAY, INFO a SETTINGS do vertikálního kontejneru.
+     *
+     * @return VBox s připravenými Buttony
+     */
     private VBox createMenuButtons() {
         VBox buttonContainer = new VBox(15);
         buttonContainer.setAlignment(Pos.CENTER);
@@ -253,6 +306,12 @@ public class GameMenuView {
         return buttonContainer;
     }
 
+    /**
+     * Standardní stylování jednoho tlačítka menu.
+     *
+     * @param text text, který se na tlačítko vypíše
+     * @return nově vytvořený a naformátovaný Button
+     */
     private Button createStyledButton(String text) {
         Button button = new Button(text);
 
@@ -341,6 +400,11 @@ public class GameMenuView {
         return button;
     }
 
+    /**
+     * Přidá dekorativní "cestičky" elektro-cesty do menu pozadí.
+     *
+     * @return Pane s několika Path prvky
+     */
     private Pane createCircuitDecoration() {
         Pane circuitPane = new Pane();
 
@@ -356,6 +420,21 @@ public class GameMenuView {
         return circuitPane;
     }
 
+
+    /**
+     * Vytvoří cestu ("circuit") skládající se z úseček (PathElements),
+     * jejíž souřadnice jsou vypočítány jako procentuální pozice vůči velikosti okna.
+     * Cesta začíná v bodě odpovídajícím startXPercent, startYPercent,
+     * poté vede vodorovně, svisle, zase vodorovně, atd., až do koncového bodu
+     * na procentuálním offsetu (startXPercent + widthPercent, startYPercent + heightPercent).
+     * Výsledná cesta je na konec naformátována stylingem (barva, tloušťka čáry, čárkování).
+     *
+     * @param startXPercent  horizontální startovací pozice jako procento šířky okna (0.0–1.0)
+     * @param startYPercent  vertikální startovací pozice jako procento výšky okna (0.0–1.0)
+     * @param widthPercent   procentuální šířka segmentu cesty (0.0–1.0)
+     * @param heightPercent  procentuální výška segmentu cesty (0.0–1.0)
+     * @return Path obsahující nakonfigurované HLineTo a VLineTo elementy a stylování
+     */
     private Path createCircuitPath(double startXPercent, double startYPercent, double widthPercent, double heightPercent) {
         Path path = new Path();
 
@@ -391,6 +470,11 @@ public class GameMenuView {
         return path;
     }
 
+    /**
+     * Spustí všechny animace (pohyb čárek a blikání) v dekoraci.
+     *
+     * @param circuitDecoration Pane, jehož děti (Path) se mají animovat
+     */
     private void startAnimations(Pane circuitDecoration) {
         // Animate the circuit paths
         for (int i = 0; i < circuitDecoration.getChildren().size(); i++) {
@@ -431,7 +515,11 @@ public class GameMenuView {
         settingsButton.setOnAction(handler);
     }
 
-    // Getter for the root pane
+    /**
+     * Vrací root uzel scény – vkládá se do Scene v MainApp.
+     *
+     * @return StackPane kořenová část scény menu
+     */
     public StackPane getRoot() {
         return root;
     }

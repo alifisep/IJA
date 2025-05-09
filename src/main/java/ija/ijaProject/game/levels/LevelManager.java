@@ -1,3 +1,20 @@
+/**
+ * Soubor: src/main/java/ija.ijaProject/game/levels/LevelManager.java
+ *
+ * Popis:
+ * Třída LevelManager zajišťuje evidenci a perzistenci dokončených úrovní hry.
+ *   Používá vzor Singleton, aby v aplikaci existovala pouze jedna instance.
+ *   Poskytuje metody pro:
+ *     – označení úrovně jako dokončené (markLevelCompleted),
+ *     – kontrolu, zda je úroveň dokončená (isLevelCompleted),
+ *     – zjištění nejvyšší dokončené úrovně pro danou obtížnost (getHighestCompletedLevel),
+ *     – načtení a uložení progressu do souboru (loadProgress, saveProgress),
+ *     – resetování veškerého progressu (resetProgress),
+ *     – získání všech dokončených úrovní (getCompletedLevels).
+ * @Author: Yaroslav Hryn (xhryny00),Oleksandr Musiichuk (xmusii00)
+ *
+ */
+
 package ija.ijaProject.game.levels;
 
 import java.io.*;

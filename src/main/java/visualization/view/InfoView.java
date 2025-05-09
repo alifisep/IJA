@@ -1,15 +1,3 @@
-/**
- * Soubor: src/main/java/visualization/view/InfoView.java
- *
- * Popis:
- *  Třída InfoView zajišťuje zobrazení informací o hře.
- *   Vytváří animované pozadí s elektrickými částicemi a obvody,
- *   flexibilní rozložení reagující na změnu velikosti okna a posuvný panel pro textový obsah.
- *
- *
- * @Author: Yaroslav Hryn (xhryny00), Oleksandr Musiichuk (xmusii00)
- */
-
 package visualization.view;
 
 import javafx.animation.*;
@@ -34,20 +22,12 @@ import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
-/** Třída InfoView zajišťuje zobrazení informací o hře.*/
 public class InfoView {
 
     private final StackPane root;
     private final Stage stage;
     private Button backButton;
 
-
-    /**
-     * Konstruktor třídy <code>InfoView</code>.
-     * Inicializuje hlavní rozložení, animace a obsah.
-     *
-     * @param stage primární JavaFX Stage, na které se InfoView zobrazí
-     */
     public InfoView(Stage stage) {
         this.stage = stage;
 
@@ -121,28 +101,21 @@ public class InfoView {
         configurePlatformSpecificSettings();
     }
 
-
-
-    /**
-     * Konfiguruje platformně specifická nastavení (např. větší cíle pro dotyk).
-     */
     private void configurePlatformSpecificSettings() {
-        // Check if running on mobile
+        // Check if running on mobile (approximate detection)
         boolean isMobile = detectMobileDevice();
 
         if (isMobile) {
+            // Adjust font sizes for mobile
             adjustFontSizesForMobile();
+
+            // Increase touch target sizes
             backButton.setPrefHeight(50);
             backButton.setPrefWidth(120);
             backButton.setStyle(backButton.getStyle() + "-fx-font-size: 18px;");
         }
     }
 
-    /**
-     * Detekuje, zda aplikace běží na mobilním zařízení.
-     *
-     * @return <code>true</code>, pokud je mobilní zařízení, jinak <code>false</code>
-     */
     private boolean detectMobileDevice() {
         // Simple detection based on screen size and touch support
         // This is an approximation - actual detection depends on your deployment environment
@@ -160,11 +133,6 @@ public class InfoView {
         // Implementation would depend on your specific UI components
     }
 
-    /**
-     * Vytvoří animované pozadí s přechodem a efekty částic.
-     *
-     * @return Pane s animovaným pozadím
-     */
     private Pane createAnimatedBackground() {
         Pane backgroundPane = new Pane();
 
@@ -196,11 +164,6 @@ public class InfoView {
         return backgroundPane;
     }
 
-    /**
-     * Vytvoří síť mřížkových čar na pozadí.
-     *
-     * @return Group s grafickými čárami
-     */
     private Group createGridLines() {
         Group gridLines = new Group();
 
@@ -230,11 +193,6 @@ public class InfoView {
         return gridLines;
     }
 
-    /**
-     * Vytvoří animované částice energie rozptýlené po ploše.
-     *
-     * @return Group s částicemi
-     */
     private Group createEnergyParticles() {
         Group particles = new Group();
 
@@ -278,11 +236,6 @@ public class InfoView {
         return particles;
     }
 
-    /**
-     * Vytvoří hlavičku s návratovým tlačítkem a názvem sekce.
-     *
-     * @return HBox s tlačítkem a textem
-     */
     private HBox createHeader() {
         HBox headerBox = new HBox();
         headerBox.setAlignment(Pos.CENTER);
@@ -403,11 +356,6 @@ public class InfoView {
         return headerBox;
     }
 
-    /**
-     * Vytvoří kontejner s textovým obsahem sekcí a popisy.
-     *
-     * @return VBox s oddíly informací
-     */
     private VBox createInfoContent() {
         VBox infoBox = new VBox(25);
         infoBox.setAlignment(Pos.CENTER); // Center the content box
@@ -493,12 +441,6 @@ public class InfoView {
         return infoBox;
     }
 
-    /**
-     * Vytvoří nadpis sekce s efektem záře.
-     *
-     * @param title text nadpisu
-     * @return Text jako sekční nadpis
-     */
     private Text createSectionTitle(String title) {
         Text sectionTitle = new Text(title);
         sectionTitle.setFont(Font.font("System", FontWeight.BOLD, 24));
@@ -514,12 +456,6 @@ public class InfoView {
         return sectionTitle;
     }
 
-    /**
-     * Vytvoří blok textu s automatickým zalomením.
-     *
-     * @param content text obsahu
-     * @return Text s obsahem
-     */
     private Text createContentText(String content) {
         Text text = new Text(content);
         text.setFont(Font.font("System", FontWeight.NORMAL, 16));
@@ -537,12 +473,6 @@ public class InfoView {
         return text;
     }
 
-
-    /**
-     * Vytvoří dekorativní obvodovou cestu.
-     *
-     * @return Pane s obvody
-     */
     private Pane createCircuitDecoration() {
         Pane circuitPane = new Pane();
 
@@ -558,15 +488,6 @@ public class InfoView {
         return circuitPane;
     }
 
-    /**
-     * Vytvoří cestu obvodu na základě procentuální polohy.
-     *
-     * @param startXPercent počáteční X jako procento
-     * @param startYPercent počáteční Y jako procento
-     * @param widthPercent šířka jako procento
-     * @param heightPercent výška jako procento
-     * @return Path definující obvod
-     */
     private Path createCircuitPath(double startXPercent, double startYPercent, double widthPercent, double heightPercent) {
         Path path = new Path();
 
@@ -602,11 +523,6 @@ public class InfoView {
         return path;
     }
 
-    /**
-     * Spustí animace obvodu (pohyb čar a efekty) v nekonečné smyčce.
-     *
-     * @param circuitDecoration Pane s obvody, které se mají animovat
-     */
     private void startAnimations(Pane circuitDecoration) {
         // Animate the circuit paths
         for (int i = 0; i < circuitDecoration.getChildren().size(); i++) {
@@ -634,20 +550,12 @@ public class InfoView {
         }
     }
 
-    /**
-     * Nastaví obsluhu akce pro tlačítko "Back".
-     *
-     * @param handler běhajíca logika při stisku tlačítka
-     */
+    // Event handler setter for back button
     public void setOnBackAction(EventHandler<ActionEvent> handler) {
         backButton.setOnAction(handler);
     }
 
-    /**
-     * Vrátí hlavní kořenový uzel pro vložení do scény.
-     *
-     * @return StackPane root
-     */
+    // Getter for the root pane
     public StackPane getRoot() {
         return root;
     }

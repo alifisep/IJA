@@ -1,18 +1,3 @@
-/**
- * Soubor: src/main/java/ija.ijaProject/common/GameNode.java
- *
- * Popis:
- *
- *   Třída reprezentující uzel (políčko) v prostředí hry (Game). Každé políčko má čtyři strany označené pomocí Side. Každá strana může být prázdná nebo obsahovat konektor (vstupní/výstupní vodič), pomocí kterého se lze napojit na sousední políčko. Pro účely hry existují 4 typy uzlů (políček):
- * Prázdné (nic neobsahují).
- * Vodič spojující strany políčka (konektory). Vodič může spojovat sousední strany (L), protější strany (I), protější strany a jednu boční (T), nebo všechny strany (X).
- * Zdroj elektrické energie společně s vodiči (stejné podmínky jako u vodičů). Zdroj je v celé hře právě jeden.
- * Žárovky. Žárovka má pouze jeden přívod. Žárovek může být více, alespoň jedna.
- *
- * @Author: Yaroslav Hryn (xhryny00),Oleksandr Musiichuk (xmusii00)
- *
- */
-
 package ija.ijaProject.common;
 
 import ija.ijaProject.game.Game;
@@ -21,11 +6,6 @@ import visualization.common.ToolField;
 import java.util.HashSet;
 import java.util.Set;
 
-/** Třída reprezentující uzel (políčko) v prostředí hry (Game). Každé políčko má čtyři strany označené pomocí Side. Každá strana může být prázdná nebo obsahovat konektor (vstupní/výstupní vodič), pomocí kterého se lze napojit na sousední políčko. Pro účely hry existují 4 typy uzlů (políček):
- * Prázdné (nic neobsahují).
- * Vodič spojující strany políčka (konektory). Vodič může spojovat sousední strany (L), protější strany (I), protější strany a jednu boční (T), nebo všechny strany (X).
- * Zdroj elektrické energie společně s vodiči (stejné podmínky jako u vodičů). Zdroj je v celé hře právě jeden.
- * Žárovky. Žárovka má pouze jeden přívod. Žárovek může být více, alespoň jedna.*/
 public class GameNode extends AbstractObservableField implements ToolField {
     private Game game;
     private final Position position;
@@ -35,45 +15,25 @@ public class GameNode extends AbstractObservableField implements ToolField {
     private boolean isConnectedToPower = false;
     private final Set<Side> connectors = new HashSet<>();
     private int rotationCount = 0;
-
-    /**
-     * Přiřadí odkaz na instanci hry, umožňuje redraw po každém otočení.
-     * @param game instance třídy Game
-     */
+    // Creating game grid
     public void setGame(Game game) {
         this.game = game;
     }
 
-    /**
-     * Vytvoří uzel na dané pozici.
-     * @param position pozice ve formátu (řádek, sloupec)
-     */
     public GameNode(Position position) {
         this.position = position;
     }
 
-    /**
-     * Vrací kopii množiny aktuálních konektorů.
-     * @return množina směrů konektorů
-     */
-    public Set<Side> getConnectors() {
-        return new HashSet<>(connectors);
-    }
-
-    /**
-     * Nastaví tento uzel jako žárovku a přidá konektor.
-     * @param side směr, ve kterém je konektor žárovky
-     */
+    // Set node type
     public void setBulb(Side side) {
         isBulb = true;
         connectors.add(side);
         notifyObservers();
     }
+    public Set<Side> getConnectors() {
+        return new HashSet<>(connectors);
+    }
 
-    /**
-     * Nastaví tento uzel jako zdroj a přidá konektory.
-     * @param sides pole směrů, které zdroj připojuje
-     */
     public void setPower(Side... sides) {
         isPower = true;
         for (Side s : sides) {
@@ -82,10 +42,6 @@ public class GameNode extends AbstractObservableField implements ToolField {
         notifyObservers();
     }
 
-    /**
-     * Nastaví tento uzel jako spojovací (link) a přidá konektory pro všechny zadané směry.
-     * @param sides směry, ve kterých tento uzel propojuje sousední uzly
-     */
     public void setLink(Side... sides) {
         isLink = true;
         for (Side s : sides) {
@@ -94,11 +50,6 @@ public class GameNode extends AbstractObservableField implements ToolField {
         notifyObservers();
     }
 
-    /**
-     * Otočí tento uzel o 90° po směru hodinových ručiček.
-     * Po otočení aktualizuje množinu konektorů, notifikaci pozorovatelům
-     * a, pokud je přiřazena hra, znovu ji inicializuje.
-     */
     @Override
     public void turn() {
         Set<Side> newConnectors = new HashSet<>();
@@ -114,27 +65,14 @@ public class GameNode extends AbstractObservableField implements ToolField {
             game.init();
         }
     }
-
-    /**
-     * Vrátí, kolikrát byl tento uzel za svou životnost otočen uživatelem.
-     * @return počet otočení
-     */
     public int getRotationCount() {
         return rotationCount;
     }
 
-    /**
-     * Resetuje vnitřní počítadlo otočení tohoto uzlu na nulu.
-     */
     public void resetRotationCount() {
         this.rotationCount = 0;
     }
 
-    /**
-     * Pomocná metoda otáčející jeden směr o 90° CW.
-     * @param side původní směr
-     * @return nový směr po otočení
-     */
     private Side rotateClockwise(Side side) {
         return switch (side) {
             case NORTH -> Side.EAST;
@@ -144,47 +82,31 @@ public class GameNode extends AbstractObservableField implements ToolField {
         };
     }
 
-    /**
-     * Zjistí, zda tento uzel obsahuje konektor na severní straně.
-     * @return true pokud ano, jinak false
-     */
     @Override
     public boolean north() {
         return connectors.contains(Side.NORTH);
     }
 
-    /** @return true pokud tento uzel obsahuje konektor na východní straně */
     @Override
     public boolean east() {
         return connectors.contains(Side.EAST);
     }
 
-    /** @return true pokud tento uzel obsahuje konektor na jižní straně */
     @Override
     public boolean south() {
         return connectors.contains(Side.SOUTH);
     }
 
-    /** @return true pokud tento uzel obsahuje konektor na západní straně */
     @Override
     public boolean west() {
         return connectors.contains(Side.WEST);
     }
 
-    /**
-     * Indikuje, zda je tento uzel právě napájen (a tedy rozsvícen).
-     * @return true pokud napájen, jinak false
-     */
     @Override
     public boolean light() {
         return isConnectedToPower;
     }
 
-    /**
-     * Nastaví příznak, zda je tento uzel spojen s napájením.
-     * Pozorovatelé jsou automaticky notifikováni, pokud se stav změní.
-     * @param connected nové napájecí spojení (true = napájeno)
-     */
     public void setConnectedToPower(boolean connected) {
         if (this.isConnectedToPower != connected) {
             this.isConnectedToPower = connected;
@@ -193,40 +115,29 @@ public class GameNode extends AbstractObservableField implements ToolField {
     }
 
 
-    /** Ověřuje typ políčka (vodič).*/
+    // State and position of node
     @Override
     public boolean isLink() {
         return isLink;
     }
 
-    /** Ověřuje typ políčka (žárovka).*/
     @Override
     public boolean isBulb() {
         return isBulb;
     }
 
-    /** Ověřuje typ políčka (zdroj).*/
     @Override
     public boolean isPower() {
         return isPower;
     }
 
-    /** Vrací pozici políčka.*/
     public Position getPosition() {
         return position;
     }
 
-    /** Ověří, zda na zadané straně políčka existuje konektor. */
     public boolean containsConnector(Side side) {
         return connectors.contains(side);
     }
-
-
-    /**
-     * Vrátí textovou reprezentaci uzlu pro debuggování.
-     * Zahrnuje typ uzlu, pozici a směry konektorů.
-     * @return řetězec popisující tento uzel
-     */
     @Override
     public String toString() {
         char type = 'E';
@@ -257,11 +168,12 @@ public class GameNode extends AbstractObservableField implements ToolField {
         return sb.append('}').toString();
     }
 
-
-    /**
-     * Vrátí pole všech směrů, ve kterých má tento uzel konektory.
-     * @return pole hodnot Side
-     */
+    public void clearConnectors() {
+        connectors.clear();
+    }
+    public void addConnector(Side side) {
+        connectors.add(side);
+    }
     public Side[] getSides() {
         return connectors.toArray(new Side[0]);
     }

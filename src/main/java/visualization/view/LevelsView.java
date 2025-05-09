@@ -1,17 +1,3 @@
-/**
- * Soubor: src/main/java/visualization/view/GamePlayView.java
- *
- * Popis:
- *
- *  Zobrazuje výběr úrovní hry rozdělený dle obtížností.
- *  Nabízí přepínání mezi třemi obtížnostmi (Beginner, Intermediate, Advanced),
- *  vykresluje mřížku tlačítek s čísly úrovní, umožňuje návrat zpět
- *  a reset ukládaného postupu.
- *
- *
- * @Author: Yaroslav Hryn (xhryny00), Oleksandr Musiichuk (xmusii00)
- */
-
 package visualization.view;
 
 import ija.ijaProject.game.levels.LevelManager;
@@ -36,10 +22,6 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
-/** Zobrazuje výběr úrovní hry rozdělený dle obtížností.
- *  Nabízí přepínání mezi třemi obtížnostmi (Beginner, Intermediate, Advanced),
- *  vykresluje mřížku tlačítek s čísly úrovní, umožňuje návrat zpět
- *  a reset ukládaného postupu.*/
 public class LevelsView {
 
     private final StackPane root;
@@ -54,12 +36,6 @@ public class LevelsView {
     private EventHandler<ActionEvent> levelSelectHandler;
     private final LevelManager levelManager = LevelManager.getInstance();
 
-    /**
-     * Vytvoří novou instanci LevelsView pro zadané JavaFX {@code stage}.
-     * Inicializuje grafiku pozadí, ovládací prvky a první zobrazení úrovní.
-     *
-     * @param stage primární okno aplikace
-     */
     public LevelsView(Stage stage) {
         this.stage = stage;
 
@@ -103,13 +79,6 @@ public class LevelsView {
         startAnimations(circuitDecoration);
     }
 
-    /**
-     * Vytvoří Pane obsahující animované pozadí:
-     * tmavý gradient, elektrické mřížky a pohybující se částice energie.
-     * Výsledné Pane se automaticky přizpůsobí velikosti okna.
-     *
-     * @return Pane s animovaným pozadím
-     */
     private Pane createAnimatedBackground() {
         Pane backgroundPane = new Pane();
 
@@ -141,12 +110,6 @@ public class LevelsView {
         return backgroundPane;
     }
 
-    /**
-     * Vytvoří skupinu vodorovných a svislých čar tvořících
-     * elektrickou mřížku. Čáry se dynamicky škálují podle velikosti okna.
-     *
-     * @return Group obsahující mřížkové čáry
-     */
     private Group createGridLines() {
         Group gridLines = new Group();
 
@@ -176,12 +139,6 @@ public class LevelsView {
         return gridLines;
     }
 
-    /**
-     * Vytvoří skupinu kruhových částic energie, které se náhodně rozmístí po celé ploše
-     * a animují se pulzujícím efektem září a zvětšování.
-     *
-     * @return Group obsahující animované energetické částice
-     */
     private Group createEnergyParticles() {
         Group particles = new Group();
 
@@ -225,12 +182,6 @@ public class LevelsView {
         return particles;
     }
 
-    /**
-     * Vytvoří hlavičku obrazovky s názvem "Select Level" a tlačítkem zpět.
-     * Hlavička je umístěna do StackPane pro snadné zarovnání prvků.
-     *
-     * @return Pane obsahující nadpis a tlačítko zpět
-     */
     private Pane createHeader() {
         // Create a StackPane as the base container
         StackPane headerContainer = new StackPane();
@@ -283,12 +234,6 @@ public class LevelsView {
         return headerContainer;
     }
 
-    /**
-     * Vytvoří komponentu pro výběr obtížnosti hry s tlačítky Beginner, Intermediate a Advanced.
-     * Každé tlačítko změní aktuální úroveň obtížnosti a obnoví seznam úrovní.
-     *
-     * @return HBox obsahující kontejner s tlačítky obtížnosti
-     */
     private HBox createDifficultySelector() {
         HBox difficultyBox = new HBox(15);
         difficultyBox.setAlignment(Pos.CENTER);
@@ -323,14 +268,6 @@ public class LevelsView {
         return difficultyBox;
     }
 
-    /**
-     * Vytvoří tlačítko pro zvolenou obtížnost, které při stisknutí
-     * změní aktuální obtížnost a znovu vykreslí úrovně.
-     *
-     * @param text text tlačítka (např. "Beginner")
-     * @param difficulty kód obtížnosti (0=Beginner, 1=Intermediate, 2=Advanced)
-     * @return nově vytvořené tlačítko
-     */
     private Button createDifficultyButton(String text, int difficulty) {
         Button button = new Button(text);
 
@@ -344,11 +281,6 @@ public class LevelsView {
         return button;
     }
 
-    /**
-     * Aktualizuje styly tlačítek obtížnosti podle toho,
-     * která obtížnost je právě vybraná.
-     * Vybrané tlačítko se zobrazí intenzivněji a s efektem záře.
-     */
     private void updateDifficultyButtonStyles() {
         // Reset all buttons
         String unselectedStyle =
@@ -388,14 +320,7 @@ public class LevelsView {
         hardButton.setEffect(currentDifficulty == 2 ? glow : null);
     }
 
-
-    /**
-     * Zobrazí seznam úrovní pro zvolenou obtížnost.
-     * Vymaže předchozí obsah, vytvoří obalovací VBox s poloprůhledným pozadím,
-     * přidá nadpis obtížnosti, mřížku tlačítek úrovní a tlačítko pro resetování postupu.
-     *
-     * @param difficulty kód obtížnosti (0=Beginner, 1=Intermediate, 2=Advanced)
-     */
+    // Modify your showLevels method to include the reset button
     private void showLevels(int difficulty) {
         // Clear existing levels
         levelsContainer.getChildren().clear();
@@ -442,13 +367,6 @@ public class LevelsView {
         levelsContainer.getChildren().add(container);
     }
 
-    /**
-     * Vytvoří a vrátí GridPane 5×2 s tlačítky pro jednotlivé úrovně
-     * podle dané obtížnosti. Každé tlačítko spouští metodu pro načtení úrovně.
-     *
-     * @param difficulty kód obtížnosti úrovní (0=Beginner, 1=Intermediate, 2=Advanced)
-     * @return GridPane obsahující 10 tlačítek úrovní
-     */
     private GridPane createLevelsGrid(int difficulty) {
         GridPane grid = new GridPane();
         grid.setAlignment(Pos.CENTER);
@@ -476,17 +394,6 @@ public class LevelsView {
         return grid;
     }
 
-    /**
-     * Vytvoří tlačítko pro danou úroveň s odpovídajícím vzhledem a efekty.
-     * Označí tlačítko jako dokončené (zelené) nebo nedokončené (modré),
-     * přidá záři a animaci při najetí myší a nastaví akci volající
-     * levelSelectHandler při kliknutí.
-     *
-     * @param levelNumber      číslo úrovně (1–10)
-     * @param difficulty       úroveň obtížnosti (0=Beginner, 1=Intermediate, 2=Advanced)
-     * @param highestCompleted nejvyšší dokončená úroveň pro danou obtížnost
-     * @return tlačítko reprezentující danou úroveň
-     */
     private Button createLevelButton(int levelNumber, int difficulty, int highestCompleted) {
         Button button = new Button();
 
@@ -615,12 +522,6 @@ public class LevelsView {
         return button;
     }
 
-    /**
-     * Přidá tlačítku efekt při najetí myší – mírné zvětšení, změnu průhlednosti pozadí
-     * a zesílenou záři. Po opuštění ta změnu vrátí zpět.
-     *
-     * @param button tlačítko, na které se má efekt aplikovat
-     */
     private void addButtonHoverEffect(Button button) {
         button.setOnMouseEntered(e -> {
             // Scale animation
@@ -663,13 +564,6 @@ public class LevelsView {
         });
     }
 
-
-    /**
-     * Vytvoří dekorativní obvody (Path) ve dvou rozích okna.
-     * Obvody se mění podle velikosti okna díky vázání vlastností.
-     *
-     * @return Pane obsahující dvě cesty obvodu
-     */
     private Pane createCircuitDecoration() {
         Pane circuitPane = new Pane();
 
@@ -685,16 +579,6 @@ public class LevelsView {
         return circuitPane;
     }
 
-    /**
-     * Sestaví cestu ("path"), která připomíná elektrický obvod,
-     * zakotvenou procentuálně vzhledem k velikosti okna.
-     *
-     * @param startXPercent  výchozí X pozice jako procento šířky okna
-     * @param startYPercent  výchozí Y pozice jako procento výšky okna
-     * @param widthPercent   šířka obvodu jako procento šířky okna
-     * @param heightPercent  výška obvodu jako procento výšky okna
-     * @return Path s několika segmenty, stylizovaný jako obvod
-     */
     private Path createCircuitPath(double startXPercent, double startYPercent, double widthPercent, double heightPercent) {
         Path path = new Path();
 
@@ -730,13 +614,6 @@ public class LevelsView {
         return path;
     }
 
-    /**
-     * Spustí animace všech obvodových cest v zadaném Pane.
-     * Každá cesta dostane plynulý pohyb přerušované čáry a periodické
-     * prolínání (fading) mezi hodnotami průhlednosti.
-     *
-     * @param circuitDecoration Pane obsahující cesty (Path), které mají být animovány
-     */
     private void startAnimations(Pane circuitDecoration) {
         // Animate the circuit paths
         for (int i = 0; i < circuitDecoration.getChildren().size(); i++) {
@@ -764,41 +641,25 @@ public class LevelsView {
         }
     }
 
-    /**
-     * Nastaví obsluhu události pro tlačítko „Back“.
-     *
-     * @param handler EventHandler, který bude volán při kliknutí na tlačítko zpět
-     */
+    // Add a cleanup method to stop animations when switching views
+    public void cleanup() {
+        System.out.println("LevelsView cleanup called");
+        // Stop animations here if needed
+    }
+
     public void setOnBackAction(EventHandler<ActionEvent> handler) {
         backButton.setOnAction(handler);
     }
 
-
-    /**
-     * Nastaví globální obsluhu pro výběr úrovně.
-     * Tato funkce se zavolá, když uživatel klikne na tlačítko s číslem úrovně.
-     *
-     * @param handler EventHandler, který bude volán při výběru úrovně
-     */
     public void setOnLevelSelectAction(EventHandler<ActionEvent> handler) {
         this.levelSelectHandler = handler;
     }
 
-    /**
-     * Vrátí hlavní kontejner (root) tohoto pohledu.
-     *
-     * @return StackPane představující kořenovou vrstvu UI
-     */
+    // Getter for the root pane
     public StackPane getRoot() {
         return root;
     }
 
-    /**
-     * Vytvoří tlačítko pro resetování postupu ve hře.
-     * Při kliknutí otevře dialog pro potvrzení resetu.
-     *
-     * @return Button označený „Reset Progress“
-     */
     private Button createResetProgressButton() {
         Button resetButton = new Button("Reset Progress");
         resetButton.setStyle(
@@ -870,13 +731,7 @@ public class LevelsView {
         return resetButton;
     }
 
-
-    /**
-     * Zobrazí modální potvrzovací dialog pro vymazání postupu.
-     * V dialogu se objeví varovná ikona, nadpis, vysvětlující text
-     * a tlačítka „Cancel“ a „Reset All Progress“. Po potvrzení se
-     * smaže postup všech úrovní, zavře dialog a obnoví zobrazení.
-     */
+    // Add this method to show a confirmation dialog
     private void showResetConfirmationDialog() {
         // Create a modal dialog
         StackPane dialogRoot = new StackPane();
@@ -1020,10 +875,7 @@ public class LevelsView {
         dialogStage.show();
     }
 
-    /**
-     * Zobrazí krátké oznamovací „toast“ okno informující o úspěšném resetu.
-     * Toast se vyblikuje na dně okna a po 3 sekundách automaticky zmizí.
-     */
+    // Add this method to show a confirmation toast
     private void showResetConfirmationToast() {
         // Create toast container
         StackPane toastContainer = new StackPane();

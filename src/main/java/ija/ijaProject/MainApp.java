@@ -1,22 +1,8 @@
-/**
- * Soubor: src/main/java/ija.ijaProject/MainApp.java
- *
- * Popis:
- * Hlavní třída aplikace VoltMaze.
- * Zajišťuje celý cyklus životnosti JavaFX aplikace: zobrazení menu, výběr úrovní,
- * herní obrazovku, informace a nastavení. Spravuje uložení nastavení při ukončení.
- *
- *
- * @Author: Yaroslav Hryn (xhryny00),Oleksandr Musiichuk (xmusii00)
- *
- */
-
 package ija.ijaProject;
 
 import ija.ijaProject.game.Game;
 import ija.ijaProject.game.levels.LevelManager;
-import ija.ijaProject.settings.LanguageManager;
-import ija.ijaProject.settings.SettingsManager;
+import ija.ijaProject.game.levels.NodeStateManager;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.scene.Scene;
@@ -26,19 +12,10 @@ import javafx.stage.WindowEvent;
 import visualization.EnvPresenter;
 import visualization.view.*;
 
-/** Hlavní třída aplikace VoltMaze.
- * Zajišťuje celý cyklus životnosti JavaFX aplikace: zobrazení menu, výběr úrovní,
- * herní obrazovku, informace a nastavení. Spravuje uložení nastavení při ukončení. */
 public class MainApp extends Application {
-    private static final int CELL_SIZE =40 ;
+    private static final int CELL_SIZE = 40;
     private Stage primaryStage;
 
-
-    /**
-     * Spustí JavaFX aplikaci.
-     *
-     * @param primaryStage primární okno aplikace
-     */
     @Override
     public void start(Stage primaryStage) {
         // Set this to true to make the JavaFX toolkit exit when the last window is closed
@@ -61,25 +38,42 @@ public class MainApp extends Application {
     }
 
     /**
-     * Obslouží požadavek na zavření okna a zajistí korektní ukončení aplikace.
+     * Handles the window close event to ensure proper application termination.
      *
-     * @param event událost zavření okna
+     * @param event The window event
      */
     private void handleWindowClose(WindowEvent event) {
         System.out.println("Window close requested");
+
+        // Save game state if we're in a game
+        if (primaryStage != null && primaryStage.getScene() != null &&
+                primaryStage.getScene().getRoot() != null) {
+            Object userData = primaryStage.getScene().getRoot().getUserData();
+            if (userData instanceof GamePlayView) {
+                GamePlayView gameView = (GamePlayView) userData;
+                // Save the game state before closing
+                System.out.println("Saving game state before window close");
+                gameView.saveStateOnExit();
+            }
+        }
+
         // Properly exit the application
         Platform.exit();
     }
 
     /**
-     * Zobrazí úvodní hlavní menu s tlačítky Play, Info a Settings.
+     * Shows the main menu screen.
      */
     private void showMainMenu() {
+        // First, save state if we're coming from a game
+        saveCurrentGameState();
+
+        // Create a main menu view
         GameMenuView menuView = new GameMenuView(primaryStage);
+
         // Set up button actions
         menuView.setOnPlayAction(e -> showLevels());
         menuView.setOnInfoAction(e -> showInfo());
-        menuView.setOnSettingsAction(e -> showSettings());
 
         // Set the scene
         Scene scene = new Scene(menuView.getRoot(), 800, 600);
@@ -87,9 +81,12 @@ public class MainApp extends Application {
     }
 
     /**
-     * Zobrazí obrazovku výběru úrovní.
+     * Shows the levels selection screen.
      */
     private void showLevels() {
+        // First, save state if we're coming from a game
+        saveCurrentGameState();
+
         // Create a levels view
         LevelsView levelsView = new LevelsView(primaryStage);
 
@@ -112,9 +109,12 @@ public class MainApp extends Application {
     }
 
     /**
-     * Zobrazí informační stránku o hře.
+     * Shows the information screen.
      */
     private void showInfo() {
+        // First, save state if we're coming from a game
+        saveCurrentGameState();
+
         // Create an info view
         InfoView infoView = new InfoView(primaryStage);
 
@@ -127,16 +127,29 @@ public class MainApp extends Application {
     }
 
     /**
-     * Zpracuje dokončení úrovně a rozhodne, zda spustit další úroveň nebo vrátit se k výběru.
-     *
-     * @param levelNumber číslo dokončené úrovně
-     * @param difficulty  úroveň obtížnosti (0=Beginner,1=Intermediate,2=Advanced)
+     * Helper method to save the current game state if we're in a game view
      */
+    private void saveCurrentGameState() {
+        if (primaryStage != null && primaryStage.getScene() != null &&
+                primaryStage.getScene().getRoot() != null) {
+            Object userData = primaryStage.getScene().getRoot().getUserData();
+            if (userData instanceof GamePlayView) {
+                GamePlayView gameView = (GamePlayView) userData;
+                // Save the game state before navigating away
+                System.out.println("Saving game state before navigation");
+                gameView.saveStateOnExit();
+            }
+        }
+    }
+
     private void handleLevelCompleted(int levelNumber, int difficulty) {
         System.out.println("MainApp: Level " + levelNumber + " at difficulty " + difficulty + " completed!");
 
         // Mark the level as completed (this is already done in GamePlayView, but we do it here as well for safety)
         LevelManager.getInstance().markLevelCompleted(levelNumber, difficulty);
+
+        // Clear any saved state for this level since it's completed
+        NodeStateManager.getInstance().clearNodeStates(levelNumber, difficulty);
 
         // Calculate the next level
         int nextLevel = levelNumber + 1;
@@ -156,50 +169,20 @@ public class MainApp extends Application {
         }
     }
 
-    /**
-     * Zobrazí obrazovku nastavení aplikace.
-     */
-    private void showSettings() {
-        // Create a settings view
-        SettingsView settingsView = new SettingsView(primaryStage);
-
-        // Set up back button action to return to main menu
-        settingsView.setOnBackAction(e -> showMainMenu());
-
-        // Set up language change handler to refresh the UI
-        settingsView.setOnLanguageChangeHandler(e -> {
-            // Recreate the settings view with the new language
-            showSettings();
-        });
-
-        // Set the scene
-        Scene scene = new Scene(settingsView.getRoot(), 800, 600);
-        primaryStage.setScene(scene);
-        primaryStage.setTitle("VoltMaze - " + LanguageManager.getInstance().getString("settings"));
-    }
-
-
-    /**
-     * Inicializuje manažery nastavení a jazyka před startem UI.
-     */
     @Override
     public void init() {
-        // Initialize settings and language managers
-        SettingsManager.getInstance();
-        LanguageManager.getInstance();
-
         // Add a shutdown hook to save settings when the app closes
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
             System.out.println("Saving settings before shutdown...");
-            SettingsManager.getInstance().saveSettings();
+            // This is a good place to ensure any final saves happen
         }));
     }
 
     /**
-     * Spustí herní obrazovku pro zvolenou úroveň a obtížnost.
+     * Starts a game with the specified level and difficulty.
      *
-     * @param levelNumber číslo úrovně
-     * @param difficulty  úroveň obtížnosti
+     * @param levelNumber The level number
+     * @param difficulty The difficulty level (0=Beginner, 1=Intermediate, 2=Advanced)
      */
     private void startGame(int levelNumber, int difficulty) {
         System.out.println("Starting game with level: " + levelNumber + ", difficulty: " + difficulty);
@@ -209,7 +192,10 @@ public class MainApp extends Application {
             GamePlayView gamePlayView = new GamePlayView(primaryStage, levelNumber, difficulty);
 
             // Set up back button action
-            gamePlayView.setOnBackAction(e -> showLevels());
+            gamePlayView.setOnBackAction(e -> {
+                System.out.println("Back button clicked in game view");
+                showLevels();
+            });
 
             // Set up next level action
             gamePlayView.setOnNextLevelAction(e -> handleLevelCompleted(levelNumber, difficulty));
@@ -222,8 +208,6 @@ public class MainApp extends Application {
             scene.getRoot().setUserData(gamePlayView);
             primaryStage.setScene(scene);
 
-
-
         } catch (Exception e) {
             System.err.println("Error starting game: " + e.getMessage());
             e.printStackTrace();
@@ -232,17 +216,16 @@ public class MainApp extends Application {
     }
 
     /**
-     * Vrátí se zpět do výběru úrovní.
+     * Returns to the levels selection screen.
      */
     private void returnToLevels() {
+        // Save state before returning to levels
+        saveCurrentGameState();
         showLevels();
     }
 
     @Override
     public void stop() {
-        System.out.println("Application stop method called");
-        SettingsManager.getInstance().saveSettings();
-
         // Try to clean up the current view if it exists
         if (primaryStage != null && primaryStage.getScene() != null &&
                 primaryStage.getScene().getRoot() != null) {
@@ -252,6 +235,11 @@ public class MainApp extends Application {
             if (userData instanceof GamePlayView) {
                 System.out.println("Cleaning up GamePlayView...");
                 GamePlayView gameView = (GamePlayView) userData;
+
+                // Save the game state before cleanup
+                System.out.println("Final save before application exit");
+                gameView.saveStateOnExit();
+
                 // Call a cleanup method on the game view
                 gameView.cleanup();
             }

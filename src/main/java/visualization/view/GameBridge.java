@@ -1,18 +1,3 @@
-/**
- * Soubor: src/main/java/visualization/view/GameBridge.java
- *
- * Popis:
- * Třída GameBridge slouží jako most mezi herní logikou (Game) a JavaFX UI.
- *  Pravidelně kontroluje stav hry a při zjištění, že jsou všechny žárovky rozsvíceny,
- * vyvolá zaregistrované posluchače dokončení hry.
- *
- *
- * @Author: Yaroslav Hryn (xhryny00)
- * @Author: Oleksandr Musiichuk (xmusii00)
- *
- */
-
-
 package visualization.view;
 
 import ija.ijaProject.game.Game;

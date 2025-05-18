@@ -2,14 +2,10 @@
  * Soubor: src/main/java/ija.ijaProject/game/levels/GameLevels.java
  *
  * Popis:
- * Třída GameLevels obsahuje statické definice jednotlivých úrovní hry VoltMaze
- * pro obtížnosti Beginner, Intermediate a Advanced. Nabízí metody:
- *   – getLevelDefinition(..): vrací pole objektů popisující uzly dané úrovně,
- *   – getGridSizeForDifficulty(..): volí rozměr herní mřížky podle obtížnosti,
- *   – createGameLevel(..): vytváří SwingNode s JavaFX/​Swing prezentací úrovně,
- *       která nejprve zobrazí vyřešené uspořádání, pak provede scramble
- *       a následně spustí interaktivní režim hry s tooltipem zobrazujícím
- *       zbývající a provedená otočení uzlů.
+ *  obsahuje statické definice jednotlivých úrovní hry 10*3
+ * a vytvoři Hru
+ *
+ *
  * @Author: Yaroslav Hryn (xhryny00),Oleksandr Musiichuk (xmusii00)
  *
  */
@@ -32,6 +28,7 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 import visualization.EnvPresenter;
 import visualization.view.InfoPresenter;
+
 
 import javax.swing.*;
 import java.awt.*;
@@ -213,7 +210,6 @@ public class GameLevels {
     };
 
 
-    // ==================== INTERMEDIATE LEVELS (11-20) ====================
 
     private static final Object[][] LEVEL_11_INTERMEDIATE = {
             {"P", 2, 2, Side.SOUTH},
@@ -1043,27 +1039,25 @@ public class GameLevels {
 
     /**
      * Vytvoří JavaFX SwingNode obsahující herní úroveň.
-     * Nejprve zobrazí vyřešené (správné) uspořádání políček na 1 sekundu,
-     * pak provede náhodný scrambling (otočení uzlů), resetuje počitadla
-     * uživatelských otočení a přepne na herní (play) režim.
-     * Zároveň v play režimu po spočítání velikosti políčka zobrazuje
-     * po držení kurzoru 1 s tooltip s informací o zbývajících
-     * a provedených otočeních pro dané políčko.
      *
-     * @param levelNumber           číslo úrovně v rámci dané obtížnosti (1–10)
-     * @param difficulty            obtížnost (0=Beginner, 1=Intermediate, 2=Advanced)
-     * @param levelCompletedCallback volatelný callback, který se vyvolá při dokončení úrovně
-     * @return SwingNode, do kterého je vložen Swingový panel s hrou
+     * zobrazi spravné řešení pak nahodně otočí Gamenode,
+     * a zobrazi ho.
+     * Taky pomovci ToolTip po držení kurzoru nad jednym políčkem
+     * zobrazi aktualní a potřebný pro spravné řešení počet otočení
+     *
+     *
+     * @param levelNumber           číslo úrovně
+     * @param difficulty            obtížnost
+     * @param levelCompletedCallback  Oznamení, ktere se vyvolá při dokončení úrovně
+     * @return SwingNode,            Swingový panel s hrou
      */
     public static SwingNode createGameLevel(int levelNumber, int difficulty, Runnable levelCompletedCallback) {
-
         SwingNode swingNode = new SwingNode();
 
         Object[][] levelDef = getLevelDefinition(levelNumber, difficulty);
 
         SwingUtilities.invokeLater(() -> {
             try {
-
                 int gridSize = getGridSizeForDifficulty(difficulty);
                 Game game = Game.create(gridSize, gridSize + 2);
 
@@ -1085,10 +1079,24 @@ public class GameLevels {
 
                 game.init();
 
+                // by init it takes solved game which shows for one second then scramble it
+                Game solvedGame = game.deepCopy();
+
+                // Check if it has saved states for this level and if the level is not completed
+                boolean hasSavedStates = false;
+                boolean isLevelCompleted = LevelManager.getInstance().isLevelCompleted(levelNumber, difficulty);
+                if (!isLevelCompleted) {
+                    NodeStateManager nodeStateManager = NodeStateManager.getInstance();
+                    hasSavedStates = nodeStateManager.hasSavedStates(levelNumber, difficulty);
+                }
+
+                // Final value save
+                final boolean finalHasSavedStates = hasSavedStates;
+                final boolean finalIsLevelCompleted = isLevelCompleted;
+
                 EnvPresenter solvedPr = new EnvPresenter(game);
                 solvedPr.init();
                 JPanel solvedPanel = solvedPr.getGamePanel();
-                Game solvedGame = game.deepCopy();
                 Platform.runLater(() -> swingNode.setContent(solvedPanel));
                 Platform.runLater(() -> swingNode.getProperties().put("solvedGame", solvedGame));
 
@@ -1096,37 +1104,72 @@ public class GameLevels {
                     PauseTransition pause = new PauseTransition(Duration.seconds(1));
                     pause.setOnFinished(evt -> {
                         SwingUtilities.invokeLater(() -> {
-                            List<Position> posList = game.getNodes().stream()
-                                    .map(GameNode::getPosition).toList();
-                            Random rnd = new Random();
-                            int moves = 12 + difficulty * 5;
-                            do {
-                                for (int i = 0; i < moves; i++) {
-                                    game.rotateNode(posList.get(rnd.nextInt(posList.size())));
-                                }
-                            } while (game.anyBulbLit());
+                            // If itt have saved states and the level is not completed, load them
+                            if (finalHasSavedStates && !finalIsLevelCompleted) {
+                                System.out.println("Loading saved state for level " + levelNumber + " at difficulty " + difficulty);
+                                NodeStateManager.getInstance().loadNodeStates(levelNumber, difficulty, game);
+                                //NodeStateManager.getInstance().resetChangesDetected(levelNumber, difficulty);
+                            } else {
+                                // Else, scramble the level
+                                System.out.println("No saved state found or level completed " + levelNumber + " at difficulty " + difficulty);
+                                List<Position> posList = game.getNodes().stream()
+                                        .map(GameNode::getPosition).toList();
+                                Random rnd = new Random();
+                                int moves = 10 + difficulty * 5;
+                                do {
+                                    for (int i = 0; i < moves; i++) {
+                                        game.rotateNode(posList.get(rnd.nextInt(posList.size())));
+                                    }
+                                } while (game.anyBulbLit());
 
-                            for (GameNode node : game.getNodes()) {
-                                node.resetRotationCount();
+                                for (GameNode node : game.getNodes()) {
+                                    node.resetRotationCount();
+                                }
                             }
 
                             EnvPresenter playPr = new EnvPresenter(game);
                             if (levelCompletedCallback != null) {
-                                playPr.setLevelCompletedCallback(levelCompletedCallback);
+                                final boolean[] initialCheckDone = {false};
+
+                                playPr.setLevelCompletedCallback(() -> {
+                                    if (!initialCheckDone[0]) {
+                                        initialCheckDone[0] = true;
+                                        System.out.println("Skipping initial completion check");
+                                        return;
+                                    }
+
+                                    // if Completed level  - callBack
+                                    levelCompletedCallback.run();
+                                });
                             }
                             playPr.init();
+
+
+                            for (GameNode node : game.getNodes()) {
+                                node.addObserver(observable -> {
+                                    NodeStateManager.getInstance().markLevelChanged(levelNumber, difficulty);
+                                    NodeStateManager.getInstance().saveNodeStates(levelNumber, difficulty, game);
+                                    System.out.println("Node changed in level " + levelNumber + " at difficulty " + difficulty);
+                                });
+                            }
                             JPanel playPanel = playPr.getGamePanel();
+                            swingNode.setContent(playPanel);
+
 
                             Platform.runLater(() -> {
                                 swingNode.setUserData(playPr);
+                                swingNode.setContent(playPr.getGamePanel());
                                 swingNode.setContent(playPanel);
 
+                                swingNode.getProperties().put("game", game);
+                                swingNode.getProperties().put("levelNumber", levelNumber);
+                                swingNode.getProperties().put("difficulty", difficulty);
+
                                 Tooltip tip = new Tooltip();
-                                tip.setShowDelay(Duration.seconds(1));   // показывать через 1 секунду удержания
+                                tip.setShowDelay(Duration.seconds(1));
                                 Tooltip.install(swingNode, tip);
                                 final int cols = game.cols();
                                 final int rows = game.rows();
-
 
                                 swingNode.setOnMouseMoved(ev -> {
                                     Bounds b = swingNode.getLayoutBounds();
@@ -1142,21 +1185,19 @@ public class GameLevels {
                                     int remaining = rotationsNeeded(cur, tgt);
                                     int actual= game.getGameNode(row, col).getRotationCount();
 
-
                                     tip.setText("GameNode " + row + "," + col +
                                             "\n Need Rotations: " + remaining +
                                             "\n Actual Rotations: " + actual);
                                 });
                                 swingNode.setOnMouseExited(ev -> tip.hide());
                             });
-
                         });
                     });
                     pause.play();
                 });
 
             } catch (Exception e) {
-                System.err.println("ERROR during initializetion: " + e.getMessage());
+                System.err.println("ERROR during initialization: " + e.getMessage());
                 e.printStackTrace();
             }
         });
@@ -1165,11 +1206,11 @@ public class GameLevels {
     }
 
     /**
-     * Vrátí minimum otočení o 90° CW, aby se množina current shodovala s target.
+     * Vrátí Side otočeny o 90°
      *
-     * @param cur aktuální množina connectorů
-     * @param tgt cílová množina connectorů
-     * @return počet otočení (0–3)
+     * @param cur aktuální množina connectorů (ke kterým Side ma connektery)
+     * @param tgt cílová množina connectorů (ke kterým Side ma connektery)
+     * @return počet otočení
      */
     private static int rotationsNeeded(Set<Side> cur, Set<Side> tgt) {
         for (int k = 0; k < 4; k++) {
@@ -1183,11 +1224,11 @@ public class GameLevels {
     }
 
     /**
-     * Otočí jednu stranu o 90° CW n-krát.
+     * Otočí stranu o 90°
      *
      * @param s     vstupní strana
      * @param times počet otočení
-     * @return nová strana po otočení
+     * @return  strana po otočení
      */
     private static Side rotateCW(Side s, int times) {
         Side r = s;
@@ -1204,18 +1245,17 @@ public class GameLevels {
 
 
     /**
-     * Gets the level definition for the specified level and difficulty.
+     * Vrati Level defintion.
      *
-     * @param levelNumber The level number (1-10 for each difficulty)
-     * @param difficulty The difficulty level (0=Beginner, 1=Intermediate, 2=Advanced)
-     * @return The level definition array
+     * @param levelNumber level
+     * @param difficulty  difficulty of the level
+     * @return The level level definition.
      */
     private static Object[][] getLevelDefinition(int levelNumber, int difficulty) {
-        // Calculate the actual level number (1-30)
         int actualLevel = difficulty * 10 + levelNumber;
 
         return switch (actualLevel) {
-            // Beginner levels (1-10)
+
             case 1 -> LEVEL_1_BEGINNER;
             case 2 -> LEVEL_2_BEGINNER;
             case 3 -> LEVEL_3_BEGINNER;
@@ -1227,7 +1267,7 @@ public class GameLevels {
             case 9 -> LEVEL_9_BEGINNER;
             case 10 -> LEVEL_10_BEGINNER;
 
-            // Intermediate levels (11-20)
+
             case 11 -> LEVEL_11_INTERMEDIATE;
             case 12 -> LEVEL_12_INTERMEDIATE;
             case 13 -> LEVEL_13_INTERMEDIATE;
@@ -1239,7 +1279,7 @@ public class GameLevels {
             case 19 -> LEVEL_19_INTERMEDIATE;
             case 20 -> LEVEL_20_INTERMEDIATE;
 
-            // Advanced levels (21-30)
+
             case 21 -> LEVEL_21_ADVANCED;
             case 22 -> LEVEL_22_ADVANCED;
             case 23 -> LEVEL_23_ADVANCED;
@@ -1251,21 +1291,21 @@ public class GameLevels {
             case 29 -> LEVEL_29_ADVANCED;
             case 30 -> LEVEL_30_ADVANCED;
 
-            default -> LEVEL_1_BEGINNER; // Default to level 1 if not found
+            default -> LEVEL_1_BEGINNER;
         };
     }
 
     /**
-     * Gets the grid size for the specified difficulty level.
+     *  Vrati jak velke ma byt herni pole
      *
-     * @param difficulty The difficulty level (0=Beginner, 1=Intermediate, 2=Advanced)
-     * @return The grid size for the difficulty
+     * @param difficulty The difficulty level
+     * @return rozměr herniho pole
      */
     private static int getGridSizeForDifficulty(int difficulty) {
         return switch (difficulty) {
-            case 0 -> 9; // Beginner
-            case 1 -> 11; // Intermediate
-            case 2 -> 9; // Advanced
+            case 0 -> 9;
+            case 1 -> 11;
+            case 2 -> 9;
             default -> 10;
         };
     }

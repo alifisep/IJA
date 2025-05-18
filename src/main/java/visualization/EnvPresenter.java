@@ -44,6 +44,7 @@ public class EnvPresenter {
     private Runnable levelCompletedCallback;
     private boolean levelCompletionDetected = false;
     private final Timer levelCheckTimer;
+    private ToolEnvironment environment;
 
     /**
      * Creates a new EnvPresenter for the given environment.
@@ -55,15 +56,20 @@ public class EnvPresenter {
 
         this.fields = new ArrayList<>();
         initialize();
-        // Create a timer to periodically check for level completion
-        levelCheckTimer = new Timer(500, e -> checkLevelCompletion());
+        levelCheckTimer = new Timer(200, e -> checkLevelCompletion());
     }
 
-    /**
-     * Gets the main game panel for embedding in JavaFX.
-     *
-     * @return The JPanel containing the game grid
-     */
+    public void setEnvironment(ToolEnvironment env) {
+        this.environment = env;
+        getGamePanel().removeAll();
+        init();
+    }
+
+        /**
+         * Gets the main game panel for embedding in JavaFX.
+         *
+         * @return The JPanel containing the game grid
+         */
     public JPanel getGamePanel() {
         return mainPanel;
     }
@@ -76,8 +82,6 @@ public class EnvPresenter {
             SwingUtilities.invokeAndWait(() -> {
                 this.initialize();
                 this.frame.setVisible(true);
-
-                // Start checking for level completion
                 levelCheckTimer.start();
             });
         } catch (InvocationTargetException | InterruptedException var2) {
@@ -92,8 +96,6 @@ public class EnvPresenter {
     public void init() {
         SwingUtilities.invokeLater(() -> {
             this.initialize();
-
-            // Start checking for level completion
             levelCheckTimer.start();
         });
     }
@@ -116,12 +118,9 @@ public class EnvPresenter {
         boolean hasBulbs = false;
         boolean allBulbsLit = true;
 
-        // Check all fields in the environment
         for (int row = 1; row <= env.rows(); row++) {
             for (int col = 1; col <= env.cols(); col++) {
                 ToolField field = env.fieldAt(row, col);
-
-                // If it's a bulb, check if it's lit
                 if (field.isBulb()) {
                     hasBulbs = true;
                     if (!field.light()) {
@@ -130,14 +129,10 @@ public class EnvPresenter {
                     }
                 }
             }
-
-            // If we already found an unlit bulb, no need to check further
             if (!allBulbsLit) {
                 break;
             }
         }
-
-        // Level is completed if there are bulbs and all are lit
         return hasBulbs && allBulbsLit;
     }
 
@@ -145,12 +140,9 @@ public class EnvPresenter {
      * Checks if the level is completed and triggers the callback if needed.
      */
     private void checkLevelCompletion() {
-        // Check if level is completed and not already detected
         if (!levelCompletionDetected && isLevelCompleted()) {
             levelCompletionDetected = true;
             levelCheckTimer.stop();
-
-            // Invoke the callback on the Swing thread
             if (levelCompletedCallback != null) {
                 SwingUtilities.invokeLater(levelCompletedCallback);
             }
@@ -170,16 +162,13 @@ public class EnvPresenter {
         int rows = this.env.rows();
         int cols = this.env.cols();
 
-        // Create main panel with dark background
         mainPanel = new JPanel(new BorderLayout());
         mainPanel.setBackground(new Color(15, 23, 42)); // Dark blue background
 
-        // Create grid panel with spacing
         JPanel gridPanel = new JPanel(new GridLayout(rows, cols, 2, 2));
         gridPanel.setBackground(new Color(15, 23, 42)); // Dark blue background
         gridPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
-        // Create and add field views
         for(int row = 1; row <= rows; ++row) {
             for(int col = 1; col <= cols; ++col) {
                 ToolField field = this.env.fieldAt(row, col);
@@ -188,16 +177,11 @@ public class EnvPresenter {
                 this.fields.add(fieldView);
             }
         }
-
-        // Add grid panel to main panel with padding
         mainPanel.setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
         mainPanel.add(gridPanel, BorderLayout.CENTER);
-
-        // Add main panel to frame
         this.frame.getContentPane().add(mainPanel);
         this.frame.pack();
 
-        // Reset level completion state
         levelCompletionDetected = false;
     }
 
@@ -216,8 +200,6 @@ public class EnvPresenter {
      */
     public void resetLevelCompletionState() {
         levelCompletionDetected = false;
-
-        // Restart the timer if it was stopped
         if (!levelCheckTimer.isRunning()) {
             levelCheckTimer.start();
         }
@@ -227,15 +209,11 @@ public class EnvPresenter {
      * Cleans up resources when the presenter is no longer needed.
      */
     public void cleanup() {
-        // Stop the timer
         levelCheckTimer.stop();
 
-        // Clear fields list
         if (fields != null) {
             fields.clear();
         }
-
-        // Dispose frame if it exists
         if (frame != null) {
             frame.dispose();
         }

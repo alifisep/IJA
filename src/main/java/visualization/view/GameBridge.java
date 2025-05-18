@@ -51,7 +51,6 @@ public class GameBridge {
     public void addCompletionListener(Runnable listener) {
         completionListeners.add(listener);
 
-        // If the game is already completed, notify the listener immediately
         if (isCompleted) {
             listener.run();
         }
@@ -93,9 +92,6 @@ public class GameBridge {
      * @return true if all bulbs are lit, false otherwise
      */
     private boolean isGameCompleted() {
-        // The game itself is the environment (it implements ToolEnvironment)
-
-        // Check all positions in the grid
         for (int row = 1; row <= game.rows(); row++) {
             for (int col = 1; col <= game.cols(); col++) {
                 ToolField field = game.fieldAt(row, col);
@@ -107,7 +103,6 @@ public class GameBridge {
             }
         }
 
-        // If we didn't find any unlit bulbs, the game is completed
         return true;
     }
 

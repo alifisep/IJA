@@ -2,15 +2,9 @@
  * Soubor: src/main/java/visualization/view/InfoPresenter.java
  *
  * Popis:
- * InfoPresenter zajišťuje zobrazení informačního okna,
- * ve kterém se pro každou herní buňku zobrazí, kolik
- * 90° otočení je třeba provést, aby dosáhla správné (vyřešené) pozice.
- * Implementuje vzor pozorovatel (Observer): přihlásí se k odběru
- * změn každého GameNode v aktuální hře (currentGame). Při jakékoliv
- * aktualizaci (otočení buňky) přepočítá zbývající počet otočení
- * a překreslí Swing panel s tlačítky, na kterých je toto číslo vypsáno.
- * Pokud pro danou buňku není potřeba žádné otočení (need == 0), její
- * pozadí se obarví světle zeleně.
+ * Zobrazí nové oko, které obsahuje informace o tom,
+ * které políčko je třeba kolikrát otočit,
+ * aby se dostalo do správné polohy.
  *
  * @Author: Yaroslav Hryn (xhryny00), Oleksandr Musiichuk (xmusii00)
  */
@@ -33,9 +27,9 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-/** Zajišťuje zobrazení informačního okna,
+/** Zobrazení informačního okna,
  * ve kterém se pro každou herní buňku zobrazí, kolik
- * 90° otočení je třeba provést, aby dosáhla správné (vyřešené) pozice. */
+ * otočení je třeba provést, aby dosáhla správné  pozice. */
 public class InfoPresenter implements Observable.Observer {
     public static final int TILE_SIZE = 40;
     private static final Color BG        = Color.decode("#0f1e2e");
@@ -54,8 +48,7 @@ public class InfoPresenter implements Observable.Observer {
     }
 
     /**
-     * Vytvoří panel s tlačítky, kde každé tlačítko reprezentuje jedno políčko.
-     * Nehratelné buňky (žádné konektory) se zobrazí černě s otazníkem.
+     * Vytvoří panel s tlačítky( reprezentuje jedno políčko.)
      */
     public InfoPresenter(Game currentGame, Game solvedGame) {
         this.currentGame = currentGame;
@@ -84,14 +77,14 @@ public class InfoPresenter implements Observable.Observer {
                 if (currentGame.isPlayebleNode(node)) {
                     node.addObserver(this);
                     buttons.put(pos, btn);
-                   /* updateTooltip(pos, btn);
+                    updateTooltip(pos, btn);
                     ToolTipManager.sharedInstance().registerComponent(btn);
                     btn.addMouseListener(new MouseAdapter() {
                         @Override
                         public void mouseEntered(MouseEvent e) {
                             updateTooltip(pos, btn);
                         }
-                    });*/
+                    });
                 } else {
                     btn.setText("?");
                     btn.setBackground(Color.DARK_GRAY);
@@ -103,13 +96,13 @@ public class InfoPresenter implements Observable.Observer {
         updateAll();
     }
 
-    /** Volá se, když se nějaký pozorovaný uzel otočí (Observable) */
+    /** Volá se, když se nějaký uzel otočí  */
     @Override
     public void update(Observable source) {
         SwingUtilities.invokeLater(this::updateAll);
     }
 
-    /** Aktualizuje všechna tlačítka podle aktuálního stavu a řešení */
+    /** Aktualizuje tlačítka podle aktuálního stavu  */
     private void updateAll() {
         for (Map.Entry<Position, JButton> e : buttons.entrySet()) {
             Position pos = e.getKey();
@@ -124,31 +117,25 @@ public class InfoPresenter implements Observable.Observer {
             );
             // btn.setText(String.valueOf(need));
             btn.setText(need >= 0 ? String.valueOf(need) : "?");
-            //updateTooltip(pos, btn);
+            updateTooltip(pos, btn);
             if (need == 0) {
-                btn.setBackground(Color.decode("#39D353"));  // например светло-зелёный
+                btn.setBackground(Color.decode("#39D353"));
             } else {
                 btn.setBackground(BG_CELL);
             }
         }
     }
-    /* private void updateTooltip(Position pos, JButton btn) {
-
+    /** */
+     private void updateTooltip(Position pos, JButton btn) {
         GameNode cur = currentGame.getGameNode(pos.row(), pos.col());
-        GameNode sol = solvedGame.getGameNode(pos.row(), pos.col());
-
-        int needed = rotationsNeeded(cur.getConnectors(), sol.getConnectors());
         int actual = cur.getRotationCount();
-        System.out.println("Needed: " + needed + " Actual: " + actual);
 
         btn.setToolTipText(
-                "<html>GameNode " + pos.row() + "," + pos.col() + "<br/>" +
-                        "Needed: " + needed + "<br/>" +
-                        "Actual: " + actual + "</html>"
+                "<html> Actual: " + actual + "</html>"
         );
     }
-*/
-    /** Vrátí min. počet otočení o 90° CW, aby se proudy shodovaly */
+
+    /** Vrátí počet otočení,do spravneho řešení  */
     private int rotationsNeeded(Set<Side> cur, Set<Side> tgt) {
         for (int k = 0; k < 4; k++) {
             final int kk = k;
@@ -160,7 +147,7 @@ public class InfoPresenter implements Observable.Observer {
         return 0;
     }
 
-    /** Otočí jednu stranu o 90° CW n-krát */
+    /** Otočí jednu stranu */
     private Side rotateCW(Side s, int times) {
         Side r = s;
         for (int i = 0; i < times; i++) {
@@ -174,7 +161,7 @@ public class InfoPresenter implements Observable.Observer {
         return r;
     }
 
-    /** Vrátí komponovaný JPanel, který vložíme do JavaFX SwingNode */
+    /** Vrátí JPanel, který pak vloží do JavaFX SwingNode */
     public JPanel getPanel() {
         return panel;
     }

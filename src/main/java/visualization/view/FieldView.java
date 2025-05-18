@@ -140,7 +140,6 @@ public class FieldView extends JPanel implements Observable.Observer {
     private void drawLinkNode(Graphics2D g2d, int width, int height) {
         boolean isPowered = field.light();
 
-        // Set colors based on power state
         Color mainColor = isPowered ? new Color(14, 165, 233) : new Color(100, 116, 139);
         Color bgColor = new Color(mainColor.getRed(), mainColor.getGreen(), mainColor.getBlue(), 50);
 

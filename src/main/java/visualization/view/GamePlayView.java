@@ -2,10 +2,9 @@
  * Soubor: src/main/java/visualization/view/GamePlayView.java
  *
  * Popis:
- * Tato třída spravuje zobrazení herního plátna JavaFX, včetně ovládacích prvků, hlavičky
- * s tlačítkem zpět a informacemi o úrovni, a SwingNode obsahujícího hru. Zajišťuje inicializaci,
- * sledování dokončení úrovně, přepínání mezi zobrazením hry a nápovědy a vykreslování překryvného
- * dialogu po dokončení.
+ *  Spravuje zobrazení herního panelu JavaFX a
+ *  ovládacích prvků, hlavičky,tlačítka zpět
+ *
  *
  * @Author: Yaroslav Hryn (xhryny00), Oleksandr Musiichuk (xmusii00)
  */
@@ -17,7 +16,9 @@ import ija.ijaProject.common.Side;
 import ija.ijaProject.game.levels.LevelManager;
 import ija.ijaProject.game.Game;
 import ija.ijaProject.game.levels.GameLevels;
+import ija.ijaProject.game.levels.NodeStateManager;
 import javafx.animation.FadeTransition;
+import javafx.animation.PauseTransition;
 import javafx.animation.Timeline;
 import javafx.animation.KeyFrame;
 import javafx.application.Platform;
@@ -53,8 +54,7 @@ import java.util.stream.Collectors;
 
 
 /**
- * GamePlayView provides the visualization and UI for the game screen.
- * It includes a back button, level information, and wraps the game SwingNode.
+ * Visuallizace herniho okna
  */
 public class GamePlayView {
 
@@ -79,8 +79,13 @@ public class GamePlayView {
     private Game solvedGame;
     private Button infoButton;
     private Stage infoStage;
+    private Button stepBackButton;
+    private Button stepForwardButton;
+    private Button playModeButton;
+
+    private EnvPresenter playPresenter;
     /**
-     * Creates a new GamePlayView for the specified level and difficulty.
+     * Vytvoří GamePlayView pro hru s level a difficulty..
      *
      * @param stage The primary stage
      * @param levelNumber The level number
@@ -96,30 +101,21 @@ public class GamePlayView {
         // Check if this level was already completed before
         levelAlreadyCompleted = LevelManager.getInstance().isLevelCompleted(levelNumber, difficulty);
 
-        // Create the main layout
         root = new StackPane();
         layout = new BorderPane();
-
-        // Create and add the background
         Pane backgroundPane = createBackground();
         root.getChildren().add(backgroundPane);
 
-        // Create the header with back button and level info
         HBox header = createHeader();
         layout.setTop(header);
 
-        // Create the game content
         System.out.println("Starting game with level: " + levelNumber + ", difficulty: " + difficulty);
         gameNode = GameLevels.createGameLevel(levelNumber, difficulty, this::handleLevelCompleted);
-        System.out.println("gameNode=" + gameNode + ", class=" + (gameNode != null ? gameNode.getClass() : "null") + ", id=" + (gameNode != null ? gameNode.getId() : "null"));
-
-
-        // Create a container for the game to add padding
+        System.out.println("GameNode: " + gameNode);
         StackPane gameContainer = new StackPane(gameNode);
         gameContainer.setPadding(new Insets(10));
         gameContainer.setStyle("-fx-background-color: rgba(15, 23, 42, 0.7); -fx-background-radius: 10px;");
 
-        // Add a border to the game container
         gameContainer.setBorder(new Border(new BorderStroke(
                 Color.web("#0EA5E9", 0.6),
                 BorderStrokeStyle.SOLID,
@@ -127,26 +123,25 @@ public class GamePlayView {
                 new BorderWidths(2)
         )));
 
-        // Add drop shadow to the game container
         DropShadow shadow = new DropShadow();
         shadow.setColor(Color.web("#0EA5E9", 0.5));
         shadow.setRadius(15);
         shadow.setSpread(0.1);
         gameContainer.setEffect(shadow);
-
         layout.setCenter(gameContainer);
 
-
-        // Create the level complete overlay (initially hidden)
         levelCompleteOverlay = createLevelCompleteOverlay();
         levelCompleteOverlay.setVisible(false);
         levelCompleteOverlay.setOpacity(0);
 
-        // Add layout and overlay to root
         root.getChildren().addAll(layout, levelCompleteOverlay);
 
-        // Set up game completion listener with a delay to ensure proper initialization
         Platform.runLater(this::setupGameCompletionListener);
+        if (levelAlreadyCompleted) {
+            Platform.runLater(() -> {
+                showLevelCompleteOverlay();
+            });
+        }
     }
     private EnvPresenter getPlayPresenter() {
         return (EnvPresenter) gameNode.getUserData();
@@ -154,25 +149,21 @@ public class GamePlayView {
 
 
     /**
-     * Creates the background for the game screen.
+     * Background
      *
-     * @return A pane containing the background
+     * @return  panel s background
      */
     private Pane createBackground() {
         Pane backgroundPane = new Pane();
 
-        // Create a dark background
         Rectangle background = new Rectangle();
         background.widthProperty().bind(backgroundPane.widthProperty());
         background.heightProperty().bind(backgroundPane.heightProperty());
         background.setFill(Color.web("#0F172A"));
-
-        // Add electric grid lines
         Group gridLines = createGridLines();
 
         backgroundPane.getChildren().addAll(background, gridLines);
 
-        // Make sure the background pane fills the entire window
         backgroundPane.prefWidthProperty().bind(stage.widthProperty());
         backgroundPane.prefHeightProperty().bind(stage.heightProperty());
 
@@ -186,8 +177,6 @@ public class GamePlayView {
      */
     private Group createGridLines() {
         Group gridLines = new Group();
-
-        // Create horizontal and vertical grid lines that will scale with the window
         for (int i = 0; i < 40; i++) {
             // Horizontal lines
             Line hLine = new Line();
@@ -198,7 +187,6 @@ public class GamePlayView {
             hLine.setStroke(Color.web("#0EA5E9", 0.1));
             hLine.setStrokeWidth(1);
 
-            // Vertical lines
             Line vLine = new Line();
             vLine.startXProperty().set(i * 40);
             vLine.endXProperty().set(i * 40);
@@ -224,10 +212,9 @@ public class GamePlayView {
         header.setPadding(new Insets(15, 20, 15, 20));
         header.setSpacing(20);
 
-        // Add semi-transparent background to header
         header.setStyle("-fx-background-color: rgba(15, 23, 42, 0.7);");
 
-        // Create back button
+
         backButton = new Button("← Back to Levels");
         backButton.setStyle(
                 "-fx-background-color: rgba(14, 165, 233, 0.2);" +
@@ -241,17 +228,14 @@ public class GamePlayView {
                         "-fx-padding: 8 15;"
         );
 
-        // Add drop shadow effect
         DropShadow shadow = new DropShadow();
         shadow.setColor(Color.web("#0EA5E9"));
         shadow.setRadius(10);
         shadow.setSpread(0);
         backButton.setEffect(shadow);
 
-        // Add hover effects
         addButtonHoverEffect(backButton);
 
-        // Create level text
         String difficultyName = switch (difficulty) {
             case 0 -> "Beginner";
             case 1 -> "Intermediate";
@@ -263,11 +247,9 @@ public class GamePlayView {
         levelText.setFont(Font.font("System", FontWeight.BOLD, 20));
         levelText.setFill(Color.web("#7DD3FC"));
 
-        // Add glow effect to text
         Glow glow = new Glow(0.5);
         levelText.setEffect(glow);
 
-        // Add to header
         header.getChildren().addAll(backButton, levelText);
 
         Button infoButton = new Button("Hints");
@@ -285,6 +267,39 @@ public class GamePlayView {
         addButtonHoverEffect(infoButton);
         infoButton.setOnAction(e -> openInfoWindow());
         header.getChildren().add(infoButton);
+/*
+        Button backStep   = new Button("<- ");
+        Button forwardStep = new Button("-> ");
+        Button playMode   = new Button("▶  ");
+        backStep.setStyle(
+                "-fx-background-color: rgba(14, 165, 233, 0.2);" +
+                        "-fx-background-radius: 30;" +
+                        "-fx-border-color: #0EA5E9;" +
+                        "-fx-border-width: 2;" +
+                        "-fx-border-radius: 30;" +
+                        "-fx-text-fill: white;" +
+                        "-fx-font-size: 14px;" +
+                        "-fx-font-weight: bold;" +
+                        "-fx-padding: 8 15;"
+        );
+        addButtonHoverEffect(backStep);
+        forwardStep.setStyle(
+                "-fx-background-color: rgba(14, 165, 233, 0.2);" +
+                        "-fx-background-radius: 30;" +
+                        "-fx-border-color: #0EA5E9;" +
+                        "-fx-border-width: 2;" +
+                        "-fx-border-radius: 30;" +
+                        "-fx-text-fill: white;" +
+                        "-fx-font-size: 14px;" +
+                        "-fx-font-weight: bold;" +
+                        "-fx-padding: 8 15;"
+        );
+        addButtonHoverEffect(forwardStep);
+
+
+        header.getChildren().add(backStep);
+        header.getChildren().add(forwardStep);
+        */
 
         return header;
     }
@@ -335,7 +350,6 @@ public class GamePlayView {
         overlay.setPadding(new Insets(30));
         overlay.setStyle("-fx-background-color: rgba(0, 0, 0, 0.7);");
 
-        // Create container for content
         VBox content = new VBox(25);
         content.setAlignment(Pos.CENTER);
         content.setPadding(new Insets(40));
@@ -349,39 +363,33 @@ public class GamePlayView {
                         "-fx-border-radius: 20px;"
         );
 
-        // Add drop shadow
+
         DropShadow contentShadow = new DropShadow();
         contentShadow.setColor(Color.web("#0EA5E9", 0.7));
         contentShadow.setRadius(30);
         contentShadow.setSpread(0.2);
         content.setEffect(contentShadow);
 
-        // Create completion message
         Text completionTitle = new Text("Level Complete!");
         completionTitle.setFont(Font.font("System", FontWeight.BOLD, 36));
         completionTitle.setFill(Color.web("#0EA5E9"));
 
-        // Add glow to title
         Glow titleGlow = new Glow(0.8);
         completionTitle.setEffect(titleGlow);
 
-        // Create congratulation message
         Text congratsText = new Text("Congratulations! You've successfully completed this level.");
         congratsText.setFont(Font.font("System", FontWeight.NORMAL, 18));
         congratsText.setFill(Color.WHITE);
         congratsText.setWrappingWidth(400);
         congratsText.setTextAlignment(javafx.scene.text.TextAlignment.CENTER);
 
-        // Create buttons container
         HBox buttons = new HBox(20);
         buttons.setAlignment(Pos.CENTER);
         buttons.setPadding(new Insets(20, 0, 0, 0));
 
-        // Create retry button
         Button retryButton = new Button("Retry Level");
         styleButton(retryButton);
 
-        // Create next level button
         Button nextLevelButton = new Button("Next Level →");
         styleButton(nextLevelButton);
         nextLevelButton.setStyle(
@@ -396,11 +404,9 @@ public class GamePlayView {
                         "-fx-padding: 12 25;"
         );
 
-        // Add hover effects
         addButtonHoverEffect(retryButton);
         addButtonHoverEffect(nextLevelButton);
 
-        // Set button actions
         retryButton.setOnAction(e -> {
 
             if (infoStage != null) {
@@ -408,11 +414,10 @@ public class GamePlayView {
                 infoStage = null;
             }
             hideLevelCompleteOverlay();
-            restartLevel();
+            retryCurrentLevel();
         });
 
         nextLevelButton.setOnAction(e -> {
-            // Notify the MainApp that the level is completed
             hideLevelCompleteOverlay();
             if (infoStage != null) {
                 infoStage.close();
@@ -428,13 +433,10 @@ public class GamePlayView {
             }
         });
 
-        // Add buttons to container
         buttons.getChildren().addAll(retryButton, nextLevelButton);
 
-        // Add all elements to content
         content.getChildren().addAll(completionTitle, congratsText, buttons);
 
-        // Add content to overlay
         overlay.getChildren().add(content);
 
         return overlay;
@@ -457,8 +459,6 @@ public class GamePlayView {
                         "-fx-font-weight: bold;" +
                         "-fx-padding: 12 25;"
         );
-
-        // Add drop shadow
         DropShadow buttonShadow = new DropShadow();
         buttonShadow.setColor(Color.web("#0EA5E9"));
         buttonShadow.setRadius(10);
@@ -473,12 +473,10 @@ public class GamePlayView {
      */
     private void addButtonHoverEffect(Button button) {
         button.setOnMouseEntered(e -> {
-            // Change style on hover
             String style = button.getStyle();
             style = style.replace("rgba(14, 165, 233, 0.2)", "rgba(14, 165, 233, 0.4)");
             button.setStyle(style);
 
-            // Enhance glow effect
             DropShadow hoverShadow = new DropShadow();
             hoverShadow.setColor(Color.web("#0EA5E9"));
             hoverShadow.setRadius(15);
@@ -487,12 +485,10 @@ public class GamePlayView {
         });
 
         button.setOnMouseExited(e -> {
-            // Restore original style
             String style = button.getStyle();
             style = style.replace("rgba(14, 165, 233, 0.4)", "rgba(14, 165, 233, 0.2)");
             button.setStyle(style);
 
-            // Restore original shadow
             DropShadow originalShadow = new DropShadow();
             originalShadow.setColor(Color.web("#0EA5E9"));
             originalShadow.setRadius(10);
@@ -506,47 +502,35 @@ public class GamePlayView {
      * Uses the GameBridge to monitor the game state.
      */
     private void setupGameCompletionListener() {
-        System.out.println("Настройка слушателя завершения игры...");
-        System.out.println("gameNode=" + gameNode + ", userData=" + (gameNode != null ? gameNode.getUserData() : "null"));
-
-        // Создаем JavaFX таймер для периодической проверки
         if (gameNodeCheckTimeline != null) {
             gameNodeCheckTimeline.stop();
         }
 
         gameNodeCheckTimeline = new Timeline(
                 new KeyFrame(
-                        Duration.millis(500), // Проверяем каждые 500 мс
+                        Duration.millis(150),
                         event -> {
                             try {
-                                // Проверяем, инициализирован ли gameNode и его userData
                                 if (gameNode != null && gameNode.getUserData() instanceof EnvPresenter) {
-                                    // Останавливаем таймер
                                     gameNodeCheckTimeline.stop();
-
-                                    // Настраиваем слушателя
                                     EnvPresenter presenter = (EnvPresenter) gameNode.getUserData();
                                     setupGameCompletionListenerWithPresenter(presenter);
                                 } else {
-                                    System.out.println("Ожидание инициализации gameNode: userData=" +
+                                    System.out.println("Waiting for gameNpde " +
                                             (gameNode != null ? gameNode.getUserData() : "null"));
                                 }
                             } catch (Exception e) {
-                                System.err.println("Ошибка при проверке gameNode: " + e.getMessage());
+                                System.err.println("Error unvalid GameNode " + e.getMessage());
                                 e.printStackTrace();
                             }
                         }
                 )
         );
-
-        // Запускаем таймер с повторением
         gameNodeCheckTimeline.setCycleCount(Timeline.INDEFINITE);
         gameNodeCheckTimeline.play();
-
-        // For testing purposes, keep the key press handler
         root.setOnKeyPressed(e -> {
             switch (e.getCode()) {
-                case F5 -> handleLevelCompleted(); // Press F5 to simulate level completion
+                case F5 -> handleLevelCompleted();
             }
         });
     }
@@ -558,34 +542,20 @@ public class GamePlayView {
      */
     private void setupGameCompletionListenerWithPresenter(EnvPresenter presenter) {
         try {
-            // Получаем Game через метод getEnvironment
             ToolEnvironment environment = presenter.getEnvironment();
             System.out.println("ToolEnv " + environment);
 
             if (environment instanceof Game) {
                 Game game = (Game) environment;
-
-                // Создаем GameBridge для мониторинга игры
                 gameBridge = new GameBridge(game);
-
-                // Добавляем слушатель завершения
                 gameBridge.addCompletionListener(() -> Platform.runLater(this::handleLevelCompleted));
-                System.out.println("Слушатель завершения уровня успешно настроен");
             } else {
-                System.out.println("env не является экземпляром Game: " +
+                System.out.println("Env Problem: " +
                         (environment != null ? environment.getClass().getName() : "null"));
-
-                // Если не удалось получить Game, выводим сообщение о F5
-                System.out.println("Автоматическое определение завершения уровня не работает.");
-                System.out.println("Используйте клавишу F5 для завершения уровня.");
             }
         } catch (Exception e) {
-            System.err.println("Ошибка при настройке слушателя: " + e.getMessage());
+            System.err.println("Error listener " + e.getMessage());
             e.printStackTrace();
-
-            // В случае ошибки, выводим сообщение о F5
-            System.out.println("Автоматическое определение завершения уровня не работает из-за ошибки.");
-            System.out.println("Используйте клавишу F5 для завершения уровня.");
         }
     }
 
@@ -594,20 +564,17 @@ public class GamePlayView {
      * This is called when the game is completed.
      */
     public void handleLevelCompleted() {
-        // Проверяем, не вызывается ли метод повторно
         if (levelAlreadyCompleted) {
-            System.out.println("Уровень " + levelNumber + " уже был завершен ранее, игнорируем повторное завершение");
+            System.out.println("Level " + levelNumber + " was completed");
             return;
         }
 
         System.out.println("Level " + levelNumber + " at difficulty " + difficulty + " completed!");
 
-        // Mark the level as completed in LevelManager
         LevelManager.getInstance().markLevelCompleted(levelNumber, difficulty);
         levelAlreadyCompleted = true;
+        NodeStateManager.getInstance().clearNodeStates(levelNumber, difficulty);
 
-
-        // Show the completion overlay
         showLevelCompleteOverlay();
     }
 
@@ -619,28 +586,22 @@ public class GamePlayView {
      * @return The Game instance, or null if not found
      */
     private Game getGameFromPanel(JPanel panel) {
-        System.out.println("getGameFromPanel вызван с panel=" + panel);
 
         if (panel == null) {
-            System.out.println("getGameFromPanel: panel равен null");
+            System.out.println("ERROR: panel is null");
             return null;
         }
 
         try {
-            // Выводим информацию о компонентах панели
             Component[] components = panel.getComponents();
-            System.out.println("Компонентов в панели: " + components.length);
 
             for (int i = 0; i < components.length; i++) {
                 Component component = components[i];
-                System.out.println("Компонент " + i + ": " + component.getClass().getName());
             }
         } catch (Exception e) {
-            System.err.println("Ошибка при анализе компонентов панели: " + e.getMessage());
+            System.err.println("Error: component panel " + e.getMessage());
             e.printStackTrace();
         }
-
-        // Этот метод больше не используется, так как мы получаем Game из EnvPresenter
         return null;
     }
 
@@ -650,14 +611,12 @@ public class GamePlayView {
     public void showLevelCompleteOverlay() {
         try {
             levelCompleteOverlay.setVisible(true);
-
-            // Fade in animation
             FadeTransition fadeIn = new FadeTransition(Duration.millis(500), levelCompleteOverlay);
             fadeIn.setFromValue(0);
             fadeIn.setToValue(1);
             fadeIn.play();
         } catch (Exception e) {
-            System.err.println("Ошибка при показе оверлея завершения уровня: " + e.getMessage());
+            System.err.println("Error: Complete Level overlay " + e.getMessage());
             e.printStackTrace();
         }
     }
@@ -667,17 +626,14 @@ public class GamePlayView {
      */
     private void hideLevelCompleteOverlay() {
         try {
-            // Fade out animation
             FadeTransition fadeOut = new FadeTransition(Duration.millis(500), levelCompleteOverlay);
             fadeOut.setFromValue(1);
             fadeOut.setToValue(0);
             fadeOut.setOnFinished(e -> levelCompleteOverlay.setVisible(false));
             fadeOut.play();
         } catch (Exception e) {
-            System.err.println("Ошибка при скрытии оверлея завершения уровня: " + e.getMessage());
+            System.err.println("Error: hide Level Complete Overlay " + e.getMessage());
             e.printStackTrace();
-
-            // В случае ошибки, просто скрываем оверлей
             levelCompleteOverlay.setVisible(false);
         }
     }
@@ -686,36 +642,78 @@ public class GamePlayView {
      * Restarts the current level.
      */
     private void restartLevel() {
-        // Stop monitoring the current game
         if (gameBridge != null) {
             gameBridge.stopMonitoring();
             gameBridge = null;
         }
-
-        // Останавливаем таймер, если он запущен
         if (gameNodeCheckTimeline != null) {
             gameNodeCheckTimeline.stop();
             gameNodeCheckTimeline = null;
         }
-
-        // Replace the game node with a new one for the same level
         SwingNode newGameNode = GameLevels.createGameLevel(levelNumber, difficulty, this::handleLevelCompleted);
-
-        // Get the parent of the current game node
         StackPane gameContainer = (StackPane) gameNode.getParent();
-
-        // Replace the game node
         gameContainer.getChildren().clear();
         gameContainer.getChildren().add(newGameNode);
-
-        // Update the reference
         gameNode = newGameNode;
-
-        // Сбрасываем флаг завершения уровня
         levelAlreadyCompleted = false;
-
-        // Set up game completion listener again
         Platform.runLater(this::setupGameCompletionListener);
+    }
+
+    /**
+     * Resets the current level's progress while keeping other levels intact.
+     */
+    private void retryCurrentLevel() {
+        if (infoStage != null) {
+            infoStage.close();
+            infoStage = null;
+        }
+        if (levelCompleteOverlay.isVisible()) {
+            hideLevelCompleteOverlay();
+        }
+        LevelManager.getInstance().resetLevelCompletion(levelNumber, difficulty);
+        NodeStateManager.getInstance().clearNodeStates(levelNumber, difficulty);
+        levelAlreadyCompleted = false;
+        restartLevel();
+        showTemporaryMessage("Level reset successfully!");
+    }
+
+    /**
+     * Shows a temporary message in the UI.
+     *
+     * @param message The message to show
+     */
+    private void showTemporaryMessage(String message) {
+        Text messageText = new Text(message);
+        messageText.setFont(Font.font("System", FontWeight.BOLD, 18));
+        messageText.setFill(Color.WHITE);
+
+        StackPane messageContainer = new StackPane(messageText);
+        messageContainer.setStyle(
+                "-fx-background-color: rgba(14, 165, 233, 0.7);" +
+                        "-fx-background-radius: 10px;" +
+                        "-fx-padding: 15px 25px;"
+        );
+        messageContainer.setOpacity(0);
+
+        StackPane.setAlignment(messageContainer, Pos.TOP_CENTER);
+        StackPane.setMargin(messageContainer, new Insets(100, 0, 0, 0));
+
+        root.getChildren().add(messageContainer);
+
+        FadeTransition fadeIn = new FadeTransition(Duration.millis(300), messageContainer);
+        fadeIn.setFromValue(0);
+        fadeIn.setToValue(1);
+
+        PauseTransition pause = new PauseTransition(Duration.seconds(2));
+
+        FadeTransition fadeOut = new FadeTransition(Duration.millis(500), messageContainer);
+        fadeOut.setFromValue(1);
+        fadeOut.setToValue(0);
+        fadeOut.setOnFinished(e -> root.getChildren().remove(messageContainer));
+
+        fadeIn.setOnFinished(e -> pause.play());
+        pause.setOnFinished(e -> fadeOut.play());
+        fadeIn.play();
     }
 
     /**
@@ -725,7 +723,18 @@ public class GamePlayView {
      */
     public void setOnBackAction(EventHandler<ActionEvent> handler) {
         this.backHandler = handler;
-        backButton.setOnAction(handler);
+        EventHandler<ActionEvent> wrappedHandler = e -> {
+            System.out.println("Back button clicked - saving state before exit");
+            saveStateOnExit();
+            if (infoStage != null) {
+                infoStage.close();
+                infoStage = null;
+            }
+            if (handler != null) {
+                handler.handle(e);
+            }
+        };
+        backButton.setOnAction(wrappedHandler);
     }
 
     /**
@@ -755,31 +764,57 @@ public class GamePlayView {
         return root;
     }
 
+    /** Uloží stavy Nodes */
+    public void saveStateOnExit() { try { System.out.println("saveStateOnExit called for level " + levelNumber + " at difficulty " + difficulty);
+        if (levelAlreadyCompleted) {
+            System.out.println("saveStateOnExit: Level " + levelNumber + " at difficulty " + difficulty +
+                    " is already completed, not saving state");
+            return;
+        }
+        boolean hasChanges = NodeStateManager.getInstance().hasChangesDetected(levelNumber, difficulty);
+        if (!hasChanges) {
+            System.out.println("No changes detected, not saving state");
+            return;
+        }
+        if (gameNode != null) {
+            EnvPresenter presenter = getPlayPresenter();
+            if (presenter != null) {
+                Object environment = presenter.getEnvironment();
+                if (environment instanceof Game) {
+                    Game game = (Game) environment;
+                    NodeStateManager.getInstance().saveNodeStates(levelNumber, difficulty, game);
+                }
+            }
+        }
+    } catch (Exception e) {
+        System.err.println("Error: saving game state: " + e.getMessage());
+        e.printStackTrace();
+    }
+    }
+
+
     /**
      * Cleans up resources used by this view.
      * This should be called when the view is no longer needed.
      */
     public void cleanup() {
         System.out.println("GamePlayView cleanup called");
+        saveStateOnExit();
 
-        // Stop the game bridge if it exists
         if (gameBridge != null) {
             gameBridge.stopMonitoring();
             gameBridge = null;
         }
 
-        // Останавливаем таймер, если он запущен
         if (gameNodeCheckTimeline != null) {
             gameNodeCheckTimeline.stop();
             gameNodeCheckTimeline = null;
         }
 
-        // Remove any listeners
         if (backButton != null) {
             backButton.setOnAction(null);
         }
 
-        // Clear references
         backHandler = null;
         nextLevelHandler = null;
         onLevelCompleted = null;

@@ -25,22 +25,21 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.geom.*;
 
-/** Zajišťuje kreslení jednotlivých políček herního plánu
- *   ve Swing panelu. Reaguje na změny stavu modelového objektu ToolField
- *   (implementovaného v GameNode) a zobrazuje jeho aktuální typ (vodič,
- *   žárovka, zdroj) včetně stavu napájení. Podporuje zvýraznění při najetí
- *   myší a přepínání stavu políčka po kliknutí. */
+/** Zajišťuje kreslení jednotlivých políček herního plánu.
+ *  Reaguje na změny stavu modelového objektu ToolField
+ *    a zobrazuje jeho aktuální typ (vodič,
+ *   žárovka, zdroj) včetně stavu napájení. */
 
 public class FieldView extends JPanel implements Observable.Observer {
     private final ToolField field;
     private boolean isHighlighted = false;
-    private int updateCount = 0; // Add counter for updates
+    private int updateCount = 0;
+    private boolean clicksEnabled = true;
+
 
     /**
      * Vytvoří nové FieldView pro zadané modelové pole.
-     * Přidá posluchač pro notifikace a myší.
-     *
-     * @param field modelové pole, jehož stav se bude vizualizovat
+     * @param field modelové pole
      */
     public FieldView(ToolField field) {
         this.field = field;
@@ -48,12 +47,16 @@ public class FieldView extends JPanel implements Observable.Observer {
 
         setPreferredSize(new Dimension(50, 50));
         setBorder(BorderFactory.createLineBorder(Color.DARK_GRAY, 1));
-        setBackground(new Color(15, 23, 42)); // Dark background
+        setBackground(new Color(15, 23, 42));
 
         addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
+                if (!clicksEnabled) {
+                    return;
+                }
                 field.turn();
+
             }
 
             @Override
@@ -68,6 +71,15 @@ public class FieldView extends JPanel implements Observable.Observer {
                 repaint();
             }
         });
+    }
+    public void disableClicks() {
+        clicksEnabled = false;
+        //System.out.println("disabled clicks in FieldView");
+    }
+
+    public void enableClicks() {
+        clicksEnabled = true;
+        //System.out.println("enabled clicks in FieldView");
     }
 
     /**
@@ -143,18 +155,15 @@ public class FieldView extends JPanel implements Observable.Observer {
         Color mainColor = isPowered ? new Color(14, 165, 233) : new Color(100, 116, 139);
         Color bgColor = new Color(mainColor.getRed(), mainColor.getGreen(), mainColor.getBlue(), 50);
 
-        // Draw background rectangle
         int padding = 5;
         Rectangle2D rect = new Rectangle2D.Double(padding, padding, width - 2 * padding, height - 2 * padding);
         g2d.setColor(bgColor);
         g2d.fill(rect);
 
-        // Draw border
         g2d.setColor(mainColor);
         g2d.setStroke(new BasicStroke(2));
         g2d.draw(rect);
 
-        // Draw center circle
         int centerSize = 8;
         Ellipse2D center = new Ellipse2D.Double(
                 width / 2 - centerSize / 2,
@@ -164,7 +173,6 @@ public class FieldView extends JPanel implements Observable.Observer {
         );
         g2d.fill(center);
 
-        // Draw connections based on sides
         drawConnections(g2d, width, height, mainColor);
     }
 

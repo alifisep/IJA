@@ -101,7 +101,6 @@ public class LevelManager {
     /**
      * Loads progress from file.
      */
-    @SuppressWarnings("unchecked")
     private void loadProgress() {
         File file = new File(SAVE_FILE);
         if (!file.exists()) {
@@ -114,7 +113,6 @@ public class LevelManager {
             System.out.println("Progress loaded: " + completedLevels.size() + " levels completed");
         } catch (IOException | ClassNotFoundException e) {
             System.err.println("Error loading progress: " + e.getMessage());
-            // If there's an error, start with empty progress
             completedLevels = new HashSet<>();
         }
     }
@@ -137,12 +135,9 @@ public class LevelManager {
     public void resetLevelCompletion(int levelNumber, int difficulty) {
         String levelKey = difficulty + "-" + levelNumber;
 
-        // Remove this level from the completed levels set
         if (completedLevels.contains(levelKey)) {
             completedLevels.remove(levelKey);
             System.out.println("Reset completion status for level " + levelNumber + " at difficulty " + difficulty);
-
-            // Save the updated completion status
             saveProgress();
         }
     }

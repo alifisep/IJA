@@ -16,10 +16,7 @@ import visualization.common.ToolEnvironment;
 import visualization.common.ToolField;
 import visualization.view.FieldView;
 
-import java.awt.Dimension;
-import java.awt.GridLayout;
-import java.awt.Color;
-import java.awt.BorderLayout;
+import java.awt.*;
 import java.awt.event.ActionListener;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
@@ -45,6 +42,8 @@ public class EnvPresenter {
     private boolean levelCompletionDetected = false;
     private final Timer levelCheckTimer;
     private ToolEnvironment environment;
+    private boolean clicksEnabled = true;
+
 
     /**
      * Creates a new EnvPresenter for the given environment.
@@ -98,6 +97,36 @@ public class EnvPresenter {
             this.initialize();
             levelCheckTimer.start();
         });
+    }
+
+    public void disableUserClicks() {
+        clicksEnabled = false;
+        for (Component comp : mainPanel.getComponents()) {
+            if (comp instanceof JPanel) {
+                JPanel maybeGrid = (JPanel) comp;
+                for (Component inner : maybeGrid.getComponents()) {
+                    if (inner instanceof FieldView) {
+                        ((FieldView) inner).disableClicks();
+                        //System.out.println("disabled clicks in Env,instance: " + inner);
+                    }
+                }
+            }
+        }
+    }
+
+    public void enableUserClicks() {
+        this.clicksEnabled = true;
+        for (Component comp : mainPanel.getComponents()) {
+            if (comp instanceof JPanel) {
+                JPanel maybeGrid = (JPanel) comp;
+                for (Component inner : maybeGrid.getComponents()) {
+                    if (inner instanceof FieldView) {
+                        ((FieldView) inner).enableClicks();
+                        //System.out.println("enabled clicks in Env,instance: " + inner);
+                    }
+                }
+            }
+        }
     }
 
     /**
@@ -163,7 +192,7 @@ public class EnvPresenter {
         int cols = this.env.cols();
 
         mainPanel = new JPanel(new BorderLayout());
-        mainPanel.setBackground(new Color(15, 23, 42)); // Dark blue background
+        mainPanel.setBackground(new Color(15, 23, 42));
 
         JPanel gridPanel = new JPanel(new GridLayout(rows, cols, 2, 2));
         gridPanel.setBackground(new Color(15, 23, 42)); // Dark blue background

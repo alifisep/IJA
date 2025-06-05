@@ -1,1 +1,0 @@
-packageSearchIndex = [{"l":"All Packages","u":"allpackages-index.html"},{"l":"ija.ijaProject"},{"l":"ija.ijaProject.common"},{"l":"ija.ijaProject.game"},{"l":"ija.ijaProject.game.levels"},{"l":"visualization"},{"l":"visualization.common"},{"l":"visualization.view"}];updateSearchResults();

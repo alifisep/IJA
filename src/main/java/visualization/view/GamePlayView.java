@@ -317,7 +317,7 @@ public class GamePlayView {
         header.getChildren().addAll(backButton, levelText, infoButton, stepBackButton, stepForwardButton, playModeButton);
 
         //setupButtonsOnStart();
-        setupSimulationControls();
+        //setupSimulationControls();
 
         return header;
     }
@@ -362,8 +362,17 @@ public class GamePlayView {
         stepBackButton.setOnAction(e -> {
             System.out.println("[UI] Step Back button clicked");
             GameReplay replay = (GameReplay) gameNode.getProperties().get("replay");
+            EnvPresenter playPr = (EnvPresenter) gameNode.getUserData();
             if (replay != null) {
+                if (playPr != null) {
+                    System.out.println("  → Before stepBack: ");
+                    playPr.debugPrintState();
+                }
                 replay.stepBackward();
+                if (playPr != null) {
+                    System.out.println("  → After stepBack: ");
+                    playPr.debugPrintState();
+                }
             } else {
                 System.out.println("[UI] No replay found in gameNode properties");
             }
@@ -373,7 +382,16 @@ public class GamePlayView {
             System.out.println("[UI] Step Forward button clicked");
             GameReplay replay = (GameReplay) gameNode.getProperties().get("replay");
             if (replay != null) {
+                EnvPresenter playPr = (EnvPresenter) gameNode.getUserData();
+                if (playPr != null) {
+                    System.out.println("  → Before stepForward: ");
+                    playPr.debugPrintState();
+                }
                 replay.stepForward();
+                if (playPr != null) {
+                    System.out.println("  → After stepForward: ");
+                    playPr.debugPrintState();
+                }
             } else {
                 System.out.println("[UI] No replay found in gameNode properties");
             }
@@ -382,19 +400,24 @@ public class GamePlayView {
         playModeButton.setOnAction(e -> {
             System.out.println("[UI] Play Mode button clicked");
             GameReplay replay = (GameReplay) gameNode.getProperties().get("replay");
+            EnvPresenter playPr = (EnvPresenter) gameNode.getUserData();
             if (replay != null) {
-                EnvPresenter playPr = (EnvPresenter) gameNode.getUserData();
-                playPr.enableUserClicks();
-                stepBackButton.setDisable(true);
-                stepForwardButton.setDisable(true);
-                stepForwardButton.setVisible(false);
-                stepBackButton.setVisible(false);
-                playModeButton.setVisible(false);
-                playModeButton.setDisable(true);
+                System.out.println("  → Before switchToPlayMode: ");
+                playPr.debugPrintState();
                 replay.switchToPlayMode();
-            } else {
-                System.out.println("[UI] No replay found in gameNode properties");
             }
+
+
+            if (playPr != null) {
+                playPr.setReplayMode(false);
+                playPr.enableUserClicks();
+            }
+            System.out.println("  → After switchToPlayMode: ");
+            playPr.debugPrintState();
+            stepBackButton.setVisible(false);
+            stepForwardButton.setVisible(false);
+            playModeButton.setVisible(false);
+
         });
     }
 
@@ -657,6 +680,7 @@ public class GamePlayView {
                 System.out.println("Env Problem: " +
                         (environment != null ? environment.getClass().getName() : "null"));
             }
+            setupSimulationControls();
         } catch (Exception e) {
             System.err.println("Error listener " + e.getMessage());
             e.printStackTrace();

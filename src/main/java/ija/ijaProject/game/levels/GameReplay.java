@@ -5,6 +5,7 @@ import ija.ijaProject.game.Game;
 import visualization.EnvPresenter;
 import visualization.common.ToolEnvironment;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class GameReplay {
@@ -51,6 +52,12 @@ public class GameReplay {
         NodeStateManager.getInstance().setReplayMode(false);
         System.out.println("!!!! NODE: " + NodeStateManager.getInstance().isReplayMode());
         this.isPlayMode = true;
+
+        List<GameMove> trimmed = new ArrayList<>(moves.subList(0, currentMoveIndex + 1));
+        System.out.println("[Replay] Trimmed moves to size: " + trimmed.size());
+
+        NodeStateManager.getInstance().startFromPartialLog(trimmed);
+
     }
 
     private void applyMove(GameMove move) {

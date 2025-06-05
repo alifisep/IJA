@@ -52,6 +52,8 @@ public class FieldView extends JPanel implements Observable.Observer {
         addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
+                System.out.println("[FieldView] clicked at " + field.getPosition()
+                        + ", clicksEnabled=" + clicksEnabled);
                 if (!clicksEnabled) {
                     return;
                 }
@@ -73,13 +75,16 @@ public class FieldView extends JPanel implements Observable.Observer {
         });
     }
     public void disableClicks() {
-        clicksEnabled = false;
+        this.clicksEnabled = false;
         //System.out.println("disabled clicks in FieldView");
     }
 
     public void enableClicks() {
-        clicksEnabled = true;
-        //System.out.println("enabled clicks in FieldView");
+        this.clicksEnabled = true;
+        System.out.println("enabled clicks in FieldView");
+    }
+    public boolean isClicksEnabled() {
+        return clicksEnabled;
     }
 
     /**

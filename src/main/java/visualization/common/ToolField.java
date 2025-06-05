@@ -15,6 +15,8 @@
 
 package visualization.common;
 
+import ija.ijaProject.common.Position;
+
 /** Rozhraní reprezentující pole hry.
  *  Rozhraní definuje pouze ty operace, které jsou nutné pro prezentaci
  *  (zobrazení) v prostředí třídou EnvPresenter.
@@ -47,4 +49,6 @@ public interface ToolField extends Observable {
 
     /** Ověřuje typ políčka (zdroj) kvůli zobrazení. */
     boolean isPower();
+
+    Position getPosition();
 }

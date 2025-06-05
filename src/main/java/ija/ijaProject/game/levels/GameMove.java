@@ -1,5 +1,7 @@
 package ija.ijaProject.game.levels;
 
+import ija.ijaProject.common.Position;
+
 import java.io.*;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -19,5 +21,8 @@ public class GameMove implements Serializable {
         this.y = y;
         this.rotation = rotation;
         this.timestamp = System.currentTimeMillis();
+    }
+    public Position getPosition() {
+        return new Position(x, y);
     }
 }

@@ -43,6 +43,7 @@ public class EnvPresenter {
     private final Timer levelCheckTimer;
     private ToolEnvironment environment;
     private boolean clicksEnabled = true;
+    private boolean inReplayMode = false;
 
 
     /**
@@ -54,14 +55,23 @@ public class EnvPresenter {
         this.env = env;
 
         this.fields = new ArrayList<>();
-        initialize();
+       // initialize();
         levelCheckTimer = new Timer(200, e -> checkLevelCompletion());
     }
 
     public void setEnvironment(ToolEnvironment env) {
         this.environment = env;
         getGamePanel().removeAll();
-        init();
+        SwingUtilities.invokeLater(() -> {
+            initialize();
+            levelCheckTimer.start();
+            /*if (inReplayMode) {
+                disableUserClicks();
+            }*/
+        });
+    }
+    public void setReplayMode(boolean replay) {
+        this.inReplayMode = replay;
     }
 
         /**
@@ -96,16 +106,21 @@ public class EnvPresenter {
         SwingUtilities.invokeLater(() -> {
             this.initialize();
             levelCheckTimer.start();
+            /*if (inReplayMode) {
+                disableUserClicks();
+            }*/
         });
     }
 
     public void disableUserClicks() {
+        System.out.println("[EnvPresenter] disableUserClicks() called; fieldsCount = " + fields.size());
         clicksEnabled = false;
         for (Component comp : mainPanel.getComponents()) {
             if (comp instanceof JPanel) {
                 JPanel maybeGrid = (JPanel) comp;
                 for (Component inner : maybeGrid.getComponents()) {
                     if (inner instanceof FieldView) {
+                        //System.out.println("  → disabling clicks on FieldView[" + i + "] = " + fields.get(i));
                         ((FieldView) inner).disableClicks();
                         //System.out.println("disabled clicks in Env,instance: " + inner);
                     }
@@ -129,6 +144,19 @@ public class EnvPresenter {
         }
     }
 
+    public void refreshViews() {
+        for (Component comp : mainPanel.getComponents()) {
+            if (comp instanceof JPanel) {
+                JPanel maybeGrid = (JPanel) comp;
+                for (Component inner : maybeGrid.getComponents()) {
+                    if (inner instanceof FieldView) {
+                        ((FieldView) inner).repaint();
+                        //System.out.println("enabled clicks in Env,instance: " + inner);
+                    }
+                }
+            }
+        }
+    }
     /**
      * Sets a callback to be called when the level is completed.
      *
@@ -182,6 +210,8 @@ public class EnvPresenter {
      * Initializes the game UI components.
      */
     private void initialize() {
+        System.out.println("[EnvPresenter] initialize() START; fields was: " + fields.size());
+        fields.clear();
         this.frame = new JFrame("VoltMaze");
         this.frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         this.frame.setSize(350, 400);
@@ -206,10 +236,19 @@ public class EnvPresenter {
                 this.fields.add(fieldView);
             }
         }
+        System.out.println("[EnvPresenter] initialize() END; fields now: " + fields.size());
         mainPanel.setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
         mainPanel.add(gridPanel, BorderLayout.CENTER);
         this.frame.getContentPane().add(mainPanel);
         this.frame.pack();
+
+        if (inReplayMode) {
+            SwingUtilities.invokeLater(() -> {
+                System.out.println("[EnvPresenter] (inside initialize) disableUserClicks(); fieldsCount="
+                        + fields.size());
+                disableUserClicks();
+            });
+        }
 
         levelCompletionDetected = false;
     }
@@ -222,6 +261,7 @@ public class EnvPresenter {
     protected List<FieldView> fields() {
         return new ArrayList<>(this.fields);
     }
+
 
     /**
      * Resets the level completion detection state.
@@ -251,5 +291,31 @@ public class EnvPresenter {
     /** Return the environment */
     public ToolEnvironment getEnvironment() {
         return env;
+    }
+
+    public boolean inReplayMode() {
+        return inReplayMode;
+    }
+    public boolean isInReplayMode() {
+        return inReplayMode;
+    }
+
+    /** Возвращает количество созданных FieldView. */
+    public int getFieldsCount() {
+        return fields.size();
+    }
+
+    /** Возвращает текущее состояние clicksEnabled у первого поля (или -1, если полей нет). */
+    public boolean isFirstFieldClickable() {
+        if (fields.isEmpty()) return false;
+        return fields.get(0).isClicksEnabled();
+    }
+
+    /** Для отладки: печатает краткую информацию о состоянии Presenter. */
+    public void debugPrintState() {
+        System.out.println("[EnvPresenter] this=" + this
+                + ", inReplayMode=" + inReplayMode
+                + ", panel=" + mainPanel
+                + ", fieldsCount=" + fields.size());
     }
 }

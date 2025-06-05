@@ -193,6 +193,16 @@ public class NodeStateManager {
         }
     }
 
+    public void startFromPartialLog(List<GameMove> trimmedMoves) {
+        if (currentGameLogPath == null) {
+            System.err.println("No existing game log path. Cannot trim.");
+            return;
+        }
+
+        currentGameMoves = new ArrayList<>(trimmedMoves);
+        saveMovesToFile();
+    }
+
 }
 
 

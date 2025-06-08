@@ -141,14 +141,5 @@ public class LevelManager {
             saveProgress();
         }
     }
-
-
-    /**
-     * Gets all completed levels.
-     *
-     * @return A set of level keys in the format "difficulty-levelNumber"
-     */
-    public Set<String> getCompletedLevels() {
-        return new HashSet<>(completedLevels);
-    }
 }
+

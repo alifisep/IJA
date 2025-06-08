@@ -18,7 +18,6 @@ import ija.ijaProject.game.Game;
 import visualization.common.Observable;
 
 import javax.swing.*;
-import javax.swing.border.LineBorder;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -32,19 +31,15 @@ import java.util.stream.Collectors;
  * otočení je třeba provést, aby dosáhla správné  pozice. */
 public class InfoPresenter implements Observable.Observer {
     public static final int TILE_SIZE = 40;
-    private static final Color BG        = Color.decode("#0f1e2e");
-    private static final Color CELL_BG   = Color.decode("#1f2f3f");
-    private static final Color LINE      = Color.decode("#2f3f4f");
     private static final Color BG_CELL     = new Color(0x1A1F34);
     private static final Color GRID_COLOR  = new Color(0x3A4154);
     private static final Font  FONT_NUMBER = new Font("Arial", Font.BOLD, 18);
     private final Game currentGame;
     private final Game solvedGame;
     private final JPanel panel;
-    private final Map<Position, JLabel> labels = new HashMap<>();
     private final Map<Position,JButton> buttons = new HashMap<>();
     static{
-        ToolTipManager.sharedInstance().setInitialDelay(2000); // 2 секунды перед показом
+        ToolTipManager.sharedInstance().setInitialDelay(2000);
     }
 
     /**

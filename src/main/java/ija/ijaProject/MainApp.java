@@ -13,26 +13,20 @@
 
 package ija.ijaProject;
 
-import ija.ijaProject.game.Game;
 import ija.ijaProject.game.levels.LevelManager;
-import ija.ijaProject.game.levels.NodeStateManager;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
-import visualization.EnvPresenter;
 import visualization.view.*;
 
 /** Hlavní třída aplikace VoltMaze.
  * Zajišťuje celý cyklus životnosti JavaFX aplikace: zobrazení menu, výběr úrovní,
  * herní obrazovku, informace a nastavení. Spravuje uložení nastavení při ukončení. */
 public class MainApp extends Application {
-    private static final int CELL_SIZE =40 ;
     private Stage primaryStage;
-    private boolean simulationMode = false;
-
 
     /**
      * Spustí JavaFX aplikaci.
@@ -127,7 +121,6 @@ public class MainApp extends Application {
     private void handleLevelCompleted(int levelNumber, int difficulty) {
         System.out.println("MainApp: Level " + levelNumber + " at difficulty " + difficulty + " completed!");
 
-
         LevelManager.getInstance().markLevelCompleted(levelNumber, difficulty);
 
         //NodeStateManager.getInstance().clearNodeStates(levelNumber, difficulty);
@@ -193,7 +186,7 @@ public class MainApp extends Application {
     }
 
     private void startGame(int levelNumber, int difficulty) {
-        startGame(levelNumber, difficulty, false); // default to normal mode
+        startGame(levelNumber, difficulty, false);
     }
 
 

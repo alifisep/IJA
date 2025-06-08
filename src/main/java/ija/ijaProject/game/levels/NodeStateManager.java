@@ -15,7 +15,6 @@ package ija.ijaProject.game.levels;
 
 import ija.ijaProject.common.GameNode;
 import ija.ijaProject.common.Position;
-import ija.ijaProject.common.Side;
 import ija.ijaProject.game.Game;
 
 import java.io.*;
@@ -35,10 +34,6 @@ public class NodeStateManager {
     private List<GameMove> currentGameMoves;
     private String currentGameLogPath;
     private boolean isReplayMode = false;
-
-    public boolean isReplayMode() {
-        return isReplayMode;
-    }
 
 
     public void setReplayMode(boolean replayMode) {

@@ -12,8 +12,6 @@
 package visualization.view;
 
 import ija.ijaProject.common.GameNode;
-import ija.ijaProject.game.levels.GameMove;
-import ija.ijaProject.common.Side;
 import ija.ijaProject.game.levels.*;
 import ija.ijaProject.game.Game;
 import javafx.animation.FadeTransition;
@@ -21,7 +19,6 @@ import javafx.animation.PauseTransition;
 import javafx.animation.Timeline;
 import javafx.animation.KeyFrame;
 import javafx.application.Platform;
-import javafx.collections.MapChangeListener;
 import javafx.embed.swing.SwingNode;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -30,7 +27,6 @@ import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.control.Tooltip;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.effect.Glow;
 import javafx.scene.layout.*;
@@ -45,17 +41,11 @@ import javafx.util.Duration;
 import visualization.EnvPresenter;
 import visualization.common.ToolEnvironment;
 import javafx.scene.control.Label;
-import javafx.collections.ObservableMap;
-import javafx.collections.MapChangeListener;
-
 
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.List;
 
-import java.util.Set;
-import java.util.stream.Collectors;
 
 
 /**
@@ -63,7 +53,6 @@ import java.util.stream.Collectors;
  */
 public class GamePlayView {
 
-    private static final int CELL_SIZE =40 ;
     private static final String BG_COLOR_HEX = "#0F172A";
     private final StackPane root;
     private final BorderPane layout;
@@ -81,18 +70,12 @@ public class GamePlayView {
     private boolean levelAlreadyCompleted = false;
     private Timeline gameNodeCheckTimeline;
     //private final SwingNode swingNode;
-    private Game solvedGame;
-    private Button infoButton;
     private Stage infoStage;
     private Button stepBackButton;
     private Button stepForwardButton;
     private Button playModeButton;
-
-    private Button simulationButton;
     private boolean simulationMode;
-    private GameReplay replay;
 
-    private EnvPresenter playPresenter;
 
     /**
      * Vytvoří GamePlayView pro hru s level a difficulty..
@@ -272,8 +255,8 @@ public class GamePlayView {
         );
         addButtonHoverEffect(infoButton);
         infoButton.setOnAction(e -> openInfoWindow());
-        stepBackButton = new Button("<-");
-        stepForwardButton = new Button("->");
+        stepBackButton = new Button("←");
+        stepForwardButton = new Button("→");
         playModeButton = new Button("▶");
         stepBackButton.setStyle(
                 "-fx-background-color: rgba(14, 165, 233, 0.2);" +
@@ -320,31 +303,6 @@ public class GamePlayView {
         //setupSimulationControls();
 
         return header;
-    }
-    private void setupButtonsOnStart() {
-        Platform.runLater(() -> {Object rep = gameNode.getProperties().get("replay");
-            boolean hasReplay = (rep instanceof GameReplay);
-
-            stepBackButton.setVisible(hasReplay);
-            stepForwardButton.setVisible(hasReplay);
-            stepBackButton.setDisable(!hasReplay);
-            stepForwardButton.setDisable(!hasReplay);
-
-            playModeButton.setVisible(hasReplay);
-            playModeButton.setDisable(!hasReplay);});
-
-    }
-    public void updateSimulationButtons() {
-        Object rep = gameNode.getProperties().get("replay");
-        boolean hasReplay = (rep instanceof GameReplay);
-
-        stepBackButton.setVisible(hasReplay);
-        stepForwardButton.setVisible(hasReplay);
-        playModeButton.setVisible(hasReplay);
-
-        stepBackButton.setDisable(!hasReplay);
-        stepForwardButton.setDisable(!hasReplay);
-        playModeButton.setDisable(!hasReplay);
     }
 
     private void setupSimulationControls() {
@@ -419,16 +377,6 @@ public class GamePlayView {
             playModeButton.setVisible(false);
 
         });
-    }
-
-    private Game getCurrentGame() {
-        EnvPresenter presenter = getPlayPresenter();
-        if (presenter == null) return null;
-        ToolEnvironment env = presenter.getEnvironment();
-        if (env instanceof Game) {
-            return (Game) env;
-        }
-        return null;
     }
 
     /**
@@ -704,33 +652,6 @@ public class GamePlayView {
         //NodeStateManager.getInstance().clearNodeStates(levelNumber, difficulty);
 
         showLevelCompleteOverlay();
-    }
-
-    /**
-     * Helper method to get the Game instance from the panel.
-     * This method is no longer used as we get the Game from EnvPresenter.
-     *
-     * @param panel The JPanel containing the game
-     * @return The Game instance, or null if not found
-     */
-    private Game getGameFromPanel(JPanel panel) {
-
-        if (panel == null) {
-            System.out.println("ERROR: panel is null");
-            return null;
-        }
-
-        try {
-            Component[] components = panel.getComponents();
-
-            for (int i = 0; i < components.length; i++) {
-                Component component = components[i];
-            }
-        } catch (Exception e) {
-            System.err.println("Error: component panel " + e.getMessage());
-            e.printStackTrace();
-        }
-        return null;
     }
 
     /**

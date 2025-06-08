@@ -11,13 +11,12 @@
 
 package visualization;
 
-import ija.ijaProject.game.Game;
+
 import visualization.common.ToolEnvironment;
 import visualization.common.ToolField;
 import visualization.view.FieldView;
 
 import java.awt.*;
-import java.awt.event.ActionListener;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
@@ -33,7 +32,6 @@ import javax.swing.Timer;
  * EnvPresenter handles the visualization of the game environment and detects level completion.
  */
 public class EnvPresenter {
-    public static final int CELL_SIZE = 40;
     private final ToolEnvironment env;
     private List<FieldView> fields;
     private JFrame frame;
@@ -59,17 +57,6 @@ public class EnvPresenter {
         levelCheckTimer = new Timer(200, e -> checkLevelCompletion());
     }
 
-    public void setEnvironment(ToolEnvironment env) {
-        this.environment = env;
-        getGamePanel().removeAll();
-        SwingUtilities.invokeLater(() -> {
-            initialize();
-            levelCheckTimer.start();
-            /*if (inReplayMode) {
-                disableUserClicks();
-            }*/
-        });
-    }
     public void setReplayMode(boolean replay) {
         this.inReplayMode = replay;
     }
@@ -81,21 +68,6 @@ public class EnvPresenter {
          */
     public JPanel getGamePanel() {
         return mainPanel;
-    }
-
-    /**
-     * Opens the game in a standalone window.
-     */
-    public void open() {
-        try {
-            SwingUtilities.invokeAndWait(() -> {
-                this.initialize();
-                this.frame.setVisible(true);
-                levelCheckTimer.start();
-            });
-        } catch (InvocationTargetException | InterruptedException var2) {
-            Logger.getLogger(EnvPresenter.class.getName()).log(Level.SEVERE, "Error opening game window", var2);
-        }
     }
 
     /**
@@ -263,31 +235,6 @@ public class EnvPresenter {
     }
 
 
-    /**
-     * Resets the level completion detection state.
-     * Call this when starting a new level.
-     */
-    public void resetLevelCompletionState() {
-        levelCompletionDetected = false;
-        if (!levelCheckTimer.isRunning()) {
-            levelCheckTimer.start();
-        }
-    }
-
-    /**
-     * Cleans up resources when the presenter is no longer needed.
-     */
-    public void cleanup() {
-        levelCheckTimer.stop();
-
-        if (fields != null) {
-            fields.clear();
-        }
-        if (frame != null) {
-            frame.dispose();
-        }
-    }
-
     /** Return the environment */
     public ToolEnvironment getEnvironment() {
         return env;
@@ -296,22 +243,8 @@ public class EnvPresenter {
     public boolean inReplayMode() {
         return inReplayMode;
     }
-    public boolean isInReplayMode() {
-        return inReplayMode;
-    }
 
-    /** Возвращает количество созданных FieldView. */
-    public int getFieldsCount() {
-        return fields.size();
-    }
 
-    /** Возвращает текущее состояние clicksEnabled у первого поля (или -1, если полей нет). */
-    public boolean isFirstFieldClickable() {
-        if (fields.isEmpty()) return false;
-        return fields.get(0).isClicksEnabled();
-    }
-
-    /** Для отладки: печатает краткую информацию о состоянии Presenter. */
     public void debugPrintState() {
         System.out.println("[EnvPresenter] this=" + this
                 + ", inReplayMode=" + inReplayMode

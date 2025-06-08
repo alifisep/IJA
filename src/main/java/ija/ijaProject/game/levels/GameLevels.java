@@ -51,8 +51,6 @@ import java.util.stream.Collectors;
  */
 public class GameLevels {
 
-    // ==================== BEGINNER LEVELS (1-10) ====================
-
     private static final Object[][] LEVEL_1_BEGINNER = {
             {"P", 2, 2, Side.SOUTH},
             {"L", 3, 2, Side.EAST, Side.NORTH},
@@ -560,7 +558,6 @@ public class GameLevels {
             {"B",  7, 7, Side.EAST}
     };
 
-    // ==================== ADVANCED LEVELS (21-30) ====================
 
     private static final Object[][] LEVEL_21_ADVANCED = {
             {"P", 7, 7, Side.WEST,Side.SOUTH},
@@ -1043,11 +1040,8 @@ public class GameLevels {
 
     /**
      * Vytvoří JavaFX SwingNode obsahující herní úroveň.
-     *
      * zobrazi spravné řešení pak nahodně otočí Gamenode,
      * a zobrazi ho.
-     * Taky pomovci ToolTip po držení kurzoru nad jednym políčkem
-     * zobrazi aktualní a potřebný pro spravné řešení počet otočení
      *
      *
      * @param levelNumber           číslo úrovně
@@ -1156,35 +1150,6 @@ public class GameLevels {
                         System.out.println("SolvedPanel = " + solvedPanel);
                         swingNode.setContent(solvedPanel);
                     });
-                    //PauseTransition pause = new PauseTransition(Duration.seconds(1));
-//                    SwingUtilities.invokeLater(() -> {
-//                       /* JFrame solvedFrame = new JFrame("Решённое поле (примерно на 1 сек)");
-//                        solvedFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-//                        solvedFrame.getContentPane().add(solvedPr.getGamePanel());
-//                        solvedFrame.pack();
-//                        solvedFrame.setLocationRelativeTo(null);
-//                        solvedFrame.setVisible(true);*/
-//
-//                        // Через 1 секунду (1000 мс) закрываем это окно и показываем «игровое» поле
-//                        Platform.runLater(() -> {
-//                            PauseTransition pause = new PauseTransition(javafx.util.Duration.seconds(1));
-//                            pause.setOnFinished(evt -> {
-//                                // Сначала закрываем Swing-окно на Swing-EDT:
-//                                //SwingUtilities.invokeLater(solvedFrame::dispose);
-//
-//                                // Затем сразу запускаем логику скрамбла и показа «игры»
-//                                SwingUtilities.invokeLater(() -> showScrambledPlayField(
-//                                        swingNode,
-//                                        levelNumber,
-//                                        difficulty,
-//                                        levelCompletedCallback,
-//                                        solvedGame,
-//                                        game
-//                                ));
-//                            });
-//                            pause.play();
-//                        });
-//                    });
 
                     Platform.runLater(() -> {
                         PauseTransition pause = new PauseTransition(Duration.seconds(1));
@@ -1259,69 +1224,6 @@ public class GameLevels {
         });
 
         return swingNode;
-    }
-
-    private static void showScrambledPlayField(SwingNode swingNode,
-                                               int levelNumber,
-                                               int difficulty,
-                                               Runnable levelCompletedCallback,
-                                               Game solvedGame,
-                                               Game game) {
-        // 1) Уже есть «game», в котором лежит “решённое” состояние. Но перед этим мы очистили окно solvedFrame.
-        //    Теперь его нужно «скрамблить», чтобы игрок начал играть именно в этом виде:
-        System.out.println("Scrambled game: " + solvedGame);
-        List<Position> posList = game.getNodes().stream()
-                .map(GameNode::getPosition)
-                .toList();
-        Random rnd = new Random();
-        int moves = 10 + difficulty * 5;
-        do {
-            for (int i = 0; i < moves; i++) {
-                game.rotateNode(posList.get(rnd.nextInt(posList.size())));
-            }
-        } while (game.anyBulbLit());
-
-        // 2) Сохраняем «начальное» (скрамбленное) состояние
-        NodeStateManager.getInstance().saveInitialState(levelNumber, difficulty, game);
-        for (GameNode node : game.getNodes()) {
-            node.resetRotationCount();
-        }
-        NodeStateManager.getInstance().startNewGameLog(levelNumber, difficulty);
-
-        // 3) Создаём EnvPresenter для “игрового” режима:
-        EnvPresenter playPr = new EnvPresenter(game);
-        if (levelCompletedCallback != null) {
-            final boolean[] initialCheckDone = {false};
-            playPr.setLevelCompletedCallback(() -> {
-                if (!initialCheckDone[0]) {
-                    initialCheckDone[0] = true;
-                    System.out.println("[showScrambledPlayField] Пропускаем первый вызов на окончание уровня");
-                    return;
-                }
-                levelCompletedCallback.run();
-            });
-        }
-        for (GameNode node : game.getNodes()) {
-            node.addObserver(observable -> {
-                NodeStateManager.getInstance().savePlayerProgress(levelNumber, difficulty, game);
-            });
-        }
-        playPr.init();  // ← initialize() создаст сетку, и т.к. inReplayMode=false, клики разрешены
-        System.out.println("playPr.inReplayMode() = " + playPr.inReplayMode());
-        // 4) Вставляем “игровую” панель в swingNode:
-        SwingUtilities.invokeLater(() -> {
-            // Здесь Swing-EDT уже завершил initialize() и пора вставлять панель
-            Platform.runLater(() -> {
-                System.out.println("[showScrambledPlayField] (после SwingUtilities.invokeLater) вставляем игровой JPanel в swingNode");
-                swingNode.setUserData(playPr);
-                swingNode.setContent(playPr.getGamePanel());
-                // Передаём свойства и подсказки:
-                swingNode.getProperties().put("game", game);
-                swingNode.getProperties().put("levelNumber", levelNumber);
-                swingNode.getProperties().put("difficulty", difficulty);
-                setupTooltipWithRotationInfo(swingNode, game, solvedGame);
-            });
-        });
     }
 
 

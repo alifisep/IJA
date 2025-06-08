@@ -2,8 +2,6 @@ package ija.ijaProject.game.levels;
 
 import ija.ijaProject.common.GameNode;
 import ija.ijaProject.game.Game;
-import visualization.EnvPresenter;
-import visualization.common.ToolEnvironment;
 
 import java.util.ArrayList;
 import java.util.List;

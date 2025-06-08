@@ -24,15 +24,9 @@ package ija.ijaProject.game;
 import ija.ijaProject.common.Position;
 import ija.ijaProject.common.Side;
 import ija.ijaProject.common.GameNode;
-import javafx.animation.KeyFrame;
-import javafx.animation.Timeline;
-import javafx.util.Duration;
 import visualization.common.ToolEnvironment;
 import visualization.common.ToolField;
-import visualization.view.FieldView;
 
-import javax.swing.*;
-import java.awt.*;
 import java.util.*;
 import java.util.List;
 
@@ -76,6 +70,7 @@ public class Game implements ToolEnvironment {
             }
         }
     }
+
     /**
      * Zjišťuje, zda daný uzel je součástí hry (žárovka, zdroj nebo vodič).
      *
@@ -87,31 +82,12 @@ public class Game implements ToolEnvironment {
     }
 
     /**
-     * Nastaví listener, který se zavolá při dokončení levelu.
+     * Tovární metoda, vytvoří instanci třídy Game se zadanými rozměry.
      *
-     * @param listener akce, která se spustí po úspěšném složení
-     */
-    public void setCompletionListener(Runnable listener) {
-        this.completionListener = listener;
-    }
-
-    /**
-     * Zkontroluje, zda už žádná žárovka nesvítí.
-     * Pokud ne, spustí {@link #completionListener}, pokud je nastaven.
-     */
-    public void checkCompletion() {
-        if (anyBulbLit()) return;
-        if (completionListener != null) {
-            completionListener.run();
-        }
-    }
-
-    /** Tovární metoda, vytvoří instanci třídy Game se zadanými rozměry.
-     *
-     *  @param rows počet řádků (>0)
-     *  @param cols počet sloupců (>0)
-     *  @return nová instance Game
-     *  @throws IllegalArgumentException pokud jsou rozměry ≤ 0
+     * @param rows počet řádků (>0)
+     * @param cols počet sloupců (>0)
+     * @return nová instance Game
+     * @throws IllegalArgumentException pokud jsou rozměry ≤ 0
      **/
     public static Game create(int rows, int cols) {
         if (rows <= 0 || cols <= 0) {
@@ -138,10 +114,10 @@ public class Game implements ToolEnvironment {
             GameNode current = queue.poll();
             Position pos = current.getPosition();
 
-            checkDirection(current, pos.row()-1, pos.col(), Side.NORTH, Side.SOUTH, queue); // North
-            checkDirection(current, pos.row()+1, pos.col(), Side.SOUTH, Side.NORTH, queue); // South
-            checkDirection(current, pos.row(), pos.col()-1, Side.WEST, Side.EAST, queue);   // West
-            checkDirection(current, pos.row(), pos.col()+1, Side.EAST, Side.WEST, queue);   // East
+            checkDirection(current, pos.row() - 1, pos.col(), Side.NORTH, Side.SOUTH, queue); // North
+            checkDirection(current, pos.row() + 1, pos.col(), Side.SOUTH, Side.NORTH, queue); // South
+            checkDirection(current, pos.row(), pos.col() - 1, Side.WEST, Side.EAST, queue);   // West
+            checkDirection(current, pos.row(), pos.col() + 1, Side.EAST, Side.WEST, queue);   // East
         }
     }
 
@@ -182,12 +158,12 @@ public class Game implements ToolEnvironment {
      * Zkontroluje jeden směr od aktuálního uzlu k sousednímu.
      * Pokud jsou konektory kompatibilní a soused ještě nesvítí, přidá jej do fronty.
      *
-     * @param current     aktuální uzel
-     * @param row         řádek souseda
-     * @param col         sloupec souseda
+     * @param current      aktuální uzel
+     * @param row          řádek souseda
+     * @param col          sloupec souseda
      * @param outDirection směr z aktuálního uzlu
      * @param inDirection  směr do souseda
-     * @param queue       fronta uzlů k dalšímu šíření
+     * @param queue        fronta uzlů k dalšímu šíření
      */
     private void checkDirection(GameNode current, int row, int col,
                                 Side outDirection, Side inDirection,
@@ -229,7 +205,9 @@ public class Game implements ToolEnvironment {
     }
 
 
-    /** Vytvoří políčko typu žárovka a umístí ho do prostředí hry na zadanou pozici. */
+    /**
+     * Vytvoří políčko typu žárovka a umístí ho do prostředí hry na zadanou pozici.
+     */
     public GameNode createBulbNode(Position p, Side side) {
         GameNode node = getGameNode(p.row(), p.col());
         if (node == null) return null;
@@ -238,7 +216,9 @@ public class Game implements ToolEnvironment {
         return node;
     }
 
-    /** Vytvoří políčko typu vodič a umístí ho do prostředí hry na zadanou pozici. */
+    /**
+     * Vytvoří políčko typu vodič a umístí ho do prostředí hry na zadanou pozici.
+     */
     public GameNode createLinkNode(Position p, Side... sides) {
         if (sides.length < 2) return null;
         GameNode node = getGameNode(p.row(), p.col());
@@ -249,7 +229,9 @@ public class Game implements ToolEnvironment {
     }
 
 
-    /** Vytvoří políčko typu zdroj a umístí ho do prostředí hry na zadanou pozici. */
+    /**
+     * Vytvoří políčko typu zdroj a umístí ho do prostředí hry na zadanou pozici.
+     */
     public GameNode createPowerNode(Position p, Side... sides) {
         if (sides.length < 1 || powerExists) return null;
         GameNode node = getGameNode(p.row(), p.col());
@@ -261,13 +243,17 @@ public class Game implements ToolEnvironment {
     }
 
 
-    /** Zjišťuje rozměr prostředí - počet řádků. */
+    /**
+     * Zjišťuje rozměr prostředí - počet řádků.
+     */
     @Override
     public int rows() {
         return rows;
     }
 
-    /** Zjišťuje rozměr prostředí - počet sloupců. */
+    /**
+     * Zjišťuje rozměr prostředí - počet sloupců.
+     */
     @Override
     public int cols() {
         return cols;
@@ -288,7 +274,9 @@ public class Game implements ToolEnvironment {
         return grid[row - 1][col - 1];
     }
 
-    /** Vrací políčko umístěné na zadané pozici. */
+    /**
+     * Vrací políčko umístěné na zadané pozici.
+     */
     public GameNode node(Position p) {
         if (p == null) return null;
         return getGameNode(p.row(), p.col());
@@ -346,12 +334,10 @@ public class Game implements ToolEnvironment {
             if (original.isBulb()) {
 
                 copy.createBulbNode(pos, sides[0]);
-            }
-            else if (original.isPower()) {
+            } else if (original.isPower()) {
 
                 copy.createPowerNode(pos, sides);
-            }
-            else if (original.isLink()) {
+            } else if (original.isLink()) {
 
                 copy.createLinkNode(pos, sides);
             }
@@ -360,20 +346,5 @@ public class Game implements ToolEnvironment {
 
         copy.init();
         return copy;
-    }
-
-    /**
-     * Vrátí existující uzel na pozici p, nebo vyhodí výjimku, pokud neexistuje.
-     *
-     * @param p pozice hledaného uzlu
-     * @return GameNode na pozici p
-     * @throws IllegalArgumentException pokud na pozici není uzel
-     */
-    public GameNode getNodeAt(Position p) {
-        GameNode node = nodes.get(p);
-        if (node == null) {
-            throw new IllegalArgumentException("Žádný uzel na pozici " + p);
-        }
-        return node;
     }
 }

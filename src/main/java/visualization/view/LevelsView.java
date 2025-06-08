@@ -49,11 +49,10 @@ import visualization.common.SimulationState;
         private Button hardButton;
         private final VBox contentContainer;
         private final VBox levelsContainer;
-        private int currentDifficulty = 0; // 0 = easy, 1 = medium, 2 = hard
+        private int currentDifficulty = 0;
         private EventHandler<ActionEvent> levelSelectHandler;
         private final LevelManager levelManager = LevelManager.getInstance();
         private ToggleButton simulationToggle;
-        private static boolean isSimulationModeActive = false;
 
 
     /**
@@ -231,34 +230,6 @@ import visualization.common.SimulationState;
                             "-fx-font-weight: bold;" +
                             "-fx-padding: 8 20;"
             );
-/*
-            simulationToggle = new ToggleButton();
-            updateSimulationToggleText();
-
-            simulationToggle.setStyle(
-                    "-fx-background-color: rgba(14, 165, 233, 0.2);" +
-                            "-fx-background-radius: 20;" +
-                            "-fx-border-color: #0EA5E9;" +
-                            "-fx-border-width: 2;" +
-                            "-fx-border-radius: 20;" +
-                            "-fx-text-fill: white;" +
-                            "-fx-font-size: 12px;" +
-                            "-fx-font-weight: bold;" +
-                            "-fx-padding: 6 12;"
-            );
-
-            simulationToggle.setSelected(SimulationState.isSimulationMode()); // Восстанавливаем состояние
-            simulationToggle.setPickOnBounds(true);
-            simulationToggle.setFocusTraversable(false);
-
-            simulationToggle.setOnAction(e -> {
-                SimulationState.setSimulationMode(simulationToggle.isSelected());
-                updateSimulationToggleText();
-            });
-
-            headerContainer.getChildren().add(simulationToggle);*/
-
-           // StackPane.setAlignment(simulationToggle, Pos.CENTER_RIGHT);
 
             DropShadow shadow = new DropShadow();
             shadow.setColor(Color.web("#0EA5E9"));
@@ -281,13 +252,6 @@ import visualization.common.SimulationState;
             return simulationToggle != null && simulationToggle.isSelected();
         }
 
-        private void updateSimulationToggleText() {
-            simulationToggle.setText(
-                    SimulationState.isSimulationMode()
-                            ? "Exit Simulation Mode"
-                            : "Simulation Mode"
-            );
-        }
 
 
     /**
@@ -455,7 +419,7 @@ import visualization.common.SimulationState;
 
             boolean isCompleted = LevelManager.getInstance().isLevelCompleted(levelNumber, difficulty);
 
-            boolean isUnlocked = true; // This is the key change
+            boolean isUnlocked = true;
 
             Button levelButton = createLevelButton(levelNumber, difficulty, highestCompleted);
             grid.add(levelButton, col, row);

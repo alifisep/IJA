@@ -1,8 +1,6 @@
 /**
  * Soubor: src/main/java/ija.ijaProject/common/GameNode.java
- *
  * Popis:
- *
  *   Třída reprezentující uzel (políčko) v prostředí hry (Game). Každé políčko má čtyři strany označené pomocí Side. Každá strana může být prázdná nebo obsahovat konektor (vstupní/výstupní vodič), pomocí kterého se lze napojit na sousední políčko. Pro účely hry existují 4 typy uzlů (políček):
  * Prázdné (nic neobsahují).
  * Vodič spojující strany políčka (konektory). Vodič může spojovat sousední strany (L), protější strany (I), protější strany a jednu boční (T), nebo všechny strany (X).

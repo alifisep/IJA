@@ -110,7 +110,6 @@ public class FieldView extends JPanel implements Observable.Observer {
      */
     @Override
     public void update(Observable observable) {
-        // Increment update count when field changes
         updateCount++;
         repaint();
     }

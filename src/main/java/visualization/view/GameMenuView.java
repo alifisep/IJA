@@ -368,18 +368,13 @@ public class GameMenuView {
 
 
     /**
-     * Vytvoří cestu ("circuit") skládající se z úseček (PathElements),
-     * jejíž souřadnice jsou vypočítány jako procentuální pozice vůči velikosti okna.
-     * Cesta začíná v bodě odpovídajícím startXPercent, startYPercent,
-     * poté vede vodorovně, svisle, zase vodorovně, atd., až do koncového bodu
-     * na procentuálním offsetu (startXPercent + widthPercent, startYPercent + heightPercent).
-     * Výsledná cesta je na konec naformátována stylingem (barva, tloušťka čáry, čárkování).
+     * Vytvoří cestu ("circuit") skládající se z úseček ,
      *
-     * @param startXPercent  horizontální startovací pozice jako procento šířky okna (0.0–1.0)
-     * @param startYPercent  vertikální startovací pozice jako procento výšky okna (0.0–1.0)
-     * @param widthPercent   procentuální šířka segmentu cesty (0.0–1.0)
-     * @param heightPercent  procentuální výška segmentu cesty (0.0–1.0)
-     * @return Path obsahující nakonfigurované HLineTo a VLineTo elementy a stylování
+     * @param startXPercent  horizontální startovací pozice
+     * @param startYPercent  vertikální startovací pozice
+     * @param widthPercent   procentuální šířka
+     * @param heightPercent  procentuální výška
+     * @return Path obsahující  HLineTo a VLineTo elementy a stylování
      */
     private Path createCircuitPath(double startXPercent, double startYPercent, double widthPercent, double heightPercent) {
         Path path = new Path();
@@ -441,7 +436,6 @@ public class GameMenuView {
         }
     }
 
-    // Event handler setters
     public void setOnPlayAction(EventHandler<ActionEvent> handler) {
         playButton.setOnAction(handler);
     }
